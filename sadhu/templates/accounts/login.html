@@ -1,0 +1,16 @@
+{% extends "/base/default-page.html" %}
+
+{% block title %}Log in{% endblock %}
+
+{% block content %}
+<div class="row" style="min-height: 40vh;">
+  <div class="col s6">
+    <h3>Login</h3>
+    <div class="row">
+      <div class="col s12">
+        <a href="{{ url_for('accounts.login_principal') }}" class="waves-effect waves-light btn blue">Login with Principal</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

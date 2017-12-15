@@ -1,0 +1,5 @@
+*.pyc
+*.cfg
+__pycache__
+jspm_packages
+*.egg-*

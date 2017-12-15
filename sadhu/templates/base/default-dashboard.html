@@ -1,0 +1,50 @@
+{% extends "/base/base-layout.html" %}
+
+{% block title %}{{ config.get('APP_TITLE') }} Dashboard{% endblock %}
+
+{% block jsmodule %}
+System.import('css-framework').then(() => {
+                System.import('dashboard'); 
+            });
+{% endblock %}
+{% block additional_head %}
+<style>
+  header, main, footer {
+        padding-left: 300px;
+    }
+
+    @media only screen and (max-width : 992px) {
+        header, main, footer {
+        padding-left: 0;
+      }
+  }
+  .collapsible li.active i#more {
+    -ms-transform: rotate(180deg); /* IE 9 */
+    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+    transform: rotate(180deg);
+  }
+</style>
+{% endblock additional_head %}
+
+{% block header %}
+  {% include "/base/toolbar-dashboard.html" with context %}
+{% endblock %}
+
+{% block main %}
+  <div class="container">
+    <div class="row">
+      <nav>
+        <div class="nav-wrapper blue darken-2">
+          <div class="col s12">
+            <a href="{{ url_for('dashboard.index') }}" class="breadcrumb">Dashboard</a>
+            {% block breadcrumbs %}{% endblock %}
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+ 
+  <div class="container">           
+    {% block content %}{% endblock %}
+  </div>
+{% endblock %}

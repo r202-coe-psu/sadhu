@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <title>{% block title  %}{{ config.get('APP_TITLE') }}{% endblock %}</title>
+    <script src="/static/jspm_packages/system.js"></script>
+    <script src="/static/config.js"></script>
+    <script type="text/javascript">
+      {% block jsmodule %}
+      System.import('css-framework').then(() => {
+          System.import('main'); 
+      });
+      {% endblock %}
+    </script>
+    {% block additional_head %}{% endblock %}
+  </head>
+
+  <body>
+    <header> 
+    {% block header %}
+      {% include "/base/toolbar.html" %}
+      {% if request.path == url_for('site.index') %}
+        {% include "/base/banner.html" %}
+      {% else %}
+        <div style="padding-top:50px;"></div>
+      {% endif %}
+    {% endblock %}
+    </header>
+
+    <main>
+    {% block main %}{% endblock %}
+    </main>
+
+    <footer>
+      {% include "/base/footer.html" %}
+    </footer>
+  </body>
+</html>
