@@ -1,4 +1,4 @@
-from .users import User, DataSource
+from .users import User
 
 from flask_mongoengine import MongoEngine
 

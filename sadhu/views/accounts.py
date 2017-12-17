@@ -16,13 +16,15 @@ def get_user_and_remember():
     remote = oauth.get_remote()
     ret = remote.get('me')
 
-    user = models.User.objects(username=ret.data.get('username', None)).first()
+    user = models.User.objects(username=ret.data.get('userna', None)).first()
     if not user:
         user = models.User(id=ret.data.get('id'),
                            first_name=ret.data.get('first_name'),
                            last_name=ret.data.get('last_name'),
                            email=ret.data.get('email'),
-                           username=ret.data.get('username'))
+                           username=ret.data.get('username'),
+                           status='active')
+        print('\n\ndata', ret.data)
         roles = []
         for role in ['student', 'lecturer', 'staff']:
             if role in ret.data.get('roles'):
