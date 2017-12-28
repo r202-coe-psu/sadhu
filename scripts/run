@@ -1,3 +1,3 @@
 #!/bin/sh
 
-SADHU_SETTINGS=$(pwd)/sadhu.cfg DEBUG=1 OAUTHLIB_INSECURE_TRANSPORT=1 sadhu-web -d
+SADHU_SETTINGS=$(pwd)/sadhu.cfg DEBUG=1  AUTHLIB_INSECURE_TRANSPORT=true sadhu-web -d

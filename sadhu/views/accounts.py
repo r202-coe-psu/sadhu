@@ -1,3 +1,4 @@
+import datetime
 from flask import (Blueprint,
                    render_template,
                    url_for,
@@ -7,30 +8,35 @@ from flask import (Blueprint,
 from flask_login import login_user, logout_user, login_required, current_user
 
 from sadhu import models
-from sadhu import oauth
+from sadhu import oauth2
 
 module = Blueprint('accounts', __name__)
 
+cache = dict()
+
 
 def get_user_and_remember():
-    remote = oauth.get_remote()
-    ret = remote.get('me')
+    client = oauth2.oauth2_client
+    result = client.principal.get('me')
+    print('got: ', result.json())
+    data = result.json()
 
-    user = models.User.objects(username=ret.data.get('userna', None)).first()
+    user = models.User.objects(
+            username=data.get('username', '')).first()
     if not user:
-        user = models.User(id=ret.data.get('id'),
-                           first_name=ret.data.get('first_name'),
-                           last_name=ret.data.get('last_name'),
-                           email=ret.data.get('email'),
-                           username=ret.data.get('username'),
+        user = models.User(id=data.get('id'),
+                           first_name=data.get('first_name'),
+                           last_name=data.get('last_name'),
+                           email=data.get('email'),
+                           username=data.get('username'),
                            status='active')
-        print('\n\ndata', ret.data)
         roles = []
         for role in ['student', 'lecturer', 'staff']:
-            if role in ret.data.get('roles'):
+            if role in data.get('roles', []):
                 roles.append(role)
 
         user.save()
+
     if user:
         login_user(user)
 
@@ -45,27 +51,35 @@ def login():
 
 @module.route('/login-principal')
 def login_principal():
-    remote = oauth.get_remote()
-    return remote.authorize(callback=url_for('accounts.authorized_principal',
-                                             _external=True))
+    client = oauth2.oauth2_client
+    callback = url_for('accounts.authorized_principal',
+                       _external=True)
+    response = client.principal.authorize_redirect(callback)
+
+    cache[session['_principal_state_']] = dict(session)
+    return response
 
 
 @module.route('/authorized-principal')
 def authorized_principal():
-    remote = oauth.get_remote()
-    remote.authorize(callback=url_for('accounts.authorized_principal',
-                                      _external=True))
+    if request.args.get('state') in cache:
+        sdata = cache.pop(request.args.get('state'))
+        session.update(sdata)
 
-    resp = remote.authorized_response()
-    if resp is None:
-        return 'Access denied: error=%s' % (
-            request.args['error']
-        )
-    if isinstance(resp, dict) and 'access_token' in resp:
-        session['principal-tokens'] = resp
-        get_user_and_remember()
+    client = oauth2.oauth2_client
 
-        return redirect(url_for('dashboard.index'))
+    token = client.principal.authorize_access_token()
+    get_user_and_remember()
+    oauth2token = models.OAuth2Token(
+            name=client.principal.name,
+            user=current_user._get_current_object(),
+            access_token=token.get('access_token'),
+            token_type=token.get('token_type'),
+            refresh_token=token.get('refresh_token', None),
+            expires=datetime.datetime.utcfromtimestamp(
+                token.get('expires_at'))
+            )
+    oauth2token.save()
 
     return redirect(url_for('accounts.login'))
 
@@ -73,6 +87,5 @@ def authorized_principal():
 @module.route('/logout')
 @login_required
 def logout():
-    session.pop('principal-tokens', None)
     logout_user()
     return redirect(url_for('site.index'))
