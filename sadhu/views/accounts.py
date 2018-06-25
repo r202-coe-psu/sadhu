@@ -12,8 +12,6 @@ from sadhu import oauth2
 
 module = Blueprint('accounts', __name__)
 
-cache = dict()
-
 
 def get_user_and_remember():
     client = oauth2.oauth2_client
@@ -52,23 +50,31 @@ def login():
 @module.route('/login-principal')
 def login_principal():
     client = oauth2.oauth2_client
-    callback = url_for('accounts.authorized_principal',
+    redirect_uri = url_for('accounts.authorized_principal',
                        _external=True)
-    response = client.principal.authorize_redirect(callback)
+    response = client.principal.authorize_redirect(redirect_uri)
 
-    cache[session['_principal_state_']] = dict(session)
+    return response
+
+@module.route('/login-engpsu')
+def login_engpsu():
+    client = oauth2.oauth2_client
+    redirect_uri = url_for('accounts.authorized_engpsu',
+                       _external=True)
+    response = client.engpsu.authorize_redirect(redirect_uri)
     return response
 
 
 @module.route('/authorized-principal')
 def authorized_principal():
-    if request.args.get('state') in cache:
-        sdata = cache.pop(request.args.get('state'))
-        session.update(sdata)
-
     client = oauth2.oauth2_client
 
-    token = client.principal.authorize_access_token()
+    try:
+        token = client.principal.authorize_access_token()
+    except Exception as e:
+        print(e)
+        return redirect(url_for('accounts.login'))
+
     get_user_and_remember()
     oauth2token = models.OAuth2Token(
             name=client.principal.name,
@@ -81,7 +87,46 @@ def authorized_principal():
             )
     oauth2token.save()
 
-    return redirect(url_for('accounts.login'))
+    return redirect(url_for('dashboard.index'))
+
+@module.route('/authorized-engpsu')
+def authorized_engpsu():
+    client = oauth2.oauth2_client
+    try:
+        token = client.engpsu.authorize_access_token()
+    except Exception as e:
+        print(e)
+        return redirect(url_for('accounts.login'))
+
+    userinfo_response = client.engpsu.get('userinfo')
+    userinfo = userinfo_response.json()
+ 
+    user = models.User.objects(username=userinfo.get('username')).first()
+
+    if not user:
+        user = models.User(
+                username=userinfo.get('username'),
+                email=userinfo.get('email'),
+                first_name=userinfo.get('first_name'),
+                last_name=userinfo.get('last_name'),
+                status='active')
+        user.resources[client.engpsu.name] = userinfo
+        user.save()
+
+    login_user(user)
+
+    oauth2token = models.OAuth2Token(
+            name=client.engpsu.name,
+            user=user,
+            access_token=token.get('access_token'),
+            token_type=token.get('token_type'),
+            refresh_token=token.get('refresh_token', None),
+            expires=datetime.datetime.utcfromtimestamp(
+                token.get('expires_at'))
+            )
+    oauth2token.save()
+
+    return redirect(url_for('dashboard.index'))
 
 
 @module.route('/logout')

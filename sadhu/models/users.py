@@ -6,7 +6,6 @@ from flask_login import UserMixin
 
 class User(me.Document, UserMixin):
     username = me.StringField(required=True, unique=True)
-    password = me.StringField()
 
     email = me.StringField()
     first_name = me.StringField(required=True)
@@ -20,6 +19,8 @@ class User(me.Document, UserMixin):
     updated_date = me.DateTimeField(required=True,
                                     default=datetime.datetime.utcnow,
                                     auto_now=True)
+
+    resources = me.DictField()
 
     meta = {'collection': 'users'}
 
