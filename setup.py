@@ -15,7 +15,6 @@ requires = [
     'flask-allows',
     'flask-oauthlib',
     'authomatic',
-    'ldap3',
     'passlib',
     'bcrypt',
    ]
