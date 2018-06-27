@@ -1,8 +1,8 @@
 from flask import Blueprint
 
-from principal import acl
+from sadhu import acl
 
-module = Blueprint('dashboard.admin', __name__, url_prefix='/admin')
+module = Blueprint('admin', __name__, url_prefix='/admin')
 
 
 

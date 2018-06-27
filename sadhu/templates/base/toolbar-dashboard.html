@@ -14,13 +14,18 @@
         </div>
     </li>
     <li><a href="{{ url_for('dashboard.index') }}"><i class="material-icons">dashboard</i>Dashboard</a></li>
+
+    {% if current_user.has_roles(['lecturer', 'admin']) %}
+    <li><a href="{{ url_for('assignments.index') }}"><i class="material-icons">assignment</i>Assignment</a></li>
+    {% endif %}
+
     {% if current_user.has_roles(['admin']) %}
     <li>
       <ul class="collapsible" data-collapsible="accordion" style="padding-left:16px;">
         <li><a class="collapsible-header waves-effect waves-cyan"><i class="material-icons">supervisor_account</i>Admin <i class="material-icons right" id="more">expand_more</i></a>
           <div class="collapsible-body">
             <ul>
-              <li><a style="padding-left:32px;" href="{{ url_for('dashboard.index') }}"><i class="material-icons">dashboard</i>Dashboard</a></li>
+              <li><a style="padding-left:32px;" href="{{ url_for('assignments.index') }}"><i class="material-icons">assignment</i>Assignment</a></li>
             </ul>
           </div>
         </li>
