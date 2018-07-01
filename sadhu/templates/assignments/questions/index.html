@@ -1,0 +1,28 @@
+{% extends '/assignments/index.html' %}
+
+{% block breadcrumbs %}
+{{ super() }}
+<a href="{{ url_for('assignments.questions.index') }}" class="breadcrumb">Questions</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col s12">
+    <h3>Questions</h3>
+    <div>
+      <a href="{{ url_for('assignments.questions.create') }}" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s12">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s12">
+  </div>
+</div>
+
+{% endblock %}

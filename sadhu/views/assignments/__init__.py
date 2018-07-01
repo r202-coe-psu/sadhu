@@ -2,6 +2,10 @@ from flask import Blueprint, render_template
 
 from sadhu import acl
 
+from . import questions
+
+subviews = [questions]
+
 module = Blueprint('assignments',
                    __name__,
                    url_prefix='/assignments',
@@ -10,6 +14,6 @@ module = Blueprint('assignments',
 
 
 @module.route('/')
-@acl.allows.requires(acl.is_admin)
+@acl.allows.requires(acl.is_lecturer)
 def index():
     return render_template('/assignments/index.html')

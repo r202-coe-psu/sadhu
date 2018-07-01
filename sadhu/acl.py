@@ -19,6 +19,8 @@ def is_staff(ident, request):
     return 'staff' in ident.roles
 
 
+def is_lecturer(ident, request):
+    return 'lecturer' in ident.roles
 
 
 def init_acl(app):
