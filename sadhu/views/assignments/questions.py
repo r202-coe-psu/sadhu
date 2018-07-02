@@ -18,7 +18,7 @@ def index():
 @module.route('/create')
 def create():
     form = forms.questions.QuestionForm()
-    if not form.validate():
+    if not form.validate_on_submit():
         return render_template('/assignments/questions/create.html',
                                form=form)
 

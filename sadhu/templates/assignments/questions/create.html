@@ -1,22 +1,67 @@
 {% extends '/assignments/questions/index.html' %}
+{% import '/base/error-handler.html' as eh %}
+
 
 {% block content %}
 <div class="row">
   <div class="col s12">
     <h3>Create Questions</h3>
     <form>
+      {{ form.csrf_token }}
       <div class="row">
         <div class="col s12">
           <div class="row">
             <div class="input-field col s12">
-              {{ form.name }}
-              {{ form.name.lable }}
+              {{ form.name(class_=eh.get_validate_class(form.name.errors)) }}
+              {{ form.name.label }}
+              {% if form.name.errors %}
+              <div class="red lighten-5 red-text text-darken-4">
+                {{ ', '.join(form.name.errors) }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              {{ form.description(class_='materialize-textarea '+eh.get_validate_class(form.description.errors)) }}
+              {{ form.description.label }}
+              {% if form.description.errors %}
+              <div class="red lighten-5 red-text text-darken-4">
+                {{ ', '.join(form.description.errors) }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              {{ form.score(class_=eh.get_validate_class(form.score.errors)) }}
+              {{ form.score.label }}
+              {% if form.score.errors %}
+              <div class="red lighten-5 red-text text-darken-4">
+                {{ ', '.join(form.score.errors) }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              {{ form.tags(class_=eh.get_validate_class(form.tags.errors)) }}
+              {{ form.tags.label }}
+              {% if form.tags.errors %}
+              <div class="red lighten-5 red-text text-darken-4">
+                {{ ', '.join(form.tags.errors) }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12">
+              <button name="create" type="submit">Create</button>
             </div>
           </div>
         </div>
       </div>
     </form>
-    {{form}}    
   </div>
 </div>
 
