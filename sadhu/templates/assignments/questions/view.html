@@ -1,0 +1,28 @@
+{% extends '/assignments/questions/index.html' %}
+{% import '/base/error-handler.html' as eh %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col s12">
+    <h3>{{ question.name }}</h3>
+    <p>
+    {{ question.description }}
+    </p>
+    <p>
+    Tags: {{ question.tags | join(', ') }}
+    </p>
+    <p>
+    Score: {{ question.score }}
+    </p>
+  </div>
+</div>
+<div class="row">
+  <div class="col s12">
+    <p>
+    Test Case <a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+    </p>
+    Test Cass:
+  </div>
+</div>
+{% endblock %}

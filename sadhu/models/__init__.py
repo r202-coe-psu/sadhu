@@ -1,5 +1,6 @@
 from .users import User
 from .oauth2 import OAuth2Token
+from .questions import Question
 
 from flask_mongoengine import MongoEngine
 
