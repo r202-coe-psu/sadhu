@@ -18,7 +18,9 @@ module = Blueprint('assignments.questions',
 @module.route('/')
 @acl.allows.requires(acl.is_lecturer)
 def index():
-    questions = models.Question.objects()
+    questions = models.Question.objects(
+            owner=current_user._get_current_object())
+    # print('q', questions)
     return render_template('/assignments/questions/index.html',
                            questions=questions)
 
