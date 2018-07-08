@@ -36,7 +36,7 @@ def get_user_and_remember():
         user.save()
 
     if user:
-        login_user(user)
+        login_user(user, remember=True)
 
 
 @module.route('/login', methods=('GET', 'POST'))
