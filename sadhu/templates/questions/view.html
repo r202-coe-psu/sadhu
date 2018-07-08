@@ -1,9 +1,9 @@
-{% extends '/assignments/questions/index.html' %}
+{% extends '/questions/index.html' %}
 {% import '/base/error-handler.html' as eh %}
 
 {% block breadcrumbs %}
 {{ super() }}
-<a href="{{ url_for('assignments.questions.view', question_id=question.id) }}" class="breadcrumb">{{ question.name }}</a>
+<a href="{{ url_for('questions.view', question_id=question.id) }}" class="breadcrumb">{{ question.name }}</a>
 {% endblock %}
 
 {% block content %}

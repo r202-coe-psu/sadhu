@@ -1,0 +1,55 @@
+{% extends '/base/default-dashboard.html' %}
+
+{% block breadcrumbs %}
+<a href="{{ url_for('questions.index') }}" class="breadcrumb">Questions</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col s12">
+    <h3>Questions</h3>
+    <div>
+      <a href="{{ url_for('questions.create') }}" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s12">
+      <table>
+        <thead>
+          <tr>
+              <th>Name</th>
+              <th>Score</th>
+              <th>Tags</th>
+              <th>Operation</th>
+          </tr>
+        </thead>
+        <body>
+  {% for question in questions %}
+          <tr>
+            <td>
+              <a href="{{ url_for('questions.view', question_id=question.id) }}">{{ question.name }}</a>
+            </td>
+            <td>
+                {{question.score}}
+            </td>
+            <td>
+                {{ question.tags | join(', ') }}
+            </td>
+            <td>
+              xxx
+            </td>
+          </tr>
+  {% endfor %}
+        </body>
+      </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s12">
+  </div>
+</div>
+
+{% endblock %}

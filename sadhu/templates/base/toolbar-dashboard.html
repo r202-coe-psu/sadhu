@@ -22,7 +22,18 @@
           <div class="collapsible-body">
             <ul>
               <li><a style="padding-left:32px;" href="{{ url_for('assignments.index') }}"><i class="material-icons">create</i>Create</a></li>
-              <li><a style="padding-left:32px;" href="{{ url_for('assignments.questions.index') }}"><i class="material-icons">question_answer</i>Question</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <ul class="collapsible" data-collapsible="accordion" style="padding-left:16px;">
+        <li><a class="collapsible-header waves-effect waves-cyan"><i class="material-icons">question_answer</i>Question <i class="material-icons right" id="more">expand_more</i></a>
+          <div class="collapsible-body">
+            <ul>
+              <li><a style="padding-left:32px;" href="{{ url_for('questions.index') }}"><i class="material-icons">view_comfy</i>Index</a></li>
+              <li><a style="padding-left:32px;" href="{{ url_for('questions.create') }}"><i class="material-icons">create</i>Create</a></li>
             </ul>
           </div>
         </li>

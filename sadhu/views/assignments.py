@@ -4,7 +4,7 @@ from sadhu import acl
 
 from . import questions
 
-subviews = [questions]
+subviews = []
 
 module = Blueprint('assignments',
                    __name__,

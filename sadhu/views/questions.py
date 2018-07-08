@@ -9,7 +9,7 @@ from sadhu import acl
 from sadhu import forms
 from sadhu import models
 
-module = Blueprint('assignments.questions',
+module = Blueprint('questions',
                    __name__,
                    url_prefix='/questions',
                    )
@@ -21,17 +21,18 @@ def index():
     questions = models.Question.objects(
             owner=current_user._get_current_object())
     # print('q', questions)
-    return render_template('/assignments/questions/index.html',
+    return render_template('/questions/index.html',
                            questions=questions)
 
 
 @module.route('/create', methods=['GET', 'POST'])
+@acl.allows.requires(acl.is_lecturer)
 def create():
     form = forms.questions.QuestionForm(request.form)
     print(form.data)
     if not form.validate_on_submit():
         print(form.data)
-        return render_template('/assignments/questions/create.html',
+        return render_template('/questions/create.html',
                                form=form)
     data = form.data.copy()
     data.pop('csrf_token')
@@ -43,20 +44,22 @@ def create():
                             question_id=question.id))
 
 @module.route('/<question_id>/add-testcase', methods=['GET', 'POST'])
+@acl.allows.requires(acl.is_lecturer)
 def add_testcase():
-    question = models.Question.objects.get(id=question_id)
+    question = models.Question.objects.get(id=question_id,
+                                           owner=current_user._get_current_object())
     form = forms.questions.TestCaseForm(request.form)
 
     if not form.validate_on_submit():
-        return redirect(url_for('assignments.questions.add_testcase',
+        return redirect(url_for('questions.add_testcase',
                                 question_id=question.id))
 
-    return redirect(url_for('assignments.questions.view',
+    return redirect(url_for('questions.view',
                             question_id=question.id))
 
 
 @module.route('/<question_id>/view')
 def view(question_id):
     question = models.Question.objects.get(id=question_id)
-    return render_template('/assignments/questions/view.html',
+    return render_template('/questions/view.html',
                            question=question)
