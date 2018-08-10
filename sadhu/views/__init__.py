@@ -25,7 +25,7 @@ def register_blueprint(app):
     blueprints = get_subblueprints([site,
                                     accounts,
                                     dashboard,
-                                    assignments
+                                    administration
                                     ])
 
     for blueprint in blueprints:

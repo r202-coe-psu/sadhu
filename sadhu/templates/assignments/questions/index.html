@@ -10,7 +10,7 @@
   <div class="col s12">
     <h3>Questions</h3>
     <div>
-      <a href="{{ url_for('assignments.questions.create') }}" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+      <a href="{{ url_for('assignments.questions.create') }}" class="btn-floating waves-effect waves-light red"><i class="material-icons">add</i></a>
     </div>
   </div>
 </div>
@@ -30,6 +30,9 @@
             <td>
               <a href="{{ url_for('assignments.questions.view', question_id=question.id) }}">{{ question.name }}</a>
             </td>
+	    <td>
+	      {{ question.score }}
+	    </td>
           </tr>
   {% endfor %}
         </body>
