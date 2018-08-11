@@ -3,11 +3,10 @@ from flask import Blueprint, render_template
 from sadhu import acl
 from sadhu import forms
 
-from . import questions
 
-subviews = [questions]
+subviews = []
 
-module = Blueprint('assignments',
+module = Blueprint('administration.assignments',
                    __name__,
                    url_prefix='/assignments',
                    )

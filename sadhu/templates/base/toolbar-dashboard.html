@@ -21,15 +21,15 @@
         <li><a class="collapsible-header waves-effect waves-cyan"><i class="material-icons">assignment</i>Assignment <i class="material-icons right" id="more">expand_more</i></a>
           <div class="collapsible-body">
             <ul>
-              <li><a style="padding-left:32px;" href="{{ url_for('assignments.index') }}"><i class="material-icons">list</i>List</a></li>
-              <li><a style="padding-left:32px;" href="{{ url_for('assignments.create') }}"><i class="material-icons">create</i>Create</a></li>
-              <li><a style="padding-left:32px;" href="{{ url_for('assignments.questions.index') }}"><i class="material-icons">question_answer</i>Question</a></li>
+              <li><a style="padding-left:32px;" href="{{ url_for('administration.assignments.index') }}"><i class="material-icons">list</i>List</a></li>
+              <li><a style="padding-left:32px;" href="{{ url_for('administration.assignments.create') }}"><i class="material-icons">create</i>Create</a></li>
             </ul>
           </div>
         </li>
       </ul>
     </li>
 
+    <li><a href="{{ url_for('administration.questions.index') }}"><i class="material-icons">question_answer</i>Questions</a></li>
     {% endif %}
 
     {% if current_user.has_roles(['admin']) %}
@@ -38,7 +38,7 @@
         <li><a class="collapsible-header waves-effect waves-cyan"><i class="material-icons">supervisor_account</i>Admin <i class="material-icons right" id="more">expand_more</i></a>
           <div class="collapsible-body">
             <ul>
-              <li><a style="padding-left:32px;" href="{{ url_for('assignments.index') }}"><i class="material-icons">assignment</i>Assignment</a></li>
+              <li><a style="padding-left:32px;" href="{{ url_for('administration.assignments.index') }}"><i class="material-icons">assignment</i>Assignment</a></li>
             </ul>
           </div>
         </li>

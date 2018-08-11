@@ -7,7 +7,7 @@ from . import questions
 
 subviews = [questions]
 
-module = Blueprint('courses',
+module = Blueprint('administration.courses',
                    __name__,
                    url_prefix='/courses',
                    )

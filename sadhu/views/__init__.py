@@ -1,7 +1,7 @@
 
 from . import site
 from . import accounts
-from . import assignments
+from . import administration
 from . import dashboard
 from . import admin
 

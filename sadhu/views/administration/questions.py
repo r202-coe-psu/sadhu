@@ -9,7 +9,7 @@ from sadhu import acl
 from sadhu import forms
 from sadhu import models
 
-module = Blueprint('assignments.questions',
+module = Blueprint('administration.questions',
                    __name__,
                    url_prefix='/questions',
                    )
