@@ -16,12 +16,12 @@ module = Blueprint('administration.assignments',
 @module.route('/')
 @acl.allows.requires(acl.is_lecturer)
 def index():
-    return render_template('/assignments/index.html')
+    return render_template('/administration/assignments/index.html')
 
 
 @module.route('/create')
 @acl.allows.requires(acl.is_lecturer)
 def create():
     form = forms.assignments.AssignmentForm()
-    return render_template('/assignments/create.html',
+    return render_template('/administration/assignments/create.html',
                            form=form)

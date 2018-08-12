@@ -21,7 +21,7 @@ def index():
     questions = models.Question.objects(
             owner=current_user._get_current_object())
     # print('q', questions)
-    return render_template('/assignments/questions/index.html',
+    return render_template('/administration/questions/index.html',
                            questions=questions)
 
 
@@ -31,7 +31,7 @@ def create():
     print(form.data)
     if not form.validate_on_submit():
         print(form.data)
-        return render_template('/assignments/questions/create.html',
+        return render_template('/administration/questions/create.html',
                                form=form)
     data = form.data.copy()
     data.pop('csrf_token')
@@ -58,5 +58,5 @@ def add_testcase():
 @module.route('/<question_id>/view')
 def view(question_id):
     question = models.Question.objects.get(id=question_id)
-    return render_template('/assignments/questions/view.html',
+    return render_template('/administration/questions/view.html',
                            question=question)

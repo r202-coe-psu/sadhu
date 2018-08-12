@@ -1,7 +1,7 @@
 {% extends '/base/default-dashboard.html' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('questions.index') }}" class="breadcrumb">Questions</a>
+<a href="{{ url_for('administration.questions.index') }}" class="breadcrumb">Questions</a>
 {% endblock %}
 
 {% block content %}
@@ -9,7 +9,7 @@
   <div class="col s12">
     <h3>Questions</h3>
     <div>
-      <a href="{{ url_for('questions.create') }}" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+      <a href="{{ url_for('administration.questions.create') }}" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
     </div>
   </div>
 </div>
@@ -29,7 +29,7 @@
   {% for question in questions %}
           <tr>
             <td>
-              <a href="{{ url_for('questions.view', question_id=question.id) }}">{{ question.name }}</a>
+              <a href="{{ url_for('administration.questions.view', question_id=question.id) }}">{{ question.name }}</a>
             </td>
             <td>
                 {{question.score}}
