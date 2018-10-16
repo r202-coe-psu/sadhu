@@ -1,0 +1,16 @@
+{
+  "name": "sadhu",
+  "version": "0.0.1",
+  "description": "sadhu front-end",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "google-material-design-icons": "^1.0.0",
+    "jquery": "^3.3.1",
+    "materialize-css": "^1.0.0-rc.2"
+  },
+  "devDependencies": {}
+}

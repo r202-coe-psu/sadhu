@@ -4,15 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>{% block title  %}{{ config.get('APP_TITLE') }}{% endblock %}</title>
-    <script src="/static/jspm_packages/system.js"></script>
-    <script src="/static/config.js"></script>
-    <script type="text/javascript">
-      {% block jsmodule %}
-      System.import('css-framework').then(() => {
-          System.import('main'); 
-      });
-      {% endblock %}
-    </script>
+    <link rel="stylesheet" href="/static/node_modules/materialize-css/dist/css/materialize.min.css">
+    <link href="/static/node_modules/google-material-design-icons/icons.css" rel="stylesheet">
     {% block additional_head %}{% endblock %}
   </head>
 
@@ -36,4 +29,11 @@
       {% include "/base/footer.html" %}
     </footer>
   </body>
+  <script src="/static/node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="/static/node_modules/materialize-css/dist/js/materialize.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('.sidenav').sidenav();
+    });
+  </script>
 </html>
