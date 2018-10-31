@@ -10,13 +10,35 @@
     <h3>Assignments</h3>
     <div>
       <a href="{{ url_for('administration.assignments.create') }}" class="btn-floating waves-effect waves-light tooltipped red" data-position="bottom" data-tooltip="Create assignment"><i class="material-icons">add</i></a>
-      <a href="{{ url_for('administration.questions.index') }}" class="btn-floating waves-effect waves-light tooltipped green" data-position="bottom" data-tooltip="Question list"><i class="material-icons">list</i></a>
+      <a href="{{ url_for('administration.assignments.index') }}" class="btn-floating waves-effect waves-light tooltipped green" data-position="bottom" data-tooltip="Question list"><i class="material-icons">list</i></a>
     </div>
   </div>
 </div>
 
 <div class="row">
   <div class="col s12">
+	{% if assignments %}
+	 <table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<body>
+{% for assignment in assignments %}
+				<tr>
+					<td>
+						<a href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
+					</td>
+		<td>
+			{{ assignment.description }}
+		</td>
+				</tr>
+{% endfor %}
+			</body>
+		</table>
+		{% endif %}
 	
   </div>
 </div>

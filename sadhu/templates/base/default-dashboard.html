@@ -2,11 +2,6 @@
 
 {% block title %}{{ config.get('APP_TITLE') }} Dashboard{% endblock %}
 
-{% block jsmodule %}
-System.import('css-framework').then(() => {
-                System.import('dashboard'); 
-            });
-{% endblock %}
 {% block additional_head %}
 <style>
   header, main, footer {

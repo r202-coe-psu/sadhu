@@ -3,12 +3,14 @@ from flask_login import login_required
 
 from . import assignments
 from . import questions
+from . import courses
 
 module = Blueprint('administration',
                    __name__,
                    url_prefix='/administration')
 subviews = [assignments,
-            questions
+            questions,
+            courses
             ]
 
 @module.route('/')

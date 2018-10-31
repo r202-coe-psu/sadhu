@@ -1,6 +1,8 @@
 from .users import User
 from .oauth2 import OAuth2Token
 from .questions import Question
+from .courses import Course
+from .assignments import Assignment
 
 from flask_mongoengine import MongoEngine
 

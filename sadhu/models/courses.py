@@ -1,13 +1,10 @@
 import mongoengine as me
 import datetime
 
-from .users import User
 
-
-class Question(me.Document):
+class Course(me.Document):
     name = me.StringField(required=True)
     description = me.StringField(required=True)
-    score = me.IntField(required=True, default=0)
     tags = me.ListField(me.StringField(required=True))
 
     created_date = me.DateTimeField(required=True,
@@ -16,11 +13,12 @@ class Question(me.Document):
                                     default=datetime.datetime.utcnow,
                                     auto_now=True)
 
-    owner = me.ReferenceField('User', dbref=True, required=True)
-    contributors = me.ListField(
-            me.ReferenceField('User',
-                              dbref=True,
-                              required=True))
+    assignments = me.ListField(me.ReferenceField('Assignment', dbref=True))
 
-    meta = {'collection': 'questions'}
+    owner = me.ReferenceField('User', dbref=True, required=True)
+    contributors = me.ListField(me.ReferenceField('User',
+                                                  dbref=True,
+                                                  required=True))
+
+    meta = {'collection': 'courses'}
 

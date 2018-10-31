@@ -39,7 +39,7 @@ def create():
     question.owner = current_user._get_current_object()
     question.save()
 
-    return redirect(url_for('assignments.questions.view',
+    return redirect(url_for('administration.questions.view',
                             question_id=question.id))
 
 @module.route('/<question_id>/add-testcase', methods=['GET', 'POST'])
@@ -48,10 +48,10 @@ def add_testcase():
     form = forms.questions.TestCaseForm(request.form)
 
     if not form.validate_on_submit():
-        return redirect(url_for('assignments.questions.add_testcase',
+        return redirect(url_for('administration.questions.add_testcase',
                                 question_id=question.id))
 
-    return redirect(url_for('assignments.questions.view',
+    return redirect(url_for('administration.questions.view',
                             question_id=question.id))
 
 

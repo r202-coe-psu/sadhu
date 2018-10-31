@@ -1,0 +1,81 @@
+{% extends '/administration/assignments/index.html' %}
+{% import '/base/error-handler.html' as eh %}
+
+{% block additional_js %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('select').formSelect();
+		});
+	</script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col s12">
+		<h3>{{ assignment.name }}</h3>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col s12">
+		<div>
+			<p>course <a href="{{ url_for('administration.courses.view', course_id=assignment.course.id) }}">{{ assignment.course.name }}</a></p>
+		</div>
+		<div>
+			{{ assignment.description }}
+		</div>
+		<div>
+			<p>{{ assignment.tags | join(', ') }}</p>
+		</div>
+  </div>
+</div>
+
+<div class="row">
+	<form method="POST" action="{{ url_for('administration.assignments.add_question', assignment_id=assignment.id) }}">
+		<div class="col s4">
+			{{ form.csrf_token }}
+      {{ form.questions.label }}
+			{{ form.questions(class_=eh.get_validate_class(form.questions.errors)) }}
+			{% if form.questions.errors %}
+			<div class="red lighten-5 red-text text-darken-4">
+				{{ ', '.join(form.questions.errors) }}
+			</div>
+			{% endif %}
+		</div>
+		<div class="col s2">
+			<button type="submit" class="btn-floating btn-small waves-effect waves-light red"><i class="material-icons">add</i></button>
+		</div>
+	</form>
+</div>
+
+<div class="row">
+	<div class="col s12">
+	
+	{% if assignment.questions | count > 0 %}
+	 <table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<body>
+{% for question in assignment.questions %}
+				<tr>
+					<td>
+						<a href="{{ url_for('administration.questions.view', question_id=question.id) }}">{{ question.name }}</a>
+					</td>
+		<td>
+			{{ question.description }}
+		</td>
+				</tr>
+{% endfor %}
+			</body>
+		</table>
+		{% endif %}
+
+  </div>
+</div>
+
+
+{% endblock %}
