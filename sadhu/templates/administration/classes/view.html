@@ -1,52 +1,52 @@
-{% extends '/administration/courses/index.html' %}
+{% extends '/administration/classes/index.html' %}
 {% import '/base/error-handler.html' as eh %}
 
 
 {% block content %}
 <div class="row">
   <div class="col s12">
-		<h3>{{ course.name }}</h3>
+		<h3>{{ class_.name }}</h3>
   </div>
 </div>
 
 <div class="row">
 	<div class="col s12">
 		<div>
-			{{ course.description }}
+			<b>Description:</b> {{ class_.description }}
 		</div>
 		<div>
-			<p>{{ course.tags | join(', ') }}</p>
+			<b>Code:</b> {{ class_.code }}
+		</div>
+		<div>
+			<b>Course:</b> <a href="{{ url_for('administration.courses.view', course_id=class_.course.id) }}">{{ class_.course.name }}</a>
+		</div>
+		<div>
+			<b>Limited Class:</b> {{ class_.limited }}
+		</div>
+		{% if class_.limited_enrollment %}
+		<div>
+			<b>Limited Method:</b> {{ class_.limited_enrollment.method }}
+		</div>
+		<div>
+			<b>Limited Grantees:</b> {{ class_.limited_enrollment.grantees | join(', ') }}
+		</div>
+	{% endif %}
+		<div>
+			<b>Started Date:</b> {{ class_.started_date }}
+		</div>
+		<div>
+			<b>Ended Date:</b> {{ class_.ended_date }}
+		</div>
+
+		<div>
+			<b>Tag:</b> {{ class_.tags | join(', ') }}
 		</div>
   </div>
 </div>
-
 
 <div class="row">
 	<div class="col s12">
 	
-	{% if course.assignments | count > 0 %}
-	 <table>
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<body>
-{% for assignment in course.assignments %}
-				<tr>
-					<td>
-						<a href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
-					</td>
-		<td>
-			{{ assignment.description }}
-		</td>
-				</tr>
-{% endfor %}
-			</body>
-		</table>
-		{% endif %}
-
   </div>
 </div>
 {% endblock %}

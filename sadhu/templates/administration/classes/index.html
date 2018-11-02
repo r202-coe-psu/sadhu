@@ -27,14 +27,14 @@
 				</tr>
 			</thead>
 			<body>
-{% for course in classes %}
+{% for class_ in classes %}
 				<tr>
 					<td>
-						<a href="{{ url_for('administration.classes.view', course_id=course.id) }}">{{ course.name }}</a>
+						<a href="{{ url_for('administration.classes.view', class_id=class_.id) }}">{{ class_.name }}</a>
 					</td>
-		<td>
-			{{ course.description }}
-		</td>
+					<td>
+						{{ class_.description }}
+					</td>
 				</tr>
 {% endfor %}
 			</body>

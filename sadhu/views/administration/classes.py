@@ -15,7 +15,6 @@ module = Blueprint('administration.classes',
                    )
 
 
-
 @module.route('/')
 @acl.allows.requires(acl.is_lecturer)
 def index():
@@ -29,22 +28,35 @@ def index():
 def create():
     form = forms.classes.ClassForm()
     courses = models.Course.objects()
-    choices = [(str(c.id), c.name) for c in courses]
-    form.course.choices = choices
+
+    course_choices = [(str(c.id), c.name) for c in courses]
+    form.course.choices = course_choices
+    method_choices = [('email', 'Email'), ('student_id', 'Student ID')]
+    form.limited_enrollment.method.choices = method_choices
+
     if not form.validate_on_submit():
         return render_template('/administration/classes/create.html',
                                form=form)
     data = form.data.copy()
     data.pop('csrf_token')
+    data.pop('limited_enrollment')
+
     class_ = models.Class(**data)
     class_.owner = current_user._get_current_object()
+    if class_.limited:
+        if class_.limited_enrollment is None:
+            class_.limited_enrollment = models.LimitedEnrollment()
+        class_.limited_enrollment.method = form.limited_enrollment.method.data
+        for grantee in form.limited_enrollment.grantees.data.split('\n'):
+            class_.limited_enrollment.grantees.append(grantee.strip())
     class_.save()
     return redirect(url_for('administration.classes.index'))
 
-@module.route('/view/<class__id>')
+
+@module.route('/view/<class_id>')
 @acl.allows.requires(acl.is_lecturer)
-def view(class__id):
-    class_ = models.Class.objects.get(id=class__id)
+def view(class_id):
+    class_ = models.Class.objects.get(id=class_id)
     return render_template('/administration/classes/view.html',
                            class_=class_)
 

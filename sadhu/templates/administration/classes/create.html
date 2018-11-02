@@ -44,13 +44,19 @@
             </div>
 					</div>
           <div class="row">
-            <div class="input-field col s12">
+            <div class="col s12">
 							{{ renderer.render_checkbox(form.limited) }}
             </div>
 					</div>
           <div class="row">
             <div class="input-field col s12">
-							{{ renderer.render_field(form.grantees, 'materialize-textarea') }}
+							{{ renderer.render_field(form.limited_enrollment.method) }}
+            </div>
+					</div>
+
+          <div class="row">
+            <div class="input-field col s12">
+							{{ renderer.render_field(form.limited_enrollment.grantees, 'materialize-textarea') }}
             </div>
 					</div>
           <div class="row">
