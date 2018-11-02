@@ -1,15 +1,15 @@
 {% extends '/base/default-dashboard.html' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.questions.index') }}" class="breadcrumb">Questions</a>
+<a href="{{ url_for('administration.challenges.index') }}" class="breadcrumb">Challenges</a>
 {% endblock %}
 
 {% block content %}
 <div class="row">
   <div class="col s12">
-    <h3>Questions</h3>
+    <h3>Challenges</h3>
     <div>
-      <a href="{{ url_for('administration.questions.create') }}" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+      <a href="{{ url_for('administration.challenges.create') }}" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
     </div>
   </div>
 </div>
@@ -26,16 +26,16 @@
           </tr>
         </thead>
         <body>
-  {% for question in questions %}
+  {% for challenge in challenges %}
           <tr>
             <td>
-              <a href="{{ url_for('administration.questions.view', question_id=question.id) }}">{{ question.name }}</a>
+              <a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}">{{ challenge.name }}</a>
             </td>
             <td>
-                {{question.score}}
+                {{challenge.score}}
             </td>
             <td>
-                {{ question.tags | join(', ') }}
+                {{ challenge.tags | join(', ') }}
             </td>
             <td>
               xxx

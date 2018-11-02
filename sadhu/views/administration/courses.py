@@ -9,10 +9,6 @@ from sadhu import acl
 from sadhu import forms
 from sadhu import models
 
-from . import questions
-
-subviews = [questions]
-
 module = Blueprint('administration.courses',
                    __name__,
                    url_prefix='/courses',

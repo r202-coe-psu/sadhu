@@ -16,13 +16,23 @@ class TestCase(Form):
 class TestCase(FlaskForm):
     test_cases = fields.FieldList(fields.FormField(TestCase))
 
-class QuestionForm(FlaskForm):
+class ChallengeForm(FlaskForm):
     name = fields.StringField('Name',
             validators=[validators.InputRequired(),
                         validators.Length(min=3)])
     description = fields.StringField('Description',
+            validators=[validators.InputRequired()])
+    problem_statement = fields.StringField('Problem Statement',
             validators=[validators.InputRequired()],
             widget=widgets.TextArea())
+    input_format = fields.StringField('Input Format',
+            widget=widgets.TextArea())
+    constraints = fields.StringField('Constraints',
+            widget=widgets.TextArea())
+    output_format = fields.StringField('Output Format',
+            validators=[validators.InputRequired()],
+            widget=widgets.TextArea())
+
     score = fields.IntegerField('Score',
             validators=[validators.InputRequired(),
                 validators.NumberRange(min=0)],

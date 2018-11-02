@@ -23,6 +23,7 @@
 				<tr>
 					<th>Name</th>
 					<th>Description</th>
+					<th>Score</th>
 				</tr>
 			</thead>
 			<body>
@@ -31,9 +32,12 @@
 					<td>
 						<a href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
 					</td>
-		<td>
-			{{ assignment.description }}
-		</td>
+					<td>
+						{{ assignment.description }}
+					</td>
+					<td>
+						{{ assignment.score }}
+					</td>
 				</tr>
 {% endfor %}
 			</body>

@@ -1,0 +1,47 @@
+{% extends '/base/default-dashboard.html' %}
+
+{% block breadcrumbs %}
+<a href="{{ url_for('administration.classes.index') }}" class="breadcrumb">Classes</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col s12">
+    <h3>Classes</h3>
+    <div>
+      <a href="{{ url_for('administration.classes.create') }}" class="btn-floating waves-effect waves-light tooltipped red" data-position="bottom" data-tooltip="Create assignment"><i class="material-icons">add</i></a>
+      <a href="{{ url_for('administration.courses.index') }}" class="btn-floating waves-effect waves-light tooltipped blue" data-position="bottom" data-tooltip="Courses list"><i class="material-icons">list</i></a>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col s12">
+
+	{% if classes %}
+	 <table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<body>
+{% for course in classes %}
+				<tr>
+					<td>
+						<a href="{{ url_for('administration.classes.view', course_id=course.id) }}">{{ course.name }}</a>
+					</td>
+		<td>
+			{{ course.description }}
+		</td>
+				</tr>
+{% endfor %}
+			</body>
+		</table>
+		{% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

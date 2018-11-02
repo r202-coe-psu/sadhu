@@ -111,10 +111,14 @@ def authorized_engpsu():
                 last_name=userinfo.get('last_name'),
                 status='active')
         user.resources[client.engpsu.name] = userinfo
-        if 'staff_id' in userinfo.keys():
-            user.roles.append('staff')
-        elif 'student_id' in userinfo.keys():
+        # if 'staff_id' in userinfo.keys():
+        #     user.roles.append('staff')
+        # elif 'student_id' in userinfo.keys():
+        #     user.roles.append('student')
+        if userinfo['username'].isdigit():
             user.roles.append('student')
+        else:
+            user.roles.append('staff')
 
         user.save()
 

@@ -22,7 +22,7 @@ class Assignment(me.Document):
                                     default=datetime.datetime.utcnow,
                                     auto_now=True)
 
-    questions = me.ListField(me.ReferenceField('Question', db_ref=True))
+    challenges = me.ListField(me.ReferenceField('Challenge', db_ref=True))
 
     owner = me.ReferenceField('User', db_ref=True, required=True)
     contributors = me.ListField(

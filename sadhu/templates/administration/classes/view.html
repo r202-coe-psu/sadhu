@@ -1,0 +1,52 @@
+{% extends '/administration/courses/index.html' %}
+{% import '/base/error-handler.html' as eh %}
+
+
+{% block content %}
+<div class="row">
+  <div class="col s12">
+		<h3>{{ course.name }}</h3>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col s12">
+		<div>
+			{{ course.description }}
+		</div>
+		<div>
+			<p>{{ course.tags | join(', ') }}</p>
+		</div>
+  </div>
+</div>
+
+
+<div class="row">
+	<div class="col s12">
+	
+	{% if course.assignments | count > 0 %}
+	 <table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<body>
+{% for assignment in course.assignments %}
+				<tr>
+					<td>
+						<a href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
+					</td>
+		<td>
+			{{ assignment.description }}
+		</td>
+				</tr>
+{% endfor %}
+			</body>
+		</table>
+		{% endif %}
+
+  </div>
+</div>
+{% endblock %}

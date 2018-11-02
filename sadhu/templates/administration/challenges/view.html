@@ -1,0 +1,59 @@
+{% extends '/administration/challenges/index.html' %}
+{% import '/base/error-handler.html' as eh %}
+
+{% block breadcrumbs %}
+{{ super() }}
+<a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}" class="breadcrumb">{{ challenge.name }}</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col s12">
+		<h3>{{ challenge.name }}</h3>
+
+		<h5>Description</h5>
+		<div>
+			{{ challenge.description }}
+		</div>
+
+		<h5>Problem Statement</h5>
+		<div>
+			{{ challenge.problem_statement }}
+		</div>
+
+		<h5>Input Format</h5>
+		<div>
+			{{ challenge.input_format if challenge.input_format and challenge.input_format | count > 0 else '-' }}
+		</div>
+
+
+		<h5>Constrains</h5>
+		<div>
+			{{ challenge.constrains if challenge.constrains and challenge.constrains | count > 0 else '-'}}
+		</div>
+
+		<h5>Output Format</h5>
+		<div>
+			{{ challenge.output_format }}
+		</div>
+
+		<h5>Score</h5>
+		<div>
+			{{ challenge.score }}
+		</div>
+
+		<h5>Tags</h5>
+		<div>
+			{{ challenge.tags | join(', ') }}
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col s12">
+    <p>
+    Test Case <a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+    </p>
+    Test Cass:
+  </div>
+</div>
+{% endblock %}

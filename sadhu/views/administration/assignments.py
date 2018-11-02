@@ -54,27 +54,29 @@ def create():
                             assignment_id=assignment.id))
 
 
-@module.route('/<assignment_id>/add-questions', methods=['GET', 'POST'])
+@module.route('/<assignment_id>/add-challenges', methods=['GET', 'POST'])
 @acl.allows.requires(acl.is_lecturer)
-def add_question(assignment_id):
+def add_challenge(assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
     
-    questions = models.Question.objects()
-    choices = [(str(q.id), q.name) for q in questions]
-    form = forms.assignments.QuestionAddingForm()
-    form.questions.choices = choices
+    challenges = models.Challenge.objects()
+    choices = [(str(q.id), q.name) for q in challenges \
+            if q not in assignment.challenges]
+    form = forms.assignments.ChallengeAddingForm()
+    form.challenges.choices = choices
 
     if not form.validate_on_submit():
         return render_template('/administration/assignments/view.html',
                                assignment=assignment,
                                form=form)
-    question_ids = form.questions.data.copy()
+    challenge_ids = form.challenges.data.copy()
 
-    print('\n\nqids', question_ids)
-    for question_id in question_ids:
-        print('\n\nqid', question_id)
-        question = models.Question.objects.get(id=question_id)
-        assignment.questions.append(question)
+    for challenge_id in challenge_ids:
+        challenge = models.Challenge.objects.get(id=challenge_id)
+        if challenge in assignment.challenges:
+            continue
+
+        assignment.challenges.append(challenge)
 
     assignment.save()
     return redirect(url_for('administration.assignments.view',
@@ -83,12 +85,14 @@ def add_question(assignment_id):
 @module.route('/<assignment_id>')
 @acl.allows.requires(acl.is_lecturer)
 def view(assignment_id):
-    questions = models.Question.objects()
-    choices = [(str(q.id), q.name) for q in questions]
-    form = forms.assignments.QuestionAddingForm()
-    form.questions.choices = choices
-
     assignment = models.Assignment.objects.get(id=assignment_id)
+    challenges = models.Challenge.objects()
+
+    choices = [(str(q.id), q.name) for q in challenges \
+            if q not in assignment.challenges]
+
+    form = forms.assignments.ChallengeAddingForm()
+    form.challenges.choices = choices
 
     return render_template('/administration/assignments/view.html',
                            assignment=assignment,

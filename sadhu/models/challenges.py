@@ -4,9 +4,14 @@ import datetime
 from .users import User
 
 
-class Question(me.Document):
+class Challenge(me.Document):
     name = me.StringField(required=True)
     description = me.StringField(required=True)
+    problem_statement = me.StringField(required=True)
+    input_format = me.StringField()
+    output_format = me.StringField()
+    constraints = me.StringField(required=True)
+
     score = me.IntField(required=True, default=0)
     tags = me.ListField(me.StringField(required=True))
 
@@ -22,5 +27,5 @@ class Question(me.Document):
                               dbref=True,
                               required=True))
 
-    meta = {'collection': 'questions'}
+    meta = {'collection': 'challenges'}
 

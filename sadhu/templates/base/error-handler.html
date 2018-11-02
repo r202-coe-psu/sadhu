@@ -7,6 +7,10 @@
 {%- endmacro %}
 
 {% macro get_error_messages(errors) -%}
-{{ errors | join(', ') }}
+	{% if errors %}
+  <div class="red lighten-5 red-text text-darken-4">
+    {{ ', '.join(errors) }}
+  </div>
+  {% endif %}
 {%- endmacro %}
 
