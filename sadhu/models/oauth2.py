@@ -14,7 +14,7 @@ class OAuth2Token(me.Document):
     # refresh_token or access_token_secret
     refresh_token = me.StringField()
     expires = me.DateTimeField(required=True,
-                               default=datetime.datetime.utcnow)
+                               default=datetime.datetime.now)
 
     meta = {'collection': 'oauth2_tokens'}
 

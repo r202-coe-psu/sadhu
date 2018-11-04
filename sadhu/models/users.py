@@ -15,9 +15,9 @@ class User(me.Document, UserMixin):
     roles = me.ListField(me.StringField(), default=['user'])
 
     created_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.utcnow)
+                                    default=datetime.datetime.now)
     updated_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.utcnow,
+                                    default=datetime.datetime.now,
                                     auto_now=True)
 
     resources = me.DictField()

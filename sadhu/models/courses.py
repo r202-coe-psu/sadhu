@@ -8,9 +8,9 @@ class Course(me.Document):
     tags = me.ListField(me.StringField(required=True))
 
     created_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.utcnow)
+                                    default=datetime.datetime.now)
     updated_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.utcnow,
+                                    default=datetime.datetime.now,
                                     auto_now=True)
 
     assignments = me.ListField(me.ReferenceField('Assignment', dbref=True))

@@ -1,10 +1,14 @@
 
 from . import site
 from . import accounts
-from . import administration
 from . import dashboard
-from . import admin
+from . import courses
+from . import classes
+from . import assignments
+from . import challenges
 
+from . import admin
+from . import administration
 
 def get_subblueprints(views=[]):
     blueprints = []
@@ -25,6 +29,10 @@ def register_blueprint(app):
     blueprints = get_subblueprints([site,
                                     accounts,
                                     dashboard,
+                                    courses,
+                                    classes,
+                                    assignments,
+                                    challenges,
                                     administration
                                     ])
 

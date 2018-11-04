@@ -4,9 +4,32 @@ from wtforms import validators
 from wtforms import widgets
 from wtforms.fields import html5
 
+import datetime
+
 from .fields import TagListField
 
 from flask_wtf import FlaskForm
+
+class AssignmentTimeForm(FlaskForm):
+    started_date = fields.DateField('Started Date',
+            format='%d-%m-%Y',
+            default=datetime.datetime.now()
+            )
+    started_time = fields.TimeField('Started Time',
+            format='%H:%M',
+            default=datetime.datetime.now()
+            )
+
+    ended_date = fields.DateField('Ended Data',
+            format='%d-%m-%Y',
+            default=datetime.datetime.now()
+            )
+    ended_time = fields.TimeField('Ended Time',
+            format='%H:%M',
+            default=datetime.datetime.now()
+            )
+
+
 
 class ChallengeAddingForm(FlaskForm):
     challenges = fields.SelectMultipleField('Challenges')

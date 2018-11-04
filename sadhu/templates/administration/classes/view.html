@@ -46,7 +46,34 @@
 
 <div class="row">
 	<div class="col s12">
-	
+		<h5>Assignments</h5>
+		<table>
+			<thead>
+				<tr>
+						<th>Name</th>
+						<th>Challenges</th>
+						<th>Scores</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+						<th>Operation</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for assignment in class_.course.assignments %}
+					<tr>{% set ass_time=class_.get_assignment_schedule(assignment) %}
+					<td>{{ assignment.name }}</td>
+					<td>{{ assignment.challenges | count }}</td>
+					<td>{{ assignment.score }}</td>
+					<td>{{ ass_time.started_date if ass_time else '-' }}</td>
+					<td>{{ ass_time.ended_date if ass_time else '-' }}</td>
+					<td>
+						<a href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}">set time</a>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+            	
   </div>
 </div>
 {% endblock %}

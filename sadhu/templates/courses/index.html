@@ -1,0 +1,49 @@
+{% extends '/base/default-dashboard.html' %}
+
+{% block breadcrumbs %}
+<a href="{{ url_for('courses.index') }}" class="breadcrumb">Courses</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col s12">
+    <h3>Courses</h3>
+		<div>
+			{#
+      <a href="{{ url_for('administration.courses.create') }}" class="btn-floating waves-effect waves-light tooltipped red" data-position="bottom" data-tooltip="Create assignment"><i class="material-icons">add</i></a>
+      <a href="{{ url_for('administration.assignments.index') }}" class="btn-floating waves-effect waves-light tooltipped blue" data-position="bottom" data-tooltip="Assignment list"><i class="material-icons">list</i></a>
+			<a href="{{ url_for('administration.challenges.index') }}" class="btn-floating waves-effect waves-light tooltipped green" data-position="bottom" data-tooltip="Question list"><i class="material-icons">list</i></a>
+			#}
+    </div>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col s12">
+	{% if courses %}
+	 <table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<body>
+{% for course in courses %}
+				<tr>
+					<td>
+						<a href="{{ url_for('courses.view', course_id=course.id) }}">{{ course.name }}</a>
+					</td>
+		<td>
+			{{ course.description }}
+		</td>
+				</tr>
+{% endfor %}
+			</body>
+		</table>
+		{% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

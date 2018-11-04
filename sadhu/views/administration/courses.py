@@ -38,7 +38,7 @@ def create():
     course.save()
     return redirect(url_for('administration.courses.index'))
 
-@module.route('/view/<course_id>')
+@module.route('/<course_id>')
 @acl.allows.requires(acl.is_lecturer)
 def view(course_id):
     course = models.Course.objects.get(id=course_id)

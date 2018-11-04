@@ -10,6 +10,7 @@
   "dependencies": {
     "google-material-design-icons": "^1.0.0",
     "jquery": "^3.3.1",
+    "material-datetime-picker": "^2.4.0",
     "materialize-css": "^1.0.0-rc.2"
   },
   "devDependencies": {}

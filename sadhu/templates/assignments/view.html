@@ -1,0 +1,88 @@
+{% extends '/administration/assignments/index.html' %}
+{% import '/base/error-handler.html' as eh %}
+
+{% block additional_js %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('select').formSelect();
+		});
+	</script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col s12">
+		<h3>{{ assignment.name }}</h3>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col s12">
+		<div>
+			<p>course <a href="{{ url_for('administration.courses.view', course_id=assignment.course.id) }}">{{ assignment.course.name }}</a></p>
+		</div>
+		<div>
+			{{ assignment.description }}
+		</div>
+		<div>
+			Score: {{ assignment.score }}
+		</div>
+		<div>
+			<p>{{ assignment.tags | join(', ') }}</p>
+		</div>
+  </div>
+</div>
+
+<div class="row">
+	<form method="POST" action="{{ url_for('administration.assignments.add_challenge', assignment_id=assignment.id) }}">
+		<div class="col s4">
+			{{ form.csrf_token }}
+      {{ form.challenges.label }}
+			{{ form.challenges(class_=eh.get_validate_class(form.challenges.errors)) }}
+			{% if form.challenges.errors %}
+			<div class="red lighten-5 red-text text-darken-4">
+				{{ ', '.join(form.challenges.errors) }}
+			</div>
+			{% endif %}
+		</div>
+		<div class="col s2">
+			<button type="submit" class="btn-floating btn-small waves-effect waves-light red"><i class="material-icons">add</i></button>
+		</div>
+	</form>
+</div>
+
+<div class="row">
+	<div class="col s12">
+	
+	{% if assignment.challenges | count > 0 %}
+	 <table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Score</th>
+				</tr>
+			</thead>
+			<body>
+{% for challenge in assignment.challenges %}
+				<tr>
+					<td>
+						<a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}">{{ challenge.name }}</a>
+					</td>
+					<td>
+						{{ challenge.description }}
+					</td>
+					<td>
+						{{ challenge.score }}
+					</td>
+				</tr>
+{% endfor %}
+			</body>
+		</table>
+		{% endif %}
+
+  </div>
+</div>
+
+
+{% endblock %}

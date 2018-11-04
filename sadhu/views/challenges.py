@@ -9,7 +9,7 @@ from sadhu import acl
 from sadhu import forms
 from sadhu import models
 
-module = Blueprint('administration.challenges',
+module = Blueprint('challenges',
                    __name__,
                    url_prefix='/challenges',
                    )
@@ -25,22 +25,22 @@ def index():
                            challenges=challenges)
 
 
-@module.route('/create', methods=['GET', 'POST'])
-def create():
-    form = forms.challenges.ChallengeForm(request.form)
-    print(form.data)
-    if not form.validate_on_submit():
-        print(form.data)
-        return render_template('/administration/challenges/create.html',
-                               form=form)
-    data = form.data.copy()
-    data.pop('csrf_token')
-    challenge = models.Challenge(**data)
-    challenge.owner = current_user._get_current_object()
-    challenge.save()
+# @module.route('/create', methods=['GET', 'POST'])
+# def create():
+#     form = forms.challenges.ChallengeForm(request.form)
+#     print(form.data)
+#     if not form.validate_on_submit():
+#         print(form.data)
+#         return render_template('/administration/challenges/create.html',
+#                                form=form)
+#     data = form.data.copy()
+#     data.pop('csrf_token')
+#     challenge = models.Challenge(**data)
+#     challenge.owner = current_user._get_current_object()
+#     challenge.save()
 
-    return redirect(url_for('administration.challenges.view',
-                            challenge_id=challenge.id))
+#     return redirect(url_for('administration.challenges.view',
+#                             challenge_id=challenge.id))
 
 @module.route('/<challenge_id>/add-testcase', methods=['GET', 'POST'])
 def add_testcase():

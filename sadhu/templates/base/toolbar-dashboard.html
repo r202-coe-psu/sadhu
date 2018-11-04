@@ -31,11 +31,13 @@
     </li>
     #}
 
-     <li><a href="{{ url_for('administration.courses.index') }}"><i class="material-icons">subject</i>Course</a></li>
+		<li><a href="{{ url_for('administration.courses.index') }}"><i class="material-icons">subject</i>Course</a></li>
     <li><a href="{{ url_for('administration.assignments.index') }}"><i class="material-icons">assignment</i>Assignment</a></li>
     <li><a href="{{ url_for('administration.challenges.index') }}"><i class="material-icons">question_answer</i>Challenge</a></li>
      <li><a href="{{ url_for('administration.classes.index') }}"><i class="material-icons">class</i>Class</a></li>
-    {% endif %}
+		{% else %}
+		<li><a href="{{ url_for('courses.index') }}"><i class="material-icons">subject</i>Course</a></li>
+		{% endif %}
 
     {% if current_user.has_roles(['admin']) %}
     <li>
