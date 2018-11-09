@@ -1,21 +1,21 @@
 {% extends '/administration/challenges/index.html' %}
-{% import '/base/error-handler.html' as eh %}
+{% import '/base/html-renderer.html' as renderer %}
 
 {% block breadcrumbs %}
 {{ super() }}
-<a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}" class="breadcrumb">{{ challenge.name }}</a>
+<a href="{{ url_for('challenges.view', challenge_id=challenge.id) }}" class="breadcrumb">{{ challenge.name }}</a>
 {% endblock %}
 
 {% block content %}
 <div class="row">
   <div class="col s12">
 		<h3>{{ challenge.name }}</h3>
-
+		{#
 		<h5>Description</h5>
 		<div>
 			{{ challenge.description }}
 		</div>
-
+		#}
 		<h5>Problem Statement</h5>
 		<div>
 			{{ challenge.problem_statement }}
@@ -49,11 +49,46 @@
   </div>
 </div>
 <div class="row">
-  <div class="col s12">
-    <p>
-    Test Case <a class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
-    </p>
-    Test Cass:
+	<div class="col s12">
+		<form action="{{ url_for('challenges.submit_solution', challenge_id=challenge.id, class_id=request.args.get('class_id')) }}" enctype="multipart/form-data" method="POST">
+			{{ form.csrf_token }}
+			<div class="row">
+				<div class="col s12">
+					{{ renderer.render_fileinput(form.code) }}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12">
+					<button name="submit" type="submit" class="waves-effect waves-light btn">Submit</button>
+				</div>
+			</div>
+		</form>
   </div>
 </div>
+<div class="row">
+  <div class="col s12">
+    {% if solutions %}
+		<table>
+        <thead>
+          <tr>
+              <th>Filename</th>
+              <th>Submited Date</th>
+              <th>Score</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            {% for solution in solutions %}
+              <td>{{ solution.code.filename }}</td>
+              <td>{{ solution.submitted_date }}</td>
+              <td></td>
+            {% endfor %}
+					</tr>
+        </tbody>
+		 </table>
+	 {% endif %}
+	</div>
+</div>
+
 {% endblock %}

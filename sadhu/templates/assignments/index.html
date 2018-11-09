@@ -1,7 +1,7 @@
 {% extends '/base/default-dashboard.html' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.assignments.index') }}" class="breadcrumb">Assignments</a>
+<a href="{{ url_for('assignments.index', assignment_id=assignment.id) }}" class="breadcrumb">Assignments</a>
 {% endblock %}
 
 {% block content %}

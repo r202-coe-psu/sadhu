@@ -21,7 +21,7 @@ def index():
     challenges = models.Challenge.objects(
             owner=current_user._get_current_object())
     # print('q', challenges)
-    return render_template('/administration/challenges/index.html',
+    return render_template('/challenges/index.html',
                            challenges=challenges)
 
 
@@ -42,21 +42,53 @@ def index():
 #     return redirect(url_for('administration.challenges.view',
 #                             challenge_id=challenge.id))
 
-@module.route('/<challenge_id>/add-testcase', methods=['GET', 'POST'])
-def add_testcase():
-    challenge = models.Challenge.objects.get(id=challenge_id)
-    form = forms.challenges.TestCaseForm(request.form)
+# @module.route('/<challenge_id>/add-testcase', methods=['GET', 'POST'])
+# def add_testcase():
+#     challenge = models.Challenge.objects.get(id=challenge_id)
+#     form = forms.challenges.TestCaseForm(request.form)
 
-    if not form.validate_on_submit():
-        return redirect(url_for('administration.challenges.add_testcase',
-                                challenge_id=challenge.id))
+#     if not form.validate_on_submit():
+#         return redirect(url_for('administration.challenges.add_testcase',
+#                                 challenge_id=challenge.id))
 
-    return redirect(url_for('administration.challenges.view',
-                            challenge_id=challenge.id))
+#     return redirect(url_for('administration.challenges.view',
+#                             challenge_id=challenge.id))
 
 
 @module.route('/<challenge_id>')
 def view(challenge_id):
+    class_ = models.Class.objects.get(id=request.args.get('class_id', None))
     challenge = models.Challenge.objects.get(id=challenge_id)
-    return render_template('/administration/challenges/view.html',
-                           challenge=challenge)
+
+    solutions = models.Solution.objects(
+            user=current_user._get_current_object(),
+            enrolled_class=class_,
+            challenge=challenge)
+
+    print('sol', solutions)
+    form = forms.challenges.Solution()
+    return render_template('/challenges/view.html',
+                           challenge=challenge,
+                           solutions=solutions,
+                           form=form)
+
+@module.route('/<challenge_id>/submit-solution', methods=['GET', 'POST'])
+def submit_solution(challenge_id):
+    class_ = models.Class.objects.get(id=request.args.get('class_id', None))
+    challenge = models.Challenge.objects.get(id=challenge_id)
+    form = forms.challenges.Solution()
+    if not form.validate_on_submit():
+        return render_template('/challenges/view.html',
+                               challenge=challenge,
+                               form=form)
+
+    solution = models.Solution(user=current_user._get_current_object(),
+                               enrolled_class=class_,
+                               challenge=challenge
+                               )
+    solution.code.put(form.code.data,
+                      filename=form.code.data.filename)
+    solution.save()
+    return redirect(url_for('challenges.view',
+                            challenge_id=challenge.id,
+                            class_id=class_.id))

@@ -6,7 +6,7 @@ from wtforms.fields import html5
 
 from .fields import TagListField
 
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, file
 
 
 class TestCase(Form):
@@ -15,6 +15,11 @@ class TestCase(Form):
 
 class TestCase(FlaskForm):
     test_cases = fields.FieldList(fields.FormField(TestCase))
+
+class Solution(FlaskForm):
+    code = file.FileField('File',
+            validators=[file.FileRequired()]
+            )
 
 class ChallengeForm(FlaskForm):
     name = fields.StringField('Name',
