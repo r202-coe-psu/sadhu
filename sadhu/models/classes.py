@@ -2,8 +2,8 @@ import mongoengine as me
 import datetime
 
 class Enrollment(me.Document):
-    user = me.ReferenceField('User', dbref=True)
-    enrolled_class = me.ReferenceField('Class', dbref=True)
+    user = me.ReferenceField('User', dbref=True, required=True)
+    enrolled_class = me.ReferenceField('Class', dbref=True, required=True)
     enrolled_date = me.DateTimeField(required=True,
                                      default=datetime.datetime.now)
     

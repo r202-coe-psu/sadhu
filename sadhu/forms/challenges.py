@@ -9,12 +9,12 @@ from .fields import TagListField
 from flask_wtf import FlaskForm, file
 
 
-class TestCase(Form):
-    input = fields.FileField()
-    output = fields.FileField()
+class TestCaseForm(FlaskForm):
+    input_file = fields.FileField('Input File')
+    output_file = fields.FileField('Output File',
+            validators=[file.FileRequired()])
+    public = fields.BooleanField('Public', default=False)
 
-class TestCase(FlaskForm):
-    test_cases = fields.FieldList(fields.FormField(TestCase))
 
 class Solution(FlaskForm):
     code = file.FileField('File',

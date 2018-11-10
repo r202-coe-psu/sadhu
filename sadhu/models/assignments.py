@@ -22,7 +22,10 @@ class Assignment(me.Document):
                                     default=datetime.datetime.now,
                                     auto_now=True)
 
-    challenges = me.ListField(me.ReferenceField('Challenge', db_ref=True))
+    challenges = me.ListField(
+            me.ReferenceField('Challenge',
+                              db_ref=True,
+                              required=True))
 
     owner = me.ReferenceField('User', db_ref=True, required=True)
     contributors = me.ListField(

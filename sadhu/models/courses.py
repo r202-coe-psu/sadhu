@@ -13,7 +13,8 @@ class Course(me.Document):
                                     default=datetime.datetime.now,
                                     auto_now=True)
 
-    assignments = me.ListField(me.ReferenceField('Assignment', dbref=True))
+    assignments = me.ListField(
+            me.ReferenceField('Assignment', dbref=True, requiree=True))
 
     owner = me.ReferenceField('User', dbref=True, required=True)
     contributors = me.ListField(me.ReferenceField('User',

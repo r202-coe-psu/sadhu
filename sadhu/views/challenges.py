@@ -98,7 +98,8 @@ def submit_solution(challenge_id):
                                challenge=challenge
                                )
     solution.code.put(form.code.data,
-                      filename=form.code.data.filename)
+                      filename=form.code.data.filename,
+                      content_type=form.code.data.content_type)
     solution.save()
     return redirect(url_for('challenges.view',
                             challenge_id=challenge.id,

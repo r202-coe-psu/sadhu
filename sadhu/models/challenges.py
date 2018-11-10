@@ -24,6 +24,22 @@ class Solution(me.Document):
     executed_date = me.DateTimeField()
     meta = {'collection': 'solutions'}
 
+
+class TestCase(me.Document):
+    input_file = me.FileField()
+    output_file = me.FileField(required=True)
+    public = me.BooleanField(required=True, default=False)
+
+    challenge = me.ReferenceField('Challenge', dbref=True, required=True)
+    owner = me.ReferenceField('User', dbref=True, required=True)
+    created_date = me.DateTimeField(required=True,
+                                    default=datetime.datetime.now)
+    updated_date = me.DateTimeField(required=True,
+                                    default=datetime.datetime.now,
+                                    auto_now=True)
+
+    meta = {'collection': 'test_cases'}
+
 class Challenge(me.Document):
     name = me.StringField(required=True)
     description = me.StringField(required=True)
@@ -34,6 +50,11 @@ class Challenge(me.Document):
 
     score = me.IntField(required=True, default=0)
     tags = me.ListField(me.StringField(required=True))
+
+    test_cases = me.ListField(
+            me.ReferenceField('TestCase',
+                              dbref=True,
+                              required=True))
 
     created_date = me.DateTimeField(required=True,
                                     default=datetime.datetime.now)
