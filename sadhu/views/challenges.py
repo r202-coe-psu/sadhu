@@ -3,7 +3,7 @@ from flask import (Blueprint,
                    request,
                    redirect,
                    url_for)
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from sadhu import acl
 from sadhu import forms
@@ -16,13 +16,20 @@ module = Blueprint('challenges',
 
 
 @module.route('/')
-@acl.allows.requires(acl.is_lecturer)
+@login_required
 def index():
-    challenges = models.Challenge.objects(
-            owner=current_user._get_current_object())
+    class_ = None
+    if request.args.get('class_id', None):
+        class_ = models.Class.objects(
+                id=request.args.get('class_id')).first()
+
+    challenges = []
+    for assignment in class_.course.assignments:
+        challenges.extend(assignment.challenges)
     # print('q', challenges)
     return render_template('/challenges/index.html',
-                           challenges=challenges)
+                           challenges=challenges,
+                           class_=class_)
 
 
 # @module.route('/create', methods=['GET', 'POST'])
@@ -56,8 +63,12 @@ def index():
 
 
 @module.route('/<challenge_id>')
+@login_required
 def view(challenge_id):
-    class_ = models.Class.objects.get(id=request.args.get('class_id', None))
+    class_ = None
+    if request.args.get('class_id', None):
+        class_ = models.Class.objects(
+                id=request.args.get('class_id')).first()
     challenge = models.Challenge.objects.get(id=challenge_id)
 
     solutions = models.Solution.objects(
@@ -65,12 +76,12 @@ def view(challenge_id):
             enrolled_class=class_,
             challenge=challenge)
 
-    print('sol', solutions)
     form = forms.challenges.Solution()
     return render_template('/challenges/view.html',
                            challenge=challenge,
                            solutions=solutions,
                            form=form)
+
 
 @module.route('/<challenge_id>/submit-solution', methods=['GET', 'POST'])
 def submit_solution(challenge_id):

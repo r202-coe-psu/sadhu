@@ -1,7 +1,7 @@
 {% extends '/base/default-dashboard.html' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('assignments.index', assignment_id=assignment.id) }}" class="breadcrumb">Assignments</a>
+<a href="{{ url_for('assignments.index', assignment_id=assignment.id, **request.args.to_dict()) }}" class="breadcrumb">Assignments</a>
 {% endblock %}
 
 {% block content %}
@@ -9,8 +9,8 @@
   <div class="col s12">
     <h3>Assignments</h3>
     <div>
-      <a href="{{ url_for('administration.assignments.create') }}" class="btn-floating waves-effect waves-light tooltipped red" data-position="bottom" data-tooltip="Create assignment"><i class="material-icons">add</i></a>
-      <a href="{{ url_for('administration.assignments.index') }}" class="btn-floating waves-effect waves-light tooltipped green" data-position="bottom" data-tooltip="Question list"><i class="material-icons">list</i></a>
+      <a href="{{ url_for('assignments.create') }}" class="btn-floating waves-effect waves-light tooltipped red" data-position="bottom" data-tooltip="Create assignment"><i class="material-icons">add</i></a>
+      <a href="{{ url_for('assignments.index') }}" class="btn-floating waves-effect waves-light tooltipped green" data-position="bottom" data-tooltip="Question list"><i class="material-icons">list</i></a>
     </div>
   </div>
 </div>
@@ -30,7 +30,7 @@
 {% for assignment in assignments %}
 				<tr>
 					<td>
-						<a href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
+						<a href="{{ url_for('assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
 					</td>
 					<td>
 						{{ assignment.description }}

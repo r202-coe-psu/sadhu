@@ -1,16 +1,13 @@
 {% extends '/base/default-dashboard.html' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.challenges.index') }}" class="breadcrumb">Challenges</a>
+<a href="{{ url_for('challenges.index', **request.args.to_dict()) }}" class="breadcrumb">Challenges</a>
 {% endblock %}
 
 {% block content %}
 <div class="row">
   <div class="col s12">
-    <h3>Challenges</h3>
-    <div>
-      <a href="{{ url_for('administration.challenges.create') }}" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
-    </div>
+    <h3>Challenges for {{ class_.name }}</h3>
   </div>
 </div>
 
@@ -29,7 +26,7 @@
   {% for challenge in challenges %}
           <tr>
             <td>
-              <a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}">{{ challenge.name }}</a>
+              <a href="{{ url_for('challenges.view', challenge_id=challenge.id, **request.args.to_dict()) }}">{{ challenge.name }}</a>
             </td>
             <td>
                 {{challenge.score}}

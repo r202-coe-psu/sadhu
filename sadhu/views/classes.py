@@ -18,9 +18,10 @@ module = Blueprint('classes',
 @module.route('/')
 @login_required
 def index():
-    classes = models.Class.objects(owner=current_user._get_current_object())
+    enrollments = models.Enrollment.objects(
+            user=current_user._get_current_object())
     return render_template('/classes/index.html',
-                           classes=classes)
+                           enrollments=enrollments)
 
 @module.route('/<class_id>')
 @login_required

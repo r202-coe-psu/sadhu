@@ -42,7 +42,7 @@
 					<th>Name</th>
 					<th>Description</th>
 					<th>Score</th>
-					<th>Operation</th>
+					<th>Submitted</th>
 				</tr>
 			</thead>
 			<body>
@@ -57,7 +57,8 @@
 					<td>
 						{{ challenge.score }}
 					</td>
-					<td>
+          <td>
+            {{ 'Submitted' if challenge.get_solutions() else 'Waiting' }}
 					</td>
 				</tr>
 {% endfor %}

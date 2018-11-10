@@ -22,7 +22,8 @@
 
 <div class="row">
 	<div class="col s12">
-		<h5>Class</h5>
+    <h5>Class</h5>
+    {% set enrolled_class = enrollments[0] if enrollments | count > 0 else None %}
 		{% if classes %}
 			<table>
 				<tbody>
@@ -34,7 +35,7 @@
 						<td>
 							{% if enrollments[loop.index] %}
 								<a href="{{ url_for('classes.enroll', class_id=class_.id) }}">enroll</a>
-							{% else %}
+              {% else %}
 								enrolled
 							{% endif %}
 						</td>
@@ -56,13 +57,13 @@
 				<tr>
 					<th>Name</th>
 					<th>Description</th>
-				</tr>
+				</tr>enrollment
 			</thead>
 			<body>
 {% for assignment in course.assignments %}
 				<tr>
-					<td>
-						<a href="{{ url_for('assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
+          <td>
+            <a href="{{ url_for('assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
 					</td>
 					<td>
 						{{ assignment.description }}

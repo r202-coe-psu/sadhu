@@ -49,3 +49,5 @@ class Challenge(me.Document):
 
     meta = {'collection': 'challenges'}
 
+    def get_solutions(self):
+        return Solution.objects(challenge=self).first()

@@ -1,24 +1,20 @@
 {% extends '/base/default-dashboard.html' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.classes.index') }}" class="breadcrumb">Classes</a>
+<a href="{{ url_for('classes.index') }}" class="breadcrumb">Classes</a>
 {% endblock %}
 
 {% block content %}
 <div class="row">
   <div class="col s12">
-    <h3>Classes</h3>
-    <div>
-      <a href="{{ url_for('administration.classes.create') }}" class="btn-floating waves-effect waves-light tooltipped red" data-position="bottom" data-tooltip="Create assignment"><i class="material-icons">add</i></a>
-      <a href="{{ url_for('administration.courses.index') }}" class="btn-floating waves-effect waves-light tooltipped blue" data-position="bottom" data-tooltip="Courses list"><i class="material-icons">list</i></a>
-    </div>
+    <h3>Enrolled Classes</h3>
   </div>
 </div>
 
 <div class="row">
 	<div class="col s12">
 
-	{% if classes %}
+	{% if enrollments %}
 	 <table>
 			<thead>
 				<tr>
@@ -27,13 +23,13 @@
 				</tr>
 			</thead>
 			<body>
-{% for class_ in classes %}
+{% for enrollment in enrollments %}
 				<tr>
 					<td>
-						<a href="{{ url_for('administration.classes.view', class_id=class_.id) }}">{{ class_.name }}</a>
+						<a href="{{ url_for('classes.view', class_id=enrollment.enrolled_class.id) }}">{{ enrollment.enrolled_class.name }}</a>
 					</td>
 					<td>
-						{{ class_.description }}
+						{{ enrollment.enrolled_class.description }}
 					</td>
 				</tr>
 {% endfor %}
