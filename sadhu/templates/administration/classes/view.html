@@ -67,7 +67,7 @@
 					<td>{{ ass_time.started_date if ass_time else '-' }}</td>
 					<td>{{ ass_time.ended_date if ass_time else '-' }}</td>
 					<td>
-						<a href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}">set time</a>
+            <a href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i class="material-icons">access_alarm</i></a>
 					</td>
 				</tr>
 			{% endfor %}

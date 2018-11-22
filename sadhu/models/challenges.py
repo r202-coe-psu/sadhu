@@ -3,6 +3,19 @@ import datetime
 
 from .users import User
 
+class TestResult(me.EmbeddedDocument):
+    test_case = me.ReferenceField('TestCase', required=True, dbref=True)
+    started_date = me.DateTimeField(default=datetime.datetime.now,
+                                    required=True)
+    ended_date = me.DateTimeField(default=datetime.datetime.now,
+                                  required=True)
+
+    expected_result = me.StringField()
+    result = me.StringField()
+    validated = me.BooleanField(default=False, required=True)
+    public = me.BooleanField(default=False, required=True)
+
+
 class Solution(me.Document):
     code = me.FileField(required=True)
     output = me.StringField()
@@ -22,6 +35,7 @@ class Solution(me.Document):
                                       default=datetime.datetime.now)
 
     executed_date = me.DateTimeField()
+    test_results = me.ListField(me.EmbeddedDocumentField('TestResult'))
     meta = {'collection': 'solutions'}
 
 

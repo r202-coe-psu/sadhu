@@ -23,7 +23,6 @@
 <div class="row">
 	<div class="col s12">
     <h5>Class</h5>
-    {% set enrolled_class = enrollments[0] if enrollments | count > 0 else None %}
 		{% if classes %}
 			<table>
 				<tbody>
@@ -33,7 +32,7 @@
 							<a href="{{ url_for('classes.view', class_id=class_.id) }}">{{ class_.name }}</a>
 						</td>
 						<td>
-							{% if enrollments[loop.index] %}
+							{% if class_ not in enrolled_classes %}
 								<a href="{{ url_for('classes.enroll', class_id=class_.id) }}">enroll</a>
               {% else %}
 								enrolled

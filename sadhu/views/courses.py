@@ -38,14 +38,15 @@ def view(course_id):
             (me.Q(limited_enrollment__grantees=current_user.username) |
              me.Q(limited_enrollment__grantees=current_user.email))
             )
-    enrollments = []
+    enrolled_classes = []
     for class_ in classes:
         enrollment = models.Enrollment.objects(
                 user=current_user._get_current_object(),
                 enrolled_class=class_).first()
-        enrollments.append(enrollment)
+        if enrollment:
+            enrolled_classes.append(enrollment.enrolled_class)
     return render_template('/courses/view.html',
                            course=course,
-                           enrollments=enrollments,
+                           enrolled_classes=enrolled_classes,
                            classes=classes)
 
