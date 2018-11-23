@@ -8,17 +8,10 @@ with open(os.path.join(here, 'README.md')) as f:
 with open(os.path.join(here, 'CHANGES.md')) as f:
     CHANGES = f.read()
 
-requires = [
-    'flask',
-    'flask-mongoengine',
-    'flask-login',
-    'flask-allows',
-    'flask-oauthlib',
-    'authomatic',
-    'authlib',
-    'passlib',
-    'bcrypt',
-   ]
+requires = []
+with open('requirements.txt', 'r') as fp:
+    requires = [t.strip() for t in fp.read().split('\n') \
+                if len(t.strip()) > 0]
 
 init = os.path.join(os.path.dirname(__file__), 'sadhu', '__init__.py')
 version_line = list(filter(lambda l: l.startswith('__version__'), open(init)))[0]

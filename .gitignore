@@ -1,6 +1,7 @@
 *.pyc
 *.cfg
 __pycache__
+data
 node_modules
 package-lock.json
 *.egg-*

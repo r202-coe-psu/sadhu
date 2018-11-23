@@ -1,0 +1,10 @@
+flask
+requests
+flask-mongoengine
+flask-login
+flask-allows
+flask-oauthlib
+authomatic
+authlib
+passlib
+bcrypt
