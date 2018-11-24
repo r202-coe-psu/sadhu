@@ -3,5 +3,6 @@
 __pycache__
 data
 node_modules
+deployment
 package-lock.json
 *.egg-*
