@@ -95,7 +95,8 @@ def submit_solution(challenge_id):
 
     solution = models.Solution(user=current_user._get_current_object(),
                                enrolled_class=class_,
-                               challenge=challenge
+                               challenge=challenge,
+                               language=class_.course.languages[0]
                                )
     solution.code.put(form.code.data,
                       filename=form.code.data.filename,

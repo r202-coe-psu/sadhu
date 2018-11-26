@@ -80,13 +80,13 @@
         </thead>
 
         <tbody>
+          {% for solution in solutions %}
           <tr>
-            {% for solution in solutions %}
               <td>{{ solution.code.filename }}</td>
               <td>{{ solution.submitted_date }}</td>
               <td></td>
-            {% endfor %}
 					</tr>
+          {% endfor %}
         </tbody>
 		 </table>
 	 {% endif %}

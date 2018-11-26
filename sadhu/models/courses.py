@@ -23,7 +23,7 @@ class Course(me.Document):
                                                   dbref=True,
                                                   required=True))
 
-    languages = me.ListField(me.StringField(required=True))
+    languages = me.ListField(me.StringField(required=True, choices=LANGUAGE_CHOICES))
 
     meta = {'collection': 'courses'}
 
