@@ -13,7 +13,7 @@
     <header> 
     {% block header %}
       {% include "/base/toolbar.html" %}
-      {% if request.path == url_for('site.index') %}
+      {% if request.path == '/' %}
         {% include "/base/banner.html" %}
       {% else %}
         <div style="padding-top:50px;"></div>
