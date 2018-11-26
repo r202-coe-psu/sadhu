@@ -16,7 +16,7 @@ class Server:
         self.test_runners.start()
 
         models.init_mongoengine(
-                settings.get('MONGODB_DB'))
+                settings)
 
     def run(self):
         self.running = True
