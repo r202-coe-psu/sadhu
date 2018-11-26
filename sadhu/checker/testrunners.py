@@ -5,6 +5,10 @@ import subprocess
 import os
 import datetime
 
+
+import logging
+logger = logging.getLogger(__name__)
+
 class TestResult:
     ouput = ''
     error = ''
@@ -13,10 +17,11 @@ class TestResult:
 
 class Tester:
     def __init__(self, settings):
-        self.directory = '/tmp/'
+        self.directory = settings.get('SADHU_CHECKER_DIRECTORY', '/tmp')
 
     def prepare_file(self, code):
-        filename = self.directory + code.filename
+        filename = '{}/{}'.format(self.directory if self.directory[-1] != '/' \
+                else self.directory[:-1], code.filename)
         data = code.read()
         f = open(filename, 'wb')
         f.write(data)
@@ -30,7 +35,16 @@ class Tester:
         raise 'Validate method not Impremented'
 
     def process(self, solution, test_cases):
+        solution.status = 'process'
+        solution.executed_date = datetime.datetime.now()
+        solution.save()
+
         self.validate(solution, test_cases)
+
+
+        solution.status = 'complete'
+        solution.executed_ended_date = datetime.datetime.now()
+        solution.save()
 
 class CTester(Tester):
     def __init__(self, settings):
@@ -76,7 +90,7 @@ class PythonTester(Tester):
             if not t.input_file:
                 output = subprocess.run(['python', filename], capture_output=True)
             else:
-                print('need input')
+                logger.debug('need input')
 
             if output.returncode == 0:
                 test_result.result = output.stdout.decode()
@@ -95,8 +109,6 @@ class PythonTester(Tester):
             test_result.ended_date = datetime.datetime.now()
             solution.test_results.append(test_result)
         
-        solution.status = 'complete'
-        solution.save()
                 # result.is_error = False if coutput.returncode == 0 else True
                 # result.output = coutput.stdout.decode('utf-8')
                 # result.error = coutput.stderr.decode('utf-8')
@@ -114,25 +126,32 @@ class TestRunner(threading.Thread):
 
         settings = dict()
         self.testers = dict(
-                c=CTester(settings),
-                python=PythonTester(settings)
+                C=CTester(settings),
+                Python=PythonTester(settings)
                 )
 
 
     def process(self, solution):
-        solution.status = 'process'
-        solution.save()
+       
+        tester = self.testers.get(solution.language, None)
+        if not tester:
+            solution.messages = '{} Tester Not Impremented'.format(
+                    solution.language)
+            solution.status = 'Fail'
+            solution.executed_date = datetime.datetime.now()
+            solution.executed_ended_date = datetime.datetime.now()
+            solution.save()
+            return
 
-        tester = self.testers.get('python')
         test_cases = solution.challenge.test_cases
-        result = tester.process(solution, test_cases)
+        tester.process(solution, test_cases)
         
 
     def run(self):
         self.running = True
         while(self.running):
             solution = self.queue.get()
-            print('process solution')
+            logger.debug('process solution')
             self.process(solution)
 
     def stop(self):

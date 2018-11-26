@@ -2,6 +2,8 @@ import mongoengine as me
 import datetime
 
 
+LANGUAGE_CHOICES = ['Python', 'C']
+
 class Course(me.Document):
     name = me.StringField(required=True)
     description = me.StringField(required=True)
@@ -20,6 +22,8 @@ class Course(me.Document):
     contributors = me.ListField(me.ReferenceField('User',
                                                   dbref=True,
                                                   required=True))
+
+    languages = me.ListField(me.StringField(required=True))
 
     meta = {'collection': 'courses'}
 

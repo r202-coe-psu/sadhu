@@ -35,6 +35,8 @@ class Solution(me.Document):
                                       default=datetime.datetime.now)
 
     executed_date = me.DateTimeField()
+    executed_ended_date = me.DateTimeField()
+    language = me.StringField(required=True)
     test_results = me.ListField(me.EmbeddedDocumentField('TestResult'))
     meta = {'collection': 'solutions'}
 
