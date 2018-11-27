@@ -16,6 +16,9 @@ class CourseForm(FlaskForm):
     description = fields.StringField('Description',
             validators=[validators.InputRequired()],
             widget=widgets.TextArea())
+    languages = fields.SelectMultipleField('Languages',
+            validators=[validators.InputRequired()],
+            )
     tags = TagListField('Tags',
             validators=[validators.InputRequired(),
                         validators.Length(min=3)])

@@ -28,7 +28,12 @@ def index():
 @acl.allows.requires(acl.is_lecturer)
 def create():
     form = forms.courses.CourseForm()
+    form.languages.choices = models.LANGUAGE_CHOICES.copy()
     if not form.validate_on_submit():
+        # if not form.languages.data:
+        #     form.languages.choices.insert(0, ('', 'Select Language'))
+        #     form.languages.data = ['']
+        # print('++++', form.languages.choices)
         return render_template('/administration/courses/create.html',
                                form=form)
     data = form.data.copy()

@@ -13,7 +13,7 @@
 
 {% macro render_checkbox(field) -%}
  <label>
-	{{ field() }}
+	{{ field }}
 	<span>{{ field.label.text }}</span>
 </label>
 {%- endmacro %}
@@ -29,4 +29,10 @@
 		<input class="file-path validate" type="text">
 	</div>
 </div>
+{%- endmacro %}
+
+{% macro render_select(field) -%}
+  {{ field }}
+  {{ field.label }}
+  {{ eh.get_error_messages(field.errors) }}
 {%- endmacro %}

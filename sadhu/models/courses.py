@@ -2,7 +2,8 @@ import mongoengine as me
 import datetime
 
 
-LANGUAGE_CHOICES = ['Python', 'C']
+LANGUAGE_CHOICES = [('Python', 'Python'),
+                    ('C', 'C')]
 
 class Course(me.Document):
     name = me.StringField(required=True)

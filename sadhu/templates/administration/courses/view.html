@@ -14,9 +14,12 @@
 		<div>
 			{{ course.description }}
 		</div>
+    <div>
+      for {{ course.languages | join(', ') }}
+    </div>
 		<div>
 			<p>{{ course.tags | join(', ') }}</p>
-		</div>
+    </div>
   </div>
 </div>
 

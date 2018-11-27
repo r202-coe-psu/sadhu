@@ -1,7 +1,7 @@
 from .users import User
 from .oauth2 import OAuth2Token
 from .challenges import Challenge, Solution, TestCase, TestResult
-from .courses import Course
+from .courses import Course, LANGUAGE_CHOICES
 from .classes import Class, Enrollment, LimitedEnrollment, AssignmentTime
 from .assignments import Assignment
 
