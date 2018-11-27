@@ -6,5 +6,6 @@ flask-allows
 flask-oauthlib
 authomatic
 authlib
+loginpass
 passlib
 bcrypt

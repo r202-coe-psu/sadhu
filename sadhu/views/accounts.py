@@ -64,7 +64,6 @@ def login_engpsu():
     response = client.engpsu.authorize_redirect(redirect_uri)
     return response
 
-
 @module.route('/authorized-principal')
 def authorized_principal():
     client = oauth2.oauth2_client
@@ -131,7 +130,7 @@ def authorized_engpsu():
             token_type=token.get('token_type'),
             refresh_token=token.get('refresh_token', None),
             expires=datetime.datetime.utcfromtimestamp(
-                token.get('expires_at'))
+                token.get('expires_in'))
             )
     oauth2token.save()
 
