@@ -80,6 +80,9 @@ class PythonTester(Tester):
     def validate(self, solution, test_cases):
         filename = self.prepare_file(solution.code)
 
+        test_case_len = len(test_cases)
+        pass_tests = 0
+
         for t in test_cases:
             test_result = models.TestResult()
             test_result.started_date = datetime.datetime.now()
@@ -90,7 +93,9 @@ class PythonTester(Tester):
             if not t.input_file:
                 output = subprocess.run(['python', filename], capture_output=True)
             else:
-                logger.debug('need input')
+                input_bstr = t.input_file.read()
+                output = subprocess.run(['python', filename],
+                        stdin=input_bstr.decode('utf-8'), capture_output=True)
 
             if output.returncode == 0:
                 test_result.result = output.stdout.decode()
@@ -105,15 +110,18 @@ class PythonTester(Tester):
                         break
 
                 test_result.validated = is_validate
+                if is_validate:
+                    pass_tests += 1
             
             test_result.ended_date = datetime.datetime.now()
             solution.test_results.append(test_result)
-        
-                # result.is_error = False if coutput.returncode == 0 else True
-                # result.output = coutput.stdout.decode('utf-8')
-                # result.error = coutput.stderr.decode('utf-8')
-                # result.message = coutput.stderr.decode('utf-8')
 
+        if pass_tests == test_case_len:
+            solution.passed = True
+        else:
+            solution.passed = False
+        solution.score = pass_tests/test_case_len * solution.challenge.score
+        solution.save()
         self.remove_file(filename)
 
 
@@ -122,6 +130,7 @@ class TestRunner(threading.Thread):
         super().__init__()
 
         self.queue = queue
+        self.daemon = True
         self.running = False
 
         settings = dict()
@@ -152,7 +161,10 @@ class TestRunner(threading.Thread):
         while(self.running):
             solution = self.queue.get()
             logger.debug('process solution')
-            self.process(solution)
+            try:
+                self.process(solution)
+            except Exception as e:
+                logger.exception(e)
 
     def stop(self):
         self.running = False
@@ -170,4 +182,4 @@ class SolutionController:
             solution.save()
             self.queue.put(solution)
 
-        return solutions.count()
+        return len(solutions)

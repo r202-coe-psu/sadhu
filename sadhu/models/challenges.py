@@ -20,6 +20,9 @@ class Solution(me.Document):
     code = me.FileField(required=True)
     output = me.StringField()
     messages = me.StringField()
+    score = me.FloatField(required=True, default=0)
+    passed = me.BooleanField(required=True, default=False)
+
     status = me.StringField(required=True, default='waiting')
     enrolled_class = me.ReferenceField('Class',
                                        required=True,

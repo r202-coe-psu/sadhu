@@ -31,6 +31,8 @@ class Server:
             if solution_count == 0:
                 time.sleep(10)
             else:
+                logger.debug('got {} solutions to process'.format(
+                    solution_count))
                 time.sleep(1)
 
 

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+SADHU_SETTINGS=$(pwd)/sadhu.cfg sadhu-checker
+

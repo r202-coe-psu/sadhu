@@ -39,6 +39,7 @@ setup(name='sadhu',
       entry_points="""\
       [console_scripts]
       sadhu-web = sadhu.cmd.web:main
+      sadhu-checker = sadhu.cmd.checker:main
 
       """,
       )
