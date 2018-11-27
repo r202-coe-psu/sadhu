@@ -1,2 +1,6 @@
 MONGODB_DB = 'sadhudb'
 SECRET_KEY = 'sadhu-secretkey' # change it when deploy web
+SADHU_CHECKER_DIRECTORY = '/tmp'
+
+GOOGLE_CLIENT_ID = ''
+GOOGLE_CLIENT_SECRET = ''
