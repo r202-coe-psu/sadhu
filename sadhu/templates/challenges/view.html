@@ -75,8 +75,10 @@
           <tr>
               <th>Filename</th>
               <th>Submited Date</th>
-              <th>Validation</th>
+              <th>Status</th>
+              <th>Pass</th>
               <th>Score</th>
+              <th>Operations</th>
           </tr>
         </thead>
 
@@ -85,8 +87,16 @@
           <tr>
               <td>{{ solution.code.filename }}</td>
               <td>{{ solution.submitted_date }}</td>
-              <td></td>
-              <td></td>
+              <td>{{ solution.status }}</td>
+              <td>{{ solution.passed }}</td>
+              <td>{{ solution.score }}</td>
+              <td>
+                {% if solution.status == 'complete' %}
+                  <a href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="material-icons">visibility</i></a>
+                {% else %}
+                  <i class="material-icons">visibility</i>
+                {% endif %}
+              </td>
 					</tr>
           {% endfor %}
         </tbody>

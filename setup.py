@@ -36,10 +36,10 @@ setup(name='sadhu',
       install_requires=requires,
       tests_require=requires,
       test_suite="sadhu",
-      entry_points="""\
-      [console_scripts]
-      sadhu-web = sadhu.cmd.web:main
-      sadhu-checker = sadhu.cmd.checker:main
-
-      """,
+      entry_points={
+          'console_scripts': [
+            'sadhu-web = sadhu.cmd.web:main',
+            'sadhu-checker = sadhu.cmd.checker:main',
+        ]
+      },
       )

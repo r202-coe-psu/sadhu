@@ -1,0 +1,70 @@
+{% extends '/challenges/index.html' %}
+{% import '/base/html-renderer.html' as renderer %}
+
+{% block breadcrumbs %}
+{{ super() }}
+<a href="{{ url_for('challenges.view', challenge_id=solution.challenge.id, **request.args.to_dict()) }}" class="breadcrumb">{{ solution.challenge.name }}</a>
+{% endblock %}
+
+{% block content %}
+{% set challenge = solution.challenge %}
+<div class="row">
+  <div class="col s12">
+		<h3>{{ challenge.name }}</h3>
+		<h5>Problem Statement</h5>
+		<div>
+			{{ challenge.problem_statement }}
+		</div>
+
+		<h5>Score</h5>
+		<div>
+			{{ challenge.score }}
+		</div>
+
+		<h5>Tags</h5>
+		<div>
+			{{ challenge.tags | join(', ') }}
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s12">
+    <ul>
+      <li><b>Filename:</b> {{ solution.code.filename }} </li>
+      <li><b>Submited Date:</b> {{ solution.submitted_date }} </li>
+      <li><b>Status:</b> {{ solution.status }} </li>
+      <li><b>Pass:</b> {{ solution.passed }} </li>
+      <li><b>Score:</b> {{ solution.score }} </li>
+    </ul>
+	</div>
+</div>
+
+<div class="row">
+  <div class="col s12">
+		<h5>Test Result</h5>
+		<table>
+        <thead>
+          <tr>
+              <th>Number</th>
+              <th>Result</th>
+              <th>Validation</th>
+              <th>Run Finished</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for t in solution.test_results %}
+          <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ t.result }}</td>
+              <td>{{ t.validated }}</td>
+              <td>{{ (t.ended_date - t.started_date).total_seconds() }} s</td>
+					</tr>
+          {% endfor %}
+        </tbody>
+		 </table>
+	</div>
+</div>
+
+{% endblock %}

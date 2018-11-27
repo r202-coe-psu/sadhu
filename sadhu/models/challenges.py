@@ -12,6 +12,8 @@ class TestResult(me.EmbeddedDocument):
 
     expected_result = me.StringField()
     result = me.StringField()
+
+    timeout = me.BooleanField(default=False, required=True)
     validated = me.BooleanField(default=False, required=True)
     public = me.BooleanField(default=False, required=True)
 

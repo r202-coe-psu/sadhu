@@ -76,6 +76,7 @@ class CTester(Tester):
 class PythonTester(Tester):
     def __init__(self, settings):
         super().__init__(settings)
+        self.timeout = 60 # time in second
 
     def validate(self, solution, test_cases):
         filename = self.prepare_file(solution.code)
@@ -90,14 +91,26 @@ class PythonTester(Tester):
             test_result.public = t.public
             test_result.expected_result = t.output_file.read().decode()
 
-            if not t.input_file:
-                output = subprocess.run(['python', filename], capture_output=True)
-            else:
-                input_bstr = t.input_file.read()
-                output = subprocess.run(['python', filename],
-                        stdin=input_bstr.decode('utf-8'), capture_output=True)
+            input_str = None
 
-            if output.returncode == 0:
+            if t.input_file:
+                input_str = t.input_file.read().decode('utf-8')
+
+            output = None
+            try:
+                output = subprocess.run(['python', filename],
+                    input=input_str,
+                    timeout=self.timeout,
+                    capture_output=True)
+            except Exception as e:
+                test_result.timeout = True
+
+                test_result.ended_date = datetime.datetime.now()
+                solution.test_results.append(test_result)
+                logger.exception(e)
+                continue
+
+            if output and output.returncode == 0:
                 test_result.result = output.stdout.decode()
 
                 output_data = test_result.result.split('\n')
@@ -112,7 +125,11 @@ class PythonTester(Tester):
                 test_result.validated = is_validate
                 if is_validate:
                     pass_tests += 1
-            
+            else:
+                test_result.result = '{}\n{}'.format(
+                        output.stdout.decode(),
+                        output.stderr.decode())
+
             test_result.ended_date = datetime.datetime.now()
             solution.test_results.append(test_result)
 

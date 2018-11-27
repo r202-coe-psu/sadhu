@@ -6,6 +6,7 @@ from . import courses
 from . import classes
 from . import assignments
 from . import challenges
+from . import solutions
 
 from . import admin
 from . import administration
@@ -33,6 +34,7 @@ def register_blueprint(app):
                                     classes,
                                     assignments,
                                     challenges,
+                                    solutions,
                                     administration
                                     ])
 
