@@ -11,6 +11,11 @@
 {%- endmacro %}
 
 
+{% macro render_textarea(field) -%}
+{{render_field(field, 'materialize-textarea')}}
+{%- endmacro %}
+
+
 {% macro render_checkbox(field) -%}
  <label>
 	{{ field }}

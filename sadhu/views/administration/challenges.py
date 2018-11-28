@@ -56,14 +56,33 @@ def add_testcase(challenge_id):
     test_case = models.TestCase(public=form.public.data,
                                 owner=current_user._get_current_object(),
                                 challenge=challenge)
-    if form.input_file.data:
-        test_case.input_file.put(form.input_file.data,
-                filename=form.input_file.data.filename,
-                content_type=form.input_file.data.content_type)
-    test_case.output_file.put(form.output_file.data,
-            filename=form.output_file.data.filename,
-            content_type=form.output_file.data.content_type)
 
+        
+    if form.input_file.data:
+        if form.is_inputfile.data:
+            test_case.input_file.put(form.input_file.data,
+                    filename=form.input_file.data.filename,
+                    content_type=form.input_file.data.content_type)
+        else:
+            test_case.input_string = form.input_file.data.read()
+
+    if form.output_file.data:
+        if form.is_outputfile.data:
+            test_case.output_file.put(form.output_file.data,
+                    filename=form.output_file.data.filename,
+                    content_type=form.output_file.data.content_type)
+        else:
+            test_case.output_string = form.output_file.data.read()
+
+    if (not test_case.input_string) or len(test_case.input_string) == 0:
+        test_case.input_string = form.input_string.data
+
+    if (not test_case.output_string) or len(test_case.output_string) == 0:
+        test_case.output_string = form.output_string.data
+
+    test_case.is_inputfile = form.is_inputfile.data
+    test_case.is_outputfile = form.is_outputfile.data
+    
     test_case.save()
 
     challenge.test_cases.append(test_case)

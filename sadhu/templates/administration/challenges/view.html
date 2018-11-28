@@ -72,8 +72,8 @@
       <tbody>
         {% for tc in challenge.test_cases %}
         <tr>
-          <td>{{ tc.input_file.filename }}</td>
-          <td>{{ tc.output_file.filename }}</td>
+          <td>{{ tc.input_string }}</td>
+          <td>{{ tc.output_string }}</td>
           <td>{{ tc.public }}</td>
           <td>{{ tc.created_date }}</td>
           <td>X</td>

@@ -8,13 +8,19 @@
     <form method="POST" action="{{ request.path }}" enctype="multipart/form-data">
       {{ form.csrf_token }}
       <div class="row">
-        <div class="col s12">
+        <div class="col s6">
           {{ renderer.render_fileinput(form.input_file) }}
+          {{ renderer.render_checkbox(form.is_inputfile) }}
+          <div class="input-field">
+            {{ renderer.render_textarea(form.input_string) }}
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
+        <div class="col s6">
           {{ renderer.render_fileinput(form.output_file) }}
+          {{ renderer.render_checkbox(form.is_outputfile) }}
+          <div class="input-field">
+            {{ renderer.render_textarea(form.output_string) }}
+          </div>
         </div>
       </div>
       <div class="row">

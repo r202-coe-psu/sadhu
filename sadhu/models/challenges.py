@@ -48,7 +48,13 @@ class Solution(me.Document):
 
 class TestCase(me.Document):
     input_file = me.FileField()
-    output_file = me.FileField(required=True)
+    is_inputfile = me.BooleanField(required=True, default=False)
+    input_string = me.StringField()
+
+    output_file = me.FileField()
+    is_outputfile = me.BooleanField(required=True, default=False)
+    output_string = me.StringField()
+
     public = me.BooleanField(required=True, default=False)
 
     challenge = me.ReferenceField('Challenge', dbref=True, required=True)

@@ -10,9 +10,14 @@ from flask_wtf import FlaskForm, file
 
 
 class TestCaseForm(FlaskForm):
+    input_string = fields.TextAreaField('Input Text')
     input_file = fields.FileField('Input File')
-    output_file = fields.FileField('Output File',
-            validators=[file.FileRequired()])
+    is_inputfile = fields.BooleanField('Is Input File', default=False)
+    
+    output_string = fields.TextAreaField('Output Text')
+    output_file = fields.FileField('Output File')
+    is_outputfile = fields.BooleanField('Is Output File', default=False)
+
     public = fields.BooleanField('Public', default=False)
 
 
