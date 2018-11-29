@@ -19,7 +19,7 @@
 <div class="row">
   <div class="col s12">
     <h3>Create Class</h3>
-    <form method="POST" action="{{ request.path }}">
+    <form method="POST" action="{{ request.url }}">
       {{ form.csrf_token }}
       <div class="row">
         <div class="col s12">
