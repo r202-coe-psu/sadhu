@@ -15,21 +15,14 @@ module = Blueprint('solutions',
                    )
 
 
-# @module.route('/')
-# @login_required
-# def index():
-#     class_ = None
-#     if request.args.get('class_id', None):
-#         class_ = models.Class.objects(
-#                 id=request.args.get('class_id')).first()
-
-#     challenges = []
-#     for assignment in class_.course.assignments:
-#         challenges.extend(assignment.challenges)
-#     # print('q', challenges)
-#     return render_template('/solutions/index.html',
-#                            challenges=challenges,
-#                            class_=class_)
+@module.route('/')
+@login_required
+def index():
+    solutions = models.Solution.objects(
+            user=current_user._get_current_object()).order_by('-id')
+    return render_template('/solutions/index.html',
+                           solutions=solutions,
+                           )
 
 
 # @module.route('/create', methods=['GET', 'POST'])

@@ -26,7 +26,6 @@ def index():
     challenges = []
     for assignment in class_.course.assignments:
         challenges.extend(assignment.challenges)
-    # print('q', challenges)
     return render_template('/challenges/index.html',
                            challenges=challenges,
                            class_=class_)

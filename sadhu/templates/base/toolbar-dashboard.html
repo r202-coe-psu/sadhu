@@ -36,6 +36,7 @@
     <li><a href="{{ url_for('administration.challenges.index') }}"><i class="material-icons">question_answer</i>Challenge</a></li>
     <li><a href="{{ url_for('administration.classes.index') }}"><i class="material-icons">class</i>Class</a></li>
 		{% else %}
+    <li><a href="{{ url_for('solutions.index') }}"><i class="material-icons">question_answer</i>Solution</a></li>
     <li><a href="{{ url_for('classes.index') }}"><i class="material-icons">class</i>Class</a></li>
 		<li><a href="{{ url_for('courses.index') }}"><i class="material-icons">subject</i>Course</a></li>
 		{% endif %}
