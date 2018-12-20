@@ -64,6 +64,29 @@ def handle_authorize_google(remote, token, user_info):
 
     return redirect(url_for('dashboard.index'))
 
+
+def non_verify_auth():
+    id_token = request.args.get('id_token')
+    if request.args.get('code'):
+        token = remote.authorize_access_token(verify=False)
+        if id_token:
+            token['id_token'] = id_token
+    elif id_token:
+        token = {'id_token': id_token}
+    elif request.args.get('oauth_verifier'):
+        # OAuth 1
+        token = remote.authorize_access_token(verify=False)
+    else:
+        # handle failed
+        return handle_authorize(remote, None, None)
+    if 'id_token' in token:
+        nonce = session[nonce_key]
+        user_info = remote.parse_openid(token, nonce)
+    else:
+        user_info = remote.profile(token=token)
+    return handle_authorize(remote, token, user_info)
+
+
 def init_oauth(app):
     oauth2_client.init_app(app,
                            fetch_token=fetch_token,
@@ -72,7 +95,8 @@ def init_oauth(app):
     oauth2_client.register('principal')
     oauth2_client.register('engpsu')
     # oauth2_client.register('google')
-    
+   
+    create_flask_blueprint.auth = non_verify_auth
     google_bp = create_flask_blueprint(
             Google,
             oauth2_client,
