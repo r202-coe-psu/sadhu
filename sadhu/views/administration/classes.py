@@ -25,6 +25,37 @@ def index():
                            classes=classes)
 
 
+@module.route('/<class_id>/edit', methods=['GET', 'POST'])
+@acl.allows.requires(acl.is_lecturer)
+def edit(class_id):
+    courses = models.Course.objects()
+
+    class_ = models.Class.objects.get(id=class_id)
+    form = forms.classes.ClassForm(obj=class_)
+    # le_form = forms.classes.LimitedEnrollmentForm(
+    #         obj=class_.limited_enrollment)
+
+    # form.limited_enrollment = le_form
+    course_choices = [(str(c.id), c.name) for c in courses]
+    form.course.choices = course_choices
+    form.course.data = str(class_.course.id)
+    method_choices = [('email', 'Email'), ('student_id', 'Student ID')]
+    form.limited_enrollment.method.choices = method_choices
+
+    if not form.validate_on_submit():
+        return render_template('/administration/classes/create.html',
+                               form=form)
+    data = form.data.copy()
+    data.pop('csrf_token')
+
+    form.populate_obj(class_)
+    course = models.Course.objects.get(id=form.course.data)
+    class_.course = course
+    class_.save()
+    return redirect(url_for('administration.classes.index'))
+
+
+
 @module.route('/create', methods=['GET', 'POST'])
 @acl.allows.requires(acl.is_lecturer)
 def create():
@@ -41,16 +72,12 @@ def create():
                                form=form)
     data = form.data.copy()
     data.pop('csrf_token')
-    data.pop('limited_enrollment')
+    # data.pop('limited_enrollment')
 
     class_ = models.Class(**data)
+    course = models.Course.objects.get(id=form.course.data)
+    class_.course = course
     class_.owner = current_user._get_current_object()
-    if class_.limited:
-        if class_.limited_enrollment is None:
-            class_.limited_enrollment = models.LimitedEnrollment()
-        class_.limited_enrollment.method = form.limited_enrollment.method.data
-        for grantee in form.limited_enrollment.grantees.data.split('\n'):
-            class_.limited_enrollment.grantees.append(grantee.strip())
     class_.save()
     return redirect(url_for('administration.classes.index'))
 

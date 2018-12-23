@@ -24,6 +24,7 @@
 				<tr>
 					<th>Name</th>
 					<th>Description</th>
+					<th>Operation</th>
 				</tr>
 			</thead>
 			<body>
@@ -34,7 +35,11 @@
 					</td>
 					<td>
 						{{ class_.description }}
+          </td>
+          <td>
+            <a href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="material-icons">edit</i></a>
 					</td>
+          </td>
 				</tr>
 {% endfor %}
 			</body>
