@@ -11,7 +11,7 @@ class TestResult(me.EmbeddedDocument):
                                   required=True)
 
     expected_result = me.StringField()
-    result = me.StringField()
+    output = me.StringField()
 
     timeout = me.BooleanField(default=False, required=True)
     validated = me.BooleanField(default=False, required=True)
@@ -43,6 +43,9 @@ class Solution(me.Document):
     executed_ended_date = me.DateTimeField()
     language = me.StringField(required=True)
     test_results = me.ListField(me.EmbeddedDocumentField('TestResult'))
+
+    metadata = me.DictField()
+
     meta = {'collection': 'solutions'}
 
 

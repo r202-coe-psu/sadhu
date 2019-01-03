@@ -5,6 +5,8 @@ import subprocess
 import os
 import datetime
 
+from pathlib import Path
+
 
 import logging
 logger = logging.getLogger(__name__)
@@ -17,22 +19,37 @@ class TestResult:
 
 class Tester:
     def __init__(self, settings):
-        self.directory = settings.get('SADHU_CHECKER_DIRECTORY', '/tmp')
+        self.timeout = 60 # time in second
+        directory = settings.get('SADHU_CHECKER_DIRECTORY', '/tmp')
+        self.directory = directory if directory[-1] != '/' else directory[:-1]
 
-    def prepare_file(self, code):
-        filename = '{}/{}'.format(self.directory if self.directory[-1] != '/' \
-                else self.directory[:-1], code.filename)
-        data = code.read()
-        f = open(filename, 'wb')
-        f.write(data)
-        f.close()
+    def prepare_file(self, solution):
+        p = Path('{}/{}'.format(self.directory, solution.user.id))
+        if not p.exists():
+            p.mkdir(parents=True, exist_ok=True)
+
+        filename = '{}/{}/{}'.format(self.directory,
+                                     solution.user.id,
+                                     solution.code.filename)
+        with open(filename, 'wb') as f:
+            data = solution.code.read()
+            f.write(data)
+
         return filename
 
     def remove_file(self, filename):
-        os.remove(filename)
+        file_path = Path(filename)
+        if file_path.exists():
+            os.remove(filename)
 
-    def validate(solutuib, test_cases):
-        raise 'Validate method not Impremented'
+    def build_executable_options(self, filename):
+        return [filename]
+
+    def prepair_executable(self, filename):
+        result = dict(executable=filename,
+                      status=True)
+
+        return result
 
     def process(self, solution, test_cases):
         solution.status = 'process'
@@ -46,40 +63,16 @@ class Tester:
         solution.executed_ended_date = datetime.datetime.now()
         solution.save()
 
-class CTester(Tester):
-    def __init__(self, settings):
-        super().__init__(settings)
-
     def validate(self, solution, test_cases):
-        filename = self.prepare_file(solution.code)
-        
+        filename = self.prepare_file(solution)
 
-        result = TestResult()
-        coutput = subprocess.run(['gcc', '-Wall', filename, '-o',
-            filename[:filename.rfind('.')]])
-        if coutput.returncode == 0:
-            output = subprocess.run([filename[:filename.rfind('.')]])
-            result.is_error = True if output.returncode == 0 else False
-            result.output = output.stdout
-            result.error = output.stderr
-        else:
-            result.is_error = True if coutput.returncode == 0 else False
-            result.output = coutput.stdout
-            result.error = coutput.stderr
-            result.message = coutput.stderr
+        result = self.prepair_executable(filename)
+        executable_file = result['executable']
 
-        self.remove_file(filename)
+        solution.metadata['compilation'] = result
 
-        return result
-     
- 
-class PythonTester(Tester):
-    def __init__(self, settings):
-        super().__init__(settings)
-        self.timeout = 60 # time in second
-
-    def validate(self, solution, test_cases):
-        filename = self.prepare_file(solution.code)
+        executable_list = self.build_executable_options(executable_file)
+        solution.metadata['executable'] = executable_list
 
         test_case_len = len(test_cases)
         pass_tests = 0
@@ -98,7 +91,7 @@ class PythonTester(Tester):
 
             output = None
             try:
-                output = subprocess.run(['python', filename],
+                output = subprocess.run(executable_list,
                     input=input_str,
                     timeout=self.timeout,
                     capture_output=True)
@@ -111,9 +104,9 @@ class PythonTester(Tester):
                 continue
 
             if output and output.returncode == 0:
-                test_result.result = output.stdout.decode()
+                test_result.output = output.stdout.decode()
 
-                output_data = test_result.result.split('\n')
+                output_data = test_result.output.split('\n')
                 testcase_data = test_result.expected_result.split('\n')
 
                 
@@ -144,4 +137,35 @@ class PythonTester(Tester):
             solution.passed = False
         solution.score = pass_tests/test_case_len * solution.challenge.score
         solution.save()
+
+        self.remove_file(executable_file)
         self.remove_file(filename)
+
+
+class CTester(Tester):
+    def __init__(self, settings):
+        super().__init__(settings)
+
+    def prepair_executable(self, filename):
+        exe_file = filename[:filename.rfind('.')]
+        compilation = ['gcc', '-Wall', filename, '-o', exe_file]
+        
+        output = subprocess.run(compilation)
+
+        result = dict(executable=exe_file,
+                      status=True,
+                      compilation=compilation)
+
+        if output.returncode != 0:
+            result['output'] = output.stdout
+            result['error'] = output.stderr
+
+        return result
+
+ 
+class PythonTester(Tester):
+    def __init__(self, settings):
+        super().__init__(settings)
+
+    def build_executable_options(self, filename):
+        return ['python', filename]
