@@ -6,6 +6,7 @@ import os
 import datetime
 
 from pathlib import Path
+import shutil
 
 
 import logging
@@ -24,13 +25,14 @@ class Tester:
         self.directory = directory if directory[-1] != '/' else directory[:-1]
 
     def prepare_file(self, solution):
-        p = Path('{}/{}'.format(self.directory, solution.user.id))
+        p = Path('{}/{}/{}'.format(self.directory,
+                                   solution.user.id,
+                                   solution.challenge.id))
         if not p.exists():
             p.mkdir(parents=True, exist_ok=True)
 
-        filename = '{}/{}/{}'.format(self.directory,
-                                     solution.user.id,
-                                     solution.code.filename)
+        filename = '{}/{}'.format(str(p),
+                                  solution.code.filename)
         with open(filename, 'wb') as f:
             data = solution.code.read()
             f.write(data)
@@ -39,8 +41,9 @@ class Tester:
 
     def remove_file(self, filename):
         file_path = Path(filename)
-        if file_path.exists():
-            os.remove(filename)
+        directory_path = file_path.parents[0]
+
+        shutil.rmtree(str(directory_path))
 
     def build_executable_options(self, filename):
         return [filename]
@@ -57,7 +60,6 @@ class Tester:
         solution.save()
 
         self.validate(solution, test_cases)
-
 
         solution.status = 'complete'
         solution.executed_ended_date = datetime.datetime.now()
@@ -138,7 +140,6 @@ class Tester:
         solution.score = pass_tests/test_case_len * solution.challenge.score
         solution.save()
 
-        self.remove_file(executable_file)
         self.remove_file(filename)
 
 

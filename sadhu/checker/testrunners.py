@@ -46,7 +46,11 @@ class TestRunner(threading.Thread):
         self.running = True
         while(self.running):
             solution = self.queue.get()
-            logger.debug('process solution')
+            logger.debug('process solution {} for challenge {} of user {}'.format(
+                    solution.id,
+                    solution.challenge.id,
+                    solution.user.id
+                    ))
             try:
                 self.process(solution)
             except Exception as e:
