@@ -69,7 +69,11 @@
 					<td>{{ ass_time.assignment.challenges | count }}</td>
 					<td>{{ ass_time.started_date }}</td>
 					<td>{{ ass_time.ended_date }}</td>
-					<td></td>
+          <td>
+            <a href="{{ url_for('assignments.view', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">
+              <i class="material-icons">visibility</i>
+            </a>
+          </td>
 				</tr>
 			{% endfor %}
 			</tbody>

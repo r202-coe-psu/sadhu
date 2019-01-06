@@ -70,3 +70,18 @@ class Class(me.Document):
                 break
 
         return ass_time
+
+    def is_enrolled(self, user_id):
+        for e in self.enrollments:
+            if str(user_id) == str(e.user.id):
+                return True
+
+        return False
+
+    def get_enrolled_information(self, user_id):
+        for e in self.enrollments:
+            if str(user_id) == str(e.user.id):
+                return e
+
+        return None
+

@@ -3,7 +3,8 @@ import datetime
 
 
 LANGUAGE_CHOICES = [('Python', 'Python'),
-                    ('C', 'C')]
+                    ('C', 'C'),
+                    ('Java', 'Java')]
 
 class Course(me.Document):
     name = me.StringField(required=True)

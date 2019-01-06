@@ -8,7 +8,55 @@
 </div>
 
 <div class="row">
-  <div class="col s12">
+  <div class="col s6">
+    <h4 class="blue-text text-darken-4">Available Class</h4>
+    {% if available_classes %}
+    <ul class="collection">
+      {% for class_ in available_classes %}
+        <li class="collection-item avatar">
+          {% if class_.is_enrolled(current_user.id) %}
+          <i class="material-icons circle blue">play_arrow</i>
+          {% else %}
+          <i class="material-icons circle">folder</i>
+          {% endif %}
+          <span class="title"><a href="{{ url_for('classes.view', class_id=class_.id) }}">{{ class_.name }}</a></span>
+        <p>{{ class_.description }}</p>
+        <p>Start {{ class_.started_date.date() }} <br>
+           End {{ class_.ended_date.date() }} <br>
+           Enroll {{ class_.is_enrolled(current_user.id) }}
+        </p>
+        {% if not class_.is_enrolled(current_user.id) %}
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <h5>No Class for You</h5>
+    {% endif%}
+  </div>
+  <div class="col s6">
+    <h4 class="blue-text text-darken-4">Assignment</h4>
+    {% if assignment_schedule | count > 0 %}
+      <ul class="collection">
+        {% for ass_t in assignment_schedule %}
+        {% set assignment = ass_t.assignment %}
+        <li class="collection-item avatar">
+          <i class="material-icons circle green">assignment</i>
+          <span class="title"><a href="{{ url_for('assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a></span>
+          <p>{{ assignment.description }}</p>
+          <p>Start {{ ass_t.started_date }}</p>
+          <p>End {{ ass_t.ended_date }}</p>
+          <p>Score {{ assignment.score }}</p>
+          {#
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+          #}
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <h5>There are not up comming assignments</h5>
+    {% endif %}
   </div>
 </div>
 
