@@ -19,12 +19,10 @@ def index_user():
 
     available_classes = models.Class.objects(
             (me.Q(limited_enrollment__grantees=user.email) | 
-                 me.Q(limited_enrollment__grantees=str(user.id))
-                 ) &
+                 me.Q(limited_enrollment__grantees=user.username)) &
             (me.Q(started_date__lte=now) |
                  me.Q(ended_date__gt=now))
             )
-
 
     assignment_schedule = []
     for class_ in available_classes:
