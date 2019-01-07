@@ -26,7 +26,7 @@
            Enroll {{ class_.is_enrolled(current_user.id) }}
         </p>
         {% if not class_.is_enrolled(current_user.id) %}
-          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+          <a href="{{ url_for('classes.enroll', class_id=class_.id) }}" class="secondary-content"><i class="material-icons">class</i></a>
         {% endif %}
       </li>
       {% endfor %}
@@ -39,12 +39,15 @@
     <h4 class="blue-text text-darken-4">Assignment</h4>
     {% if assignment_schedule | count > 0 %}
       <ul class="collection">
-        {% for ass_t in assignment_schedule %}
+        {% for ass_sch in assignment_schedule %}
+        {% set ass_t = ass_sch['assignment_schedule'] %}
+        {% set class_ = ass_sch['class_'] %}
         {% set assignment = ass_t.assignment %}
         <li class="collection-item avatar">
           <i class="material-icons circle green">assignment</i>
-          <span class="title"><a href="{{ url_for('assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a></span>
+          <span class="title"><a href="{{ url_for('assignments.view', assignment_id=assignment.id, class_id=class_.id) }}">{{ assignment.name }}</a></span>
           <p>{{ assignment.description }}</p>
+          <p>Class {{ class_.name }}</p>
           <p>Start {{ ass_t.started_date }}</p>
           <p>End {{ ass_t.ended_date }}</p>
           <p>Score {{ assignment.score }}</p>

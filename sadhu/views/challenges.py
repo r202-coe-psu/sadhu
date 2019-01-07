@@ -71,7 +71,7 @@ def view(challenge_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
 
     solutions = models.Solution.objects(
-            user=current_user._get_current_object(),
+            owner=current_user._get_current_object(),
             enrolled_class=class_,
             challenge=challenge)
 
@@ -92,7 +92,7 @@ def submit_solution(challenge_id):
                                challenge=challenge,
                                form=form)
 
-    solution = models.Solution(user=current_user._get_current_object(),
+    solution = models.Solution(owner=current_user._get_current_object(),
                                enrolled_class=class_,
                                challenge=challenge,
                                language=class_.course.languages[0]

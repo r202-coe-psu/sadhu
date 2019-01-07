@@ -1,6 +1,7 @@
 from flask import (Blueprint,
                    render_template,
                    redirect,
+                   request,
                    url_for)
 
 from flask_login import current_user, login_required
@@ -85,9 +86,15 @@ def index():
 @module.route('/<assignment_id>')
 @login_required
 def view(assignment_id):
+    class_ = None
+    if request.args.get('class_id', None):
+        class_ = models.Class.objects(
+                id=request.args.get('class_id')).first()
+
     assignment = models.Assignment.objects.get(id=assignment_id)
 
     return render_template('/assignments/view.html',
                            assignment=assignment,
+                           class_=class_
                            )
 

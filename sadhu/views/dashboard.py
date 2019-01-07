@@ -22,17 +22,27 @@ def index_user():
                  me.Q(limited_enrollment__grantees=user.username)) &
             (me.Q(started_date__lte=now) |
                  me.Q(ended_date__gt=now))
-            )
+            ).order_by('ended_date')
 
-    assignment_schedule = []
+    ass_schedule = []
     for class_ in available_classes:
+        if not class_.is_enrolled(user.id):
+            continue
+
         for ass_t in class_.assignment_schedule:
             if now < ass_t.ended_date:
-                assignment_schedule.append(ass_t)
+                ass_schedule.append(
+                        dict(assignment_schedule=ass_t,
+                             class_=class_))
+
+    def order_by_ended_date(e):
+        return e['assignment_schedule'].ended_date
+
+    ass_schedule.sort(key=order_by_ended_date)
 
     return render_template('/dashboard/index.html',
                            available_classes=available_classes,
-                           assignment_schedule=assignment_schedule
+                           assignment_schedule=ass_schedule
                            )
 
 @module.route('/')

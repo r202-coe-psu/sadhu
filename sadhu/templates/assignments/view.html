@@ -19,7 +19,8 @@
 <div class="row">
 	<div class="col s12">
 		<div>
-			<p>course <a href="{{ url_for('courses.view', course_id=assignment.course.id) }}">{{ assignment.course.name }}</a></p>
+			<p>Course <a href="{{ url_for('courses.view', course_id=assignment.course.id) }}">{{ assignment.course.name }}</a></p>
+      <p>Class <a href="{{ url_for('classes.view', class_id=class_.id) }}">{{ class_.name }}</a></p>
 		</div>
 		<div>
 			{{ assignment.description }}
@@ -58,7 +59,7 @@
 						{{ challenge.score }}
 					</td>
           <td>
-            {{ 'Submitted' if challenge.get_solutions() else 'Waiting' }}
+            {{'Submitted' if challenge.get_solutions(class_.id) else 'Waiting' }}
 					</td>
 				</tr>
 {% endfor %}

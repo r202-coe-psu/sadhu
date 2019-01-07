@@ -19,7 +19,7 @@ module = Blueprint('solutions',
 @login_required
 def index():
     solutions = models.Solution.objects(
-            user=current_user._get_current_object()).order_by('-id')
+            owner=current_user._get_current_object()).order_by('-id')
     return render_template('/solutions/index.html',
                            solutions=solutions,
                            )
@@ -65,7 +65,7 @@ def view(solution_id):
 
     solution = models.Solution.objects(
             id=solution_id,
-            user=current_user._get_current_object(),
+            owner=current_user._get_current_object(),
             enrolled_class=class_).first()
 
     return render_template('/solutions/view.html',

@@ -2,6 +2,7 @@ import mongoengine as me
 import datetime
 
 from .users import User
+from .classes import Class
 
 class TestResult(me.EmbeddedDocument):
     test_case = me.ReferenceField('TestCase', required=True, dbref=True)
@@ -32,7 +33,7 @@ class Solution(me.Document):
     challenge = me.ReferenceField('Challenge',
                                   required=True,
                                   dbref=True)
-    user = me.ReferenceField('User',
+    owner = me.ReferenceField('User',
                              required=True,
                              dbref=True)
 
@@ -100,5 +101,8 @@ class Challenge(me.Document):
 
     meta = {'collection': 'challenges'}
 
-    def get_solutions(self):
-        return Solution.objects(challenge=self).first()
+    def get_solutions(self, class_id):
+        class_ = Class.objects.get(id=class_id)
+        return Solution.objects(challenge=self,
+                                enrolled_class=class_,
+                                owner=self.owner).first()
