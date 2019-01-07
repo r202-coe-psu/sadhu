@@ -21,7 +21,7 @@ def index_user():
             (me.Q(limited_enrollment__grantees=user.email) | 
                  me.Q(limited_enrollment__grantees=str(user.id))
                  ) &
-            (me.Q(started_date__lt=now) |
+            (me.Q(started_date__lte=now) |
                  me.Q(ended_date__gt=now))
             )
 
