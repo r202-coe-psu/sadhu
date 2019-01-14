@@ -26,7 +26,7 @@ class Tester:
 
     def prepare_file(self, solution):
         p = Path('{}/{}/{}'.format(self.directory,
-                                   solution.user.id,
+                                   solution.owner.id,
                                    solution.challenge.id))
         if not p.exists():
             p.mkdir(parents=True, exist_ok=True)

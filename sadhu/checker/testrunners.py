@@ -49,7 +49,7 @@ class TestRunner(threading.Thread):
             logger.debug('process solution {} for challenge {} of user {}'.format(
                     solution.id,
                     solution.challenge.id,
-                    solution.user.id
+                    solution.owner.id
                     ))
             try:
                 self.process(solution)
