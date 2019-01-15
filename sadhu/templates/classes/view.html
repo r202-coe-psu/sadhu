@@ -62,7 +62,7 @@
 				{% for ass_time in class_.assignment_schedule %}
 				<tr>
 					<td>
-						<a href="{{ url_for('assignments.view', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">
+						<a href="{{ url_for('assignments.practice', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">
 							{{ ass_time.assignment.name }}
 						</a>
 					</td>
@@ -70,7 +70,7 @@
 					<td>{{ ass_time.started_date }}</td>
 					<td>{{ ass_time.ended_date }}</td>
           <td>
-            <a href="{{ url_for('assignments.view', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">
+            <a href="{{ url_for('assignments.practice', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">
               <i class="material-icons">visibility</i>
             </a>
           </td>

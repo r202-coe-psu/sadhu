@@ -35,3 +35,20 @@ class Assignment(me.Document):
 
     meta = {'collection': 'assignments'}
 
+
+    def check_user_submission(self, user, class_):
+        from sadhu import models
+
+        challenge_checker = dict([(c.id, 'missing') for c in self.challenges])
+    
+        solutions = models.Solution.objects(
+                owner=user,
+                enrolled_class=class_,
+                challenge__in=self.challenges)
+
+        for s in solutions:
+            challenge_checker[s.challenge.id] = s.status
+
+        return challenge_checker
+
+

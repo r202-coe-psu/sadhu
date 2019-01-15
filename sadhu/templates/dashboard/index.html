@@ -47,10 +47,17 @@
           <i class="material-icons circle green">assignment</i>
           <span class="title"><a href="{{ url_for('assignments.practice', assignment_id=assignment.id, class_id=class_.id) }}">{{ assignment.name }}</a></span>
           <p>{{ assignment.description }}</p>
-          <p>Class {{ class_.name }}</p>
-          <p>Start {{ ass_t.started_date }}</p>
-          <p>End {{ ass_t.ended_date }}</p>
-          <p>Score {{ assignment.score }}</p>
+          <p>Class: {{ class_.name }}</p>
+          <p>Start: {{ ass_t.started_date }}</p>
+          <p>End: {{ ass_t.ended_date }}</p>
+          <p>Score: {{ assignment.score }}</p>
+          <p>Status: 
+          {% if assignment.challenges | count == assignment.check_user_submission(current_user, class_) | count %}
+            submitted
+          {% else %}
+            waitting
+          {% endif %}
+          </p>
           {#
           <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
           #}
