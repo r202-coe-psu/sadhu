@@ -39,7 +39,7 @@ class Assignment(me.Document):
     def check_user_submission(self, user, class_):
         from sadhu import models
 
-        challenge_checker = dict([(c.id, 'missing') for c in self.challenges])
+        challenge_checker = dict()
     
         solutions = models.Solution.objects(
                 owner=user,
