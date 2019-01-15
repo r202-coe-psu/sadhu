@@ -20,9 +20,10 @@ def index_user():
     available_classes = models.Class.objects(
             (me.Q(limited_enrollment__grantees=user.email) | 
                  me.Q(limited_enrollment__grantees=user.username)) &
-            (me.Q(started_date__lte=now) |
-                 me.Q(ended_date__gt=now))
+            (me.Q(started_date__lte=now) &
+                 me.Q(ended_date__gte=now))
             ).order_by('ended_date')
+
 
     ass_schedule = []
     for class_ in available_classes:

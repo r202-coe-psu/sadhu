@@ -11,6 +11,8 @@ from sadhu import models
 
 import mongoengine as me
 
+import datetime
+
 module = Blueprint('courses',
                    __name__,
                    url_prefix='/courses',
@@ -33,10 +35,14 @@ def index():
 @module.route('/<course_id>')
 @login_required
 def view(course_id):
+    now = datetime.datetime.now()
     course = models.Course.objects.get(id=course_id)
-    classes = models.Class.objects(me.Q(course=course) &
+    classes = models.Class.objects(
+            me.Q(course=course) &
             (me.Q(limited_enrollment__grantees=current_user.username) |
-             me.Q(limited_enrollment__grantees=current_user.email))
+             me.Q(limited_enrollment__grantees=current_user.email)) &
+            (me.Q(started_date__lte=now) &
+             me.Q(ended_date__gte=now))
             )
     enrolled_classes = []
     for class_ in classes:

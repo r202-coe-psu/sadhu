@@ -86,6 +86,15 @@ def index():
 @module.route('/<assignment_id>')
 @login_required
 def view(assignment_id):
+    assignment = models.Assignment.objects.get(id=assignment_id)
+
+    return render_template('/assignments/view.html',
+                           assignment=assignment,
+                           )
+
+@module.route('/<assignment_id>/practice')
+@login_required
+def practice(assignment_id):
     class_ = None
     if request.args.get('class_id', None):
         class_ = models.Class.objects(
@@ -93,7 +102,7 @@ def view(assignment_id):
 
     assignment = models.Assignment.objects.get(id=assignment_id)
 
-    return render_template('/assignments/view.html',
+    return render_template('/assignments/practice.html',
                            assignment=assignment,
                            class_=class_
                            )

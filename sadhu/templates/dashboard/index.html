@@ -45,7 +45,7 @@
         {% set assignment = ass_t.assignment %}
         <li class="collection-item avatar">
           <i class="material-icons circle green">assignment</i>
-          <span class="title"><a href="{{ url_for('assignments.view', assignment_id=assignment.id, class_id=class_.id) }}">{{ assignment.name }}</a></span>
+          <span class="title"><a href="{{ url_for('assignments.practice', assignment_id=assignment.id, class_id=class_.id) }}">{{ assignment.name }}</a></span>
           <p>{{ assignment.description }}</p>
           <p>Class {{ class_.name }}</p>
           <p>Start {{ ass_t.started_date }}</p>
