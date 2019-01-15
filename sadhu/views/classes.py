@@ -38,7 +38,9 @@ def view(class_id):
 @login_required
 def enroll(class_id):
     class_ = models.Class.objects.get(id=class_id)
-    enrollment = models.Enrollment.objects(enrolled_class=class_).first()
+    enrollment = models.Enrollment.objects(
+            user=current_user._get_current_object(),
+            enrolled_class=class_).first()
     if not enrollment:
         enrollment = models.Enrollment(
                 user=current_user._get_current_object(),
