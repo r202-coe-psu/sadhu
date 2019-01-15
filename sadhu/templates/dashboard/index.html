@@ -43,19 +43,25 @@
         {% set ass_t = ass_sch['assignment_schedule'] %}
         {% set class_ = ass_sch['class_'] %}
         {% set assignment = ass_t.assignment %}
+        {% set ass_status = assignment.check_user_submission(current_user, class_) %}
+        {% set all_challenge_submission = assignment.challenges | count == ass_status | count %}
         <li class="collection-item avatar">
-          <i class="material-icons circle green">assignment</i>
+          {% if all_challenge_submission %}
+            <i class="material-icons circle green">assignment</i>
+          {% else %}
+            <i class="material-icons circle red">assignment</i>
+          {% endif %}
           <span class="title"><a href="{{ url_for('assignments.practice', assignment_id=assignment.id, class_id=class_.id) }}">{{ assignment.name }}</a></span>
           <p>{{ assignment.description }}</p>
           <p>Class: {{ class_.name }}</p>
           <p>Start: {{ ass_t.started_date }}</p>
           <p>End: {{ ass_t.ended_date }}</p>
-          <p>Score: {{ assignment.score }}</p>
+          <p>Score: {{assignment.get_score(current_user, class_)}}/{{ assignment.score }}</p>
           <p>Status: 
-          {% if assignment.challenges | count == assignment.check_user_submission(current_user, class_) | count %}
-            submitted
+          {% if all_challenge_submission %}
+            Submitted
           {% else %}
-            waitting
+            Waiting
           {% endif %}
           </p>
           {#

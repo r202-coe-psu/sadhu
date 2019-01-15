@@ -35,6 +35,36 @@ class Assignment(me.Document):
 
     meta = {'collection': 'assignments'}
 
+    def get_solutions(self, user, class_):
+        from sadhu import models
+        solutions = models.Solution.objects(
+                owner=user,
+                enrolled_class=class_,
+                challenge__in=self.challenges)
+
+
+        return solutions
+
+    def get_score(self, user, class_):
+        from sadhu import models
+        solutions = models.Solution.objects(
+                owner=user,
+                enrolled_class=class_,
+                challenge__in=self.challenges)
+
+        s_check = dict()
+        for s in solutions:
+            if s.id in s_check:
+                if s_check[s.id] < s.score:
+                    s_check[s.id] = s.score
+
+            else:
+                s_check[s.id] = s.score
+
+        score = sum(s_check.values())
+
+        return score
+
 
     def check_user_submission(self, user, class_):
         from sadhu import models
