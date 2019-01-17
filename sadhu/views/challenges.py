@@ -9,6 +9,8 @@ from sadhu import acl
 from sadhu import forms
 from sadhu import models
 
+import datetime
+
 module = Blueprint('challenges',
                    __name__,
                    url_prefix='/challenges',
@@ -75,22 +77,50 @@ def view(challenge_id):
             enrolled_class=class_,
             challenge=challenge)
 
+    assignment = models.Assignment.objects(
+            challenges=challenge,
+            course=class_.course).first()
+    assignment_time = class_.get_assignment_schedule(assignment)
+
+    now = datetime.datetime.now()
+
+
+
     form = forms.challenges.Solution()
-    return render_template('/challenges/view.html',
-                           challenge=challenge,
-                           solutions=solutions,
-                           form=form)
+    return render_template(
+            '/challenges/view.html',
+            challenge=challenge,
+            solutions=solutions,
+            assignment=assignment,
+            show_submission=now < assignment_time.ended_date,
+            form=form)
 
 
 @module.route('/<challenge_id>/submit-solution', methods=['GET', 'POST'])
 def submit_solution(challenge_id):
     class_ = models.Class.objects.get(id=request.args.get('class_id', None))
     challenge = models.Challenge.objects.get(id=challenge_id)
+
+    assignment = models.Assignment.objects(
+            challenges=challenge,
+            course=class_.course).first()
+    assignment_time = class_.get_assignment_schedule(assignment)
+
+    now = datetime.datetime.now()
+
     form = forms.challenges.Solution()
     if not form.validate_on_submit():
-        return render_template('/challenges/view.html',
-                               challenge=challenge,
-                               form=form)
+        return render_template(
+                '/challenges/view.html',
+                challenge=challenge,
+                assignment=assignment,
+                show_submission=now < assignment_time.ended_date,
+                form=form)
+    
+    if not now < assignment_time.ended_date:
+        return redirect(url_for('challenges.view',
+                                challenge_id=challenge.id,
+                                class_id=class_.id))
 
     solution = models.Solution(owner=current_user._get_current_object(),
                                enrolled_class=class_,

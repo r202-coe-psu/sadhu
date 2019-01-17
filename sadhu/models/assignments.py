@@ -52,16 +52,22 @@ class Assignment(me.Document):
                 enrolled_class=class_,
                 challenge__in=self.challenges)
 
-        s_check = dict()
+        best_solutions = dict()
         for s in solutions:
-            if s.id in s_check:
-                if s_check[s.id] < s.score:
-                    s_check[s.id] = s.score
 
+            if s.challenge.id in best_solutions:
+                if best_solutions[s.challenge.id]['score'] < s.score:
+                    best_solutions[s.challenge.id]['score'] = s.score
             else:
-                s_check[s.id] = s.score
+                best_solutions[s.challenge.id] = dict(
+                        challenge=s.challenge,
+                        score=s.score)
 
-        score = sum(s_check.values())
+        total_assignment_score = sum(
+                [d['challenge'].score for d in best_solutions.values()])
+        total_solution_score = sum(
+                [d['score'] for d in best_solutions.values()])
+        score = total_solution_score/total_assignment_score * self.score
 
         return score
 

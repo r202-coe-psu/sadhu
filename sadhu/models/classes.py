@@ -62,6 +62,19 @@ class Class(me.Document):
 
     meta = {'collection': 'classes'}
 
+    def get_assignment_score(self, user):
+        
+        total_assignment_score = 0
+        total_assignment_user_score = 0
+        for ass_t in self.assignment_schedule:
+            assignment = ass_t.assignment
+            total_assignment_score += assignment.score
+            total_assignment_user_score += assignment.get_score(user, self)
+
+        return dict(total_score=total_assignment_score,
+                    total_user_score=total_assignment_user_score)
+
+
     def get_assignment_schedule(self, assignment):
         ass_time = None
         for ass in self.assignment_schedule:
