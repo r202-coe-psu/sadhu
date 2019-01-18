@@ -30,6 +30,9 @@ class Solution(me.Document):
     enrolled_class = me.ReferenceField('Class',
                                        required=True,
                                        dbref=True)
+    assignment = me.ReferenceField('Assignment',
+                                   required=True,
+                                   dbref=True)
     challenge = me.ReferenceField('Challenge',
                                   required=True,
                                   dbref=True)

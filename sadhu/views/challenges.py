@@ -124,6 +124,7 @@ def submit_solution(challenge_id):
 
     solution = models.Solution(owner=current_user._get_current_object(),
                                enrolled_class=class_,
+                               assignment=assignment,
                                challenge=challenge,
                                language=class_.course.languages[0]
                                )
