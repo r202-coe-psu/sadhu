@@ -5,6 +5,7 @@ from . import assignments
 from . import challenges
 from . import courses
 from . import classes
+from . import students
 
 module = Blueprint('administration',
                    __name__,
@@ -12,7 +13,8 @@ module = Blueprint('administration',
 subviews = [assignments,
             challenges,
             courses,
-            classes
+            classes,
+            students,
             ]
 
 @module.route('/')
