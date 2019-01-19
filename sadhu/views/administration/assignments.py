@@ -33,7 +33,7 @@ def create():
     courses = models.Course.objects()
     form.course.choices = [(str(course.id), course.name) for course in courses]
     if not form.validate_on_submit():
-        return render_template('/administration/assignments/create.html',
+        return render_template('/administration/assignments/create-edit.html',
                                form=form)
 
     data = form.data.copy()

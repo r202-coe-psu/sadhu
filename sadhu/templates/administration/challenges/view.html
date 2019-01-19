@@ -76,7 +76,9 @@
           <td>{{ tc.output_string }}</td>
           <td>{{ tc.public }}</td>
           <td>{{ tc.created_date }}</td>
-          <td>X</td>
+          <td>
+            <a href="{{ url_for('administration.challenges.edit_testcase', challenge_id=challenge.id, testcase_id=tc.id) }}"><i class="material-icons">edit</i></a>
+          </td>
         </tr>
       {% endfor %}
       </tbody>

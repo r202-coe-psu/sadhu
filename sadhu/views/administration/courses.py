@@ -34,7 +34,7 @@ def create():
         #     form.languages.choices.insert(0, ('', 'Select Language'))
         #     form.languages.data = ['']
         # print('++++', form.languages.choices)
-        return render_template('/administration/courses/create.html',
+        return render_template('/administration/courses/create-edit.html',
                                form=form)
     data = form.data.copy()
     data.pop('csrf_token')

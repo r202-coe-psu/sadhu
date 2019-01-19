@@ -43,7 +43,7 @@ def edit(class_id):
     form.limited_enrollment.method.choices = method_choices
 
     if not form.validate_on_submit():
-        return render_template('/administration/classes/create.html',
+        return render_template('/administration/classes/create-edit.html',
                                form=form)
     data = form.data.copy()
     data.pop('csrf_token')
@@ -68,7 +68,7 @@ def create():
     form.limited_enrollment.method.choices = method_choices
 
     if not form.validate_on_submit():
-        return render_template('/administration/classes/create.html',
+        return render_template('/administration/classes/create-edit.html',
                                form=form)
     data = form.data.copy()
     data.pop('csrf_token')

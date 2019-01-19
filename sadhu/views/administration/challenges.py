@@ -42,6 +42,28 @@ def create():
     return redirect(url_for('administration.challenges.view',
                             challenge_id=challenge.id))
 
+
+@module.route('/<challenge_id>/edit', methods=['GET', 'POST'])
+@acl.allows.requires(acl.is_lecturer)
+def edit(challenge_id):
+    challenge = models.Challenge.objects.get(id=challenge_id)
+
+    form = forms.challenges.ChallengeForm(obj=challenge)
+    if not form.validate_on_submit():
+        print('error->', form.errors)
+        return render_template('/administration/challenges/create.html',
+                               form=form)
+    data = form.data.copy()
+    data.pop('csrf_token')
+    form.populate_obj(challenge)
+    challenge.save()
+
+    return redirect(url_for('administration.challenges.view',
+                            challenge_id=challenge.id))
+
+
+
+
 @module.route('/<challenge_id>/add-testcase', methods=['GET', 'POST'])
 @acl.allows.requires(acl.is_lecturer)
 def add_testcase(challenge_id):
@@ -90,6 +112,58 @@ def add_testcase(challenge_id):
 
     return redirect(url_for('administration.challenges.view',
                             challenge_id=challenge.id))
+
+
+@module.route('/<challenge_id>/testcases/<testcase_id>/edit', methods=['GET', 'POST'])
+@acl.allows.requires(acl.is_lecturer)
+def edit_testcase(challenge_id, testcase_id):
+    challenge = models.Challenge.objects.get(id=challenge_id)
+    test_case = models.TestCase.objects.get(id=testcase_id)
+    form = forms.challenges.TestCaseForm(obj=test_case)
+
+    if not form.validate_on_submit():
+        return render_template('/administration/challenges/add-testcase.html',
+                               form=form,
+                               challenge=challenge)
+    
+    data = form.data.copy()
+    data.pop('input_file')
+    data.pop('output_file')
+    data.pop('csrf_token')
+
+    test_case.update(**data)
+
+    if form.input_file.data:
+        if form.is_inputfile.data:
+            test_case.input_file.put(form.input_file.data,
+                    filename=form.input_file.data.filename,
+                    content_type=form.input_file.data.content_type)
+        else:
+            test_case.input_string = form.input_file.data.read()
+
+    if form.output_file.data:
+        if form.is_outputfile.data:
+            test_case.output_file.put(form.output_file.data,
+                    filename=form.output_file.data.filename,
+                    content_type=form.output_file.data.content_type)
+        else:
+            test_case.output_string = form.output_file.data.read()
+
+    if (not test_case.input_string) or len(test_case.input_string) == 0:
+        test_case.input_string = form.input_string.data
+
+    if (not test_case.output_string) or len(test_case.output_string) == 0:
+        test_case.output_string = form.output_string.data
+
+    test_case.is_inputfile = form.is_inputfile.data
+    test_case.is_outputfile = form.is_outputfile.data
+    
+    test_case.save()
+
+
+    return redirect(url_for('administration.challenges.view',
+                            challenge_id=challenge.id))
+
 
 
 @module.route('/<challenge_id>')
