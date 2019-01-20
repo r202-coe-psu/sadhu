@@ -126,3 +126,27 @@ def set_assignment_time(class_id, assignment_id):
     class_.save()
 
     return redirect(url_for('administration.classes.view', class_id=class_id))
+
+
+@module.route('/<class_id>/students')
+@acl.allows.requires(acl.is_lecturer)
+def list_students(class_id):
+    class_ = models.Class.objects.get(id=class_id)
+    enrollments = class_.enrollments
+
+    return render_template('/administration/classes/list-students.html',
+                           class_=class_,
+                           enrollments=enrollments)
+
+@module.route('/<class_id>/students/<student_id>')
+@acl.allows.requires(acl.is_lecturer)
+def show_student_score(class_id, student_id):
+    class_ = models.Class.objects.get(id=class_id)
+    student = models.User.objects.get(id=student_id)
+    assignments = class_.course.assignments
+
+    return render_template('/administration/classes/show-student-score.html',
+                           class_=class_,
+                           student=student,
+                           assignments=assignments)
+

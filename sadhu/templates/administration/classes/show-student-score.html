@@ -1,0 +1,45 @@
+{% extends '/base/default-dashboard.html' %}
+
+{% block breadcrumbs %}
+<a href="{{ url_for('administration.courses.index') }}" class="breadcrumb">Courses</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col s12">
+    <h3>Enrolled Students</h3>
+    <h4>{{ student.first_name }} {{ student.last_name }}</h4>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col s12">
+
+	 <table>
+			<thead>
+				<tr>
+          <th>Name</th>
+          <th>Challenge Score</th>
+					<th>Score</th>
+				</tr>
+			</thead>
+			<tbody>
+{% for assignment in assignments  %}
+				<tr>
+          <td>
+            {{ assignment.name }}
+          </td>
+          <td>
+          </td>
+          <td>
+            {{ assignment.get_score(student, class_=class_) }}
+		      </td>
+				</tr>
+{% endfor %}
+			</tbody>
+		</table>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -67,7 +67,10 @@ class Assignment(me.Document):
                 [d['challenge'].score for d in best_solutions.values()])
         total_solution_score = sum(
                 [d['score'] for d in best_solutions.values()])
-        score = total_solution_score/total_assignment_score * self.score
+
+        score = 0
+        if total_assignment_score != 0:
+            score = total_solution_score/total_assignment_score * self.score
 
         return score
 
