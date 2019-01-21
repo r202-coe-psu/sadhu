@@ -69,7 +69,7 @@ class Class(me.Document):
         for ass_t in self.assignment_schedule:
             assignment = ass_t.assignment
             total_assignment_score += assignment.score
-            total_assignment_user_score += assignment.get_score(user, self)
+            total_assignment_user_score += assignment.get_score(self, user)
 
         return dict(total_score=total_assignment_score,
                     total_user_score=total_assignment_user_score)

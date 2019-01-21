@@ -45,7 +45,7 @@ class Assignment(me.Document):
 
         return solutions
 
-    def get_score(self, user, class_):
+    def get_score(self, class_, user):
         from sadhu import models
         solutions = models.Solution.objects(
                 owner=user,
@@ -75,7 +75,7 @@ class Assignment(me.Document):
         return score
 
 
-    def check_user_submission(self, user, class_):
+    def check_user_submission(self, class_, user):
         from sadhu import models
 
         challenge_checker = dict()

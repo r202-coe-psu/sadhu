@@ -104,8 +104,27 @@ class Challenge(me.Document):
 
     meta = {'collection': 'challenges'}
 
-    def get_solutions(self, class_id):
-        class_ = Class.objects.get(id=class_id)
+    def get_solutions(self, class_, user):
         return Solution.objects(challenge=self,
                                 enrolled_class=class_,
-                                owner=self.owner).first()
+                                owner=user)
+
+    def get_best_solution(self, class_, user):
+        solutions = self.get_solutions(class_, user)
+
+        best_solution = None
+        if solutions.count() > 1:
+            best_solution = solutions[0]
+
+        for solution in solutions:
+            if solution.score > best_solution.score:
+                best_solution = solution
+        
+        return best_solution
+        
+    def get_score(self, class_, user):
+        solution = self.get_best_solution(class_, user)
+        if solution:
+            return solution.score
+
+        return 0
