@@ -59,7 +59,7 @@
 						{{ challenge.score }}
 					</td>
           <td>
-            {{'Submitted' if challenge.get_solutions(class_.id) else 'Waiting' }}
+            {{'Submitted' if challenge.get_solutions(class_, current_user) else 'Waiting' }}
 					</td>
 				</tr>
 {% endfor %}
