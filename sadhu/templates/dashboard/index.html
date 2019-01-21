@@ -64,7 +64,7 @@
         {% set ass_t = ass_sch['assignment_schedule'] %}
         {% set class_ = ass_sch['class_'] %}
         {% set assignment = ass_t.assignment %}
-        {% set ass_status = assignment.check_user_submission(current_user, class_) %}
+        {% set ass_status = assignment.check_user_submission(class_, current_user) %}
         {% set all_challenge_submission = assignment.challenges | count == ass_status | count %}
         <li class="collection-item avatar">
           {% if all_challenge_submission %}
@@ -77,7 +77,7 @@
           <p>Class: {{ class_.name }}</p>
           <p>Start: {{ ass_t.started_date }}</p>
           <p>End: {{ ass_t.ended_date }}</p>
-          <p>Score: {{assignment.get_score(current_user, class_)}}/{{ assignment.score }}</p>
+          <p>Score: {{assignment.get_score(class_, current_user)}}/{{ assignment.score }}</p>
           <p>Status: 
           {% if all_challenge_submission %}
             Submitted
