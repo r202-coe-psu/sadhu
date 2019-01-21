@@ -111,7 +111,9 @@ class Challenge(me.Document):
 
     def get_best_solution(self, class_, user):
         solutions = self.get_solutions(class_, user)
-
+        if not solutions:
+            return None
+    
         best_solution = None
         if solutions.count() > 1:
             best_solution = solutions[0]
