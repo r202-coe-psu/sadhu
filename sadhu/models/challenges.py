@@ -115,7 +115,7 @@ class Challenge(me.Document):
             return None
     
         best_solution = None
-        if solutions.count() > 1:
+        if solutions.count() > 0:
             best_solution = solutions[0]
 
         for solution in solutions:
