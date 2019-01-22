@@ -1,0 +1,58 @@
+{% extends '/base/default-dashboard.html' %}
+
+{% block breadcrumbs %}
+<a href="{{ url_for('administration.courses.index') }}" class="breadcrumb">Courses</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col s12">
+    <h3>Show Assignment</h3>
+    <h4>{{ student.first_name }} {{ student.last_name }}</h4>
+    Assignment: {{ assignment.name }}
+  </div>
+</div>
+
+{% for challenge in assignment.challenges %}
+<div class="row">
+	<div class="col s12">
+    <h5 class="card-panel blue lighten-4">{{ challenge.name }}: {{ challenge.score }}</h5>
+	  <table>
+			<thead>
+				<tr>
+          <th>Submitted Date</th>
+          <th>Status</th>
+          <th>Pass</th>
+          <th>Test Case</th>
+					<th>Score</th>
+					<th>Operation</th>
+				</tr>
+			</thead>
+			<tbody>
+        {% for solution in challenge.get_solutions(class_, student)  %}
+				<tr>
+          <td>
+            {{ solution.submitted_date }}
+          </td>
+          <td>
+            {{ solution.status }}
+          </td>
+          <td>
+            {{ solution.passed }}
+          </td>
+          <td>{{ solution.test_results | count }}</td>
+          <td>
+            {{ solution.score }}
+          </td>
+          <td>
+            <a href="{{ url_for('administration.solutions.view', solution_id=solution.id) }}"><i class="material-icons">visibility</i></a>
+          </td>
+				</tr>
+        {% endfor %}
+			</tbody>
+		</table>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

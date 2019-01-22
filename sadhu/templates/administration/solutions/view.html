@@ -1,0 +1,63 @@
+{% extends '/base/default-dashboard.html' %}
+
+{% block additional_head %}
+{{ super() }}
+
+<style type="text/css">
+  {{ style }}
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{{ url_for('administration.solutions.index') }}" class="breadcrumb">Solutions</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col s12">
+    <h3>Solution for {{ solution.challenge.name }}</h3>
+    <b>Submitter:</b> {{ solution.owner.first_name }} {{ solution.owner.last_name }}<br/>
+    <b>Submitted Date:</b> {{ solution.submitted_date }}<br/>
+    <b>Class:</b> {{ solution.enrolled_class.name }}<br/>
+    <b>Assignment:</b> {{ solution.assignment.name }}<br/>
+    <b>Challenge:</b> {{ solution.challenge.name }}<br/>
+    <b>Pass Testcase:</b> {{ solution.passed }}<br/>
+    <b>Status:</b> {{ solution.status }}<br/>
+    <b>Score:</b> {{ solution.score }}<br/> 
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s12">
+  {% for t in solution.test_results %}
+    <div>
+      <h6>Testcase {{ loop.index }}</h6>
+      Valid: {{ t.validated }}
+      {% if t.public %}
+        <div class="col s6">
+          <div class="card-panel teal lighten-2">Your Output</div>
+          <code>
+            {{ t.output }}
+          </code>
+        </div>
+        <div class="col s6">
+          <div class="card-panel teal lighten-2">Expected Output</div>
+          <code>
+            {{ t.expected_output }}
+          </code>
+        </div>
+      {% endif %}
+    <div>
+  {% endfor %}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s12">
+    <code>
+      {{ formated_code | safe }}
+    </code>
+  </div>
+</div>
+
+{% endblock %}

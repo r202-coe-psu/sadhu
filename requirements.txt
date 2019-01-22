@@ -9,3 +9,4 @@ authlib
 loginpass
 passlib
 bcrypt
+pygments

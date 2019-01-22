@@ -150,3 +150,15 @@ def show_student_score(class_id, student_id):
                            student=student,
                            assignments=assignments)
 
+@module.route('/<class_id>/students/<student_id>/assignments/<assignment_id>')
+@acl.allows.requires(acl.is_lecturer)
+def show_student_assignment(class_id, student_id, assignment_id):
+    class_ = models.Class.objects.get(id=class_id)
+    student = models.User.objects.get(id=student_id)
+    assignment = models.Assignment.objects.get(id=assignment_id)
+
+    return render_template('/administration/classes/show-student-assignment.html',
+                           class_=class_,
+                           student=student,
+                           assignment=assignment)
+
