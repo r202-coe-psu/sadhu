@@ -30,7 +30,7 @@
 <div class="row">
   <div class="col s12">
   {% for t in solution.test_results %}
-    <div class="row">
+    <div class="row {{ 'red lighten-4' if not t.validated }}">
       <div class="col s12">
         <h5>Testcase {{ loop.index }}</h5>
         <div>
