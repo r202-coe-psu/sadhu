@@ -40,7 +40,11 @@
 
 		<div>
 			<b>Tag:</b> {{ class_.tags | join(', ') }}
-		</div>
+    </div>
+    <div>
+      <a class="btn-floating waves-effect waves-light red" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="material-icons">edit</i></a>
+      <a class="btn-floating waves-effect waves-light red" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="material-icons">people</i></a>
+    </div>
   </div>
 </div>
 
