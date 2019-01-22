@@ -37,8 +37,8 @@ class Solution(me.Document):
                                   required=True,
                                   dbref=True)
     owner = me.ReferenceField('User',
-                             required=True,
-                             dbref=True)
+                              required=True,
+                              dbref=True)
 
     submitted_date = me.DateTimeField(required=True,
                                       default=datetime.datetime.now)

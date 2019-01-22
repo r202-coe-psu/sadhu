@@ -30,24 +30,31 @@
 <div class="row">
   <div class="col s12">
   {% for t in solution.test_results %}
-    <div>
-      <h6>Testcase {{ loop.index }}</h6>
-      Valid: {{ t.validated }}
-      {% if t.public %}
-        <div class="col s6">
-          <div class="card-panel teal lighten-2">Your Output</div>
-          <code>
-            {{ t.output }}
-          </code>
+    <div class="row">
+      <div class="col s12">
+        <h5>Testcase {{ loop.index }}</h5>
+        <div>
+          Valid: {{ t.validated }}
         </div>
-        <div class="col s6">
-          <div class="card-panel teal lighten-2">Expected Output</div>
-          <code>
-            {{ t.expected_output }}
-          </code>
-        </div>
-      {% endif %}
-    <div>
+      </div>
+    </div>
+
+    {% if t.public %}
+    <div class="row">
+      <div class="col s6">
+        <h6 class="class-panel blue lighten-4">Your Output</h6>
+        <code class="white">
+        {{ t.output }}
+        </code>
+      </div>
+      <div class="col s6">
+        <h6 class="class-panel blue lighten-4">Expected Output</h6>
+        <code>
+          {{ t.expected_result }}
+        </code>
+      </div>
+    </div>
+    {% endif %}
   {% endfor %}
   </div>
 </div>
