@@ -84,7 +84,8 @@ def view(challenge_id):
 
     now = datetime.datetime.now()
 
-
+    show_submission = assignment_time.started_date <= now and \
+            now < assignment_time.ended_date
 
     form = forms.challenges.Solution()
     return render_template(
@@ -92,7 +93,7 @@ def view(challenge_id):
             challenge=challenge,
             solutions=solutions,
             assignment=assignment,
-            show_submission=now < assignment_time.ended_date,
+            show_submission=show_submission,
             form=form)
 
 

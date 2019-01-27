@@ -31,7 +31,7 @@ def index_user():
             continue
 
         for ass_t in class_.assignment_schedule:
-            if now < ass_t.ended_date:
+            if ass_t.started_date <= now and now < ass_t.ended_date:
                 ass_schedule.append(
                         dict(assignment_schedule=ass_t,
                              class_=class_))
