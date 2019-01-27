@@ -94,7 +94,7 @@ class Tester:
             output = None
             try:
                 output = subprocess.run(executable_list,
-                    input=input_str,
+                    input=input_str.encode(),
                     timeout=self.timeout,
                     capture_output=True)
             except Exception as e:
