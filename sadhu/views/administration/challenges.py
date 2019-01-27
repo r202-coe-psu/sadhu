@@ -31,7 +31,7 @@ def create():
     form = forms.challenges.ChallengeForm(request.form)
     print(form.data)
     if not form.validate_on_submit():
-        return render_template('/administration/challenges/create.html',
+        return render_template('/administration/challenges/create-edit.html',
                                form=form)
     data = form.data.copy()
     data.pop('csrf_token')
@@ -50,8 +50,7 @@ def edit(challenge_id):
 
     form = forms.challenges.ChallengeForm(obj=challenge)
     if not form.validate_on_submit():
-        print('error->', form.errors)
-        return render_template('/administration/challenges/create.html',
+        return render_template('/administration/challenges/create-edit.html',
                                form=form)
     data = form.data.copy()
     data.pop('csrf_token')
