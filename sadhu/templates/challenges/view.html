@@ -42,7 +42,7 @@
 
 		<h5>Output Format</h5>
 		<div>
-			{{ challenge.output_format }}
+			{{ markdown(challenge.output_format, extensions=['fenced_code', 'codehilite']) | safe }}
 		</div>
 
 		<h5>Score</h5>
