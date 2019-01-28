@@ -18,7 +18,7 @@
 		#}
 		<h5>Problem Statement</h5>
 		<div>
-			{{ challenge.problem_statement }}
+			{{ markdown(challenge.problem_statement, extensions=['fenced_code', 'codehilite']) | safe }}
 		</div>
 
 		<h5>Input Format</h5>

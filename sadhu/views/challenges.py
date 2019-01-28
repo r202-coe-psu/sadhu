@@ -10,6 +10,8 @@ from sadhu import forms
 from sadhu import models
 
 import datetime
+import markdown
+
 
 module = Blueprint('challenges',
                    __name__,
@@ -87,6 +89,11 @@ def view(challenge_id):
     show_submission = assignment_time.started_date <= now and \
             now < assignment_time.ended_date
 
+    md = markdown.markdown(challenge.problem_statement,
+            extensions=['fenced_code', 'codehilite'])
+    print('md\n\n', md)
+    print(markdown.extensions.codehilite)
+
     form = forms.challenges.Solution()
     return render_template(
             '/challenges/view.html',
@@ -94,7 +101,8 @@ def view(challenge_id):
             solutions=solutions,
             assignment=assignment,
             show_submission=show_submission,
-            form=form)
+            form=form,
+            markdown=markdown.markdown)
 
 
 @module.route('/<challenge_id>/submit-solution', methods=['GET', 'POST'])

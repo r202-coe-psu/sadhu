@@ -10,3 +10,4 @@ loginpass
 passlib
 bcrypt
 pygments
+markdown
