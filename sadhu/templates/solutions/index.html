@@ -25,11 +25,11 @@
             <th>Operation</th>
           </tr>
         </thead>
-        <body>
+        <tbody>
   {% for solution in solutions %}
           <tr class="{{ 'red lighten-4' if not solution.passed }}">
             <td>
-              <a href="{{ url_for('challenges.view', challenge_id=solution.challenge.id) }}">{{ solution.challenge.name }}</a>
+              <a href="{{ url_for('challenges.view', challenge_id=solution.challenge.id, class_id=solution.enrolled_class.id) }}">{{ solution.challenge.name }}</a>
             </td>
             <td>
               <a href="{{ url_for('classes.view', class_id=solution.enrolled_class.id) }}">{{ solution.enrolled_class.name }}</a>
@@ -55,7 +55,7 @@
             </td>
           </tr>
   {% endfor %}
-        </body>
+        </tbody>
       </table>
   </div>
 </div>

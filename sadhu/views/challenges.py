@@ -11,7 +11,7 @@ from sadhu import models
 
 import datetime
 import markdown
-
+from pygments.formatters import HtmlFormatter
 
 module = Blueprint('challenges',
                    __name__,
@@ -77,7 +77,7 @@ def view(challenge_id):
     solutions = models.Solution.objects(
             owner=current_user._get_current_object(),
             enrolled_class=class_,
-            challenge=challenge)
+            challenge=challenge).order_by('-id')
 
     assignment = models.Assignment.objects(
             challenges=challenge,
@@ -91,8 +91,10 @@ def view(challenge_id):
 
     md = markdown.markdown(challenge.problem_statement,
             extensions=['fenced_code', 'codehilite'])
-    print('md\n\n', md)
-    print(markdown.extensions.codehilite)
+
+    formatter = HtmlFormatter(linenos=True)
+    style = formatter.get_style_defs('.codehilite')
+
 
     form = forms.challenges.Solution()
     return render_template(
@@ -102,7 +104,8 @@ def view(challenge_id):
             assignment=assignment,
             show_submission=show_submission,
             form=form,
-            markdown=markdown.markdown)
+            markdown=markdown.markdown,
+            style=style)
 
 
 @module.route('/<challenge_id>/submit-solution', methods=['GET', 'POST'])

@@ -1,6 +1,14 @@
 {% extends '/challenges/index.html' %}
 {% import '/base/html-renderer.html' as renderer %}
 
+{% block additional_head %}
+{{ super() }}
+
+<style type="text/css">
+  {{ style }}
+</style>
+{% endblock %}
+
 {% block breadcrumbs %}
 {{ super() }}
 <a href="{{ url_for('challenges.view', challenge_id=challenge.id, **request.args.to_dict()) }}" class="breadcrumb">{{ challenge.name }}</a>
@@ -86,7 +94,7 @@
 
         <tbody>
           {% for solution in solutions %}
-          <tr>
+          <tr class="{{ 'red lighten-4' if not solution.passed }}">
               <td>{{ solution.code.filename }}</td>
               <td>{{ solution.submitted_date }}</td>
               <td>{{ solution.status }}</td>
