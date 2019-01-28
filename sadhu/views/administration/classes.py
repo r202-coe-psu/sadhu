@@ -133,6 +133,7 @@ def set_assignment_time(class_id, assignment_id):
 def list_students(class_id):
     class_ = models.Class.objects.get(id=class_id)
     enrollments = class_.enrollments
+    enrollments = sorted(enrollments, key=lambda e: e.user.first_name)
 
     return render_template('/administration/classes/list-students.html',
                            class_=class_,
