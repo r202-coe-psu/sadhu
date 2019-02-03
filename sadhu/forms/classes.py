@@ -8,6 +8,11 @@ from .fields import TagListField, TextListField
 
 from flask_wtf import FlaskForm
 
+
+class TeachingAssistantAddingForm(FlaskForm):
+    users = fields.SelectMultipleField('Users')
+
+
 class LimitedEnrollmentForm(Form):
     method = fields.SelectField('Method',
             validators=[validators.InputRequired()]

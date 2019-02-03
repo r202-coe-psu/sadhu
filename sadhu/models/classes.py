@@ -28,6 +28,17 @@ class AssignmentTime(me.EmbeddedDocument):
                                     auto_now=True,
                                     default=datetime.datetime.now)
 
+class TeachingAssistant(me.EmbeddedDocument):
+    user = me.ReferenceField('User', dbref=True, required=True)
+    started_date = me.DateTimeField(required=True,
+                                    default=datetime.datetime.now)
+    ended_date = me.DateTimeField(required=True,
+                                  default=datetime.datetime.now)
+    updated_date = me.DateTimeField(required=True,
+                                    auto_now=True,
+                                    default=datetime.datetime.now)
+
+
 
 class Class(me.Document):
     name = me.StringField(required=True)
@@ -54,8 +65,8 @@ class Class(me.Document):
                                     default=datetime.datetime.now)
 
     owner = me.ReferenceField('User', dbref=True, required=True)
-    teaching_assistant = me.ListField(
-            me.ReferenceField('User', dbref=True, required=True))
+    teaching_assistants = me.ListField(
+            me.EmbeddedDocumentField(TeachingAssistant))
     contributors = me.ListField(me.ReferenceField('User',
                                                   dbref=True,
                                                   required=True))

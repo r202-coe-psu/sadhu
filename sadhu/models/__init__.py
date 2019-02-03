@@ -2,7 +2,11 @@ from .users import User
 from .oauth2 import OAuth2Token
 from .challenges import Challenge, Solution, TestCase, TestResult
 from .courses import Course, LANGUAGE_CHOICES
-from .classes import Class, Enrollment, LimitedEnrollment, AssignmentTime
+from .classes import (Class,
+                      Enrollment,
+                      LimitedEnrollment,
+                      AssignmentTime,
+                      TeachingAssistant)
 from .assignments import Assignment
 
 from flask_mongoengine import MongoEngine

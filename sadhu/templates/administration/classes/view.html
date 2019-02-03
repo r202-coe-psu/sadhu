@@ -42,8 +42,15 @@
 			<b>Tag:</b> {{ class_.tags | join(', ') }}
     </div>
     <div>
+      <b>Teaching Assistant</b> 
+      {% for ta in class_.teaching_assistants %}
+        {{ ta.user.first_name }} {{ ta.user.last_name }}, 
+      {% endfor %}
+    </div>
+    <div>
       <a class="btn-floating waves-effect waves-light red" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="material-icons">edit</i></a>
       <a class="btn-floating waves-effect waves-light red" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="material-icons">people</i></a>
+      <a class="btn-floating waves-effect waves-light red" href="{{ url_for('administration.classes.add_teaching_assistant', class_id=class_.id) }}"><i class="material-icons">assistant</i></a>
     </div>
   </div>
 </div>

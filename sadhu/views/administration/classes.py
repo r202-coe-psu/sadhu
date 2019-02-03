@@ -151,6 +151,7 @@ def show_student_score(class_id, student_id):
                            student=student,
                            assignments=assignments)
 
+
 @module.route('/<class_id>/students/<student_id>/assignments/<assignment_id>')
 @acl.allows.requires(acl.is_lecturer)
 def show_student_assignment(class_id, student_id, assignment_id):
@@ -163,3 +164,38 @@ def show_student_assignment(class_id, student_id, assignment_id):
                            student=student,
                            assignment=assignment)
 
+@module.route('/<class_id>/teaching-assistants/add', methods=['GET', 'POST'])
+@acl.allows.requires(acl.is_lecturer)
+def add_teaching_assistant(class_id):
+    class_ = models.Class.objects().get(id=class_id)
+    users = models.User.objects().order_by('first_name')
+
+    form = forms.classes.TeachingAssistantAddingForm()
+    form.users.choices = [(str(user.id), 
+                           '{} {}'.format(user.first_name, user.last_name)) \
+                                   for user in users]
+    if not form.validate_on_submit():
+        return render_template(
+                '/administration/classes/add-teaching-assistant.html',
+                form=form,
+                class_=class_,
+                users=users)
+
+    for user_id in form.users.data:
+        user = models.User.objects.get(id=user_id)
+
+        found_user = False
+        for ta in class_.teaching_assistants:
+            if ta.user == user:
+                found_user = True
+                break
+
+        if not found_user:
+            ta = models.TeachingAssistant(
+                    user=user,
+                    ended_date=class_.ended_date
+                    )
+            class_.teaching_assistants.append(ta)
+    class_.save()
+
+    return redirect(url_for('administration.classes.view', class_id=class_id))
