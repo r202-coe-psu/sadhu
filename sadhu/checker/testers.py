@@ -154,6 +154,7 @@ class CTester(Tester):
         output = subprocess.run(compilation)
 
         result = dict(executable=exe_file,
+                      compiled_date=datetime.datetime.now(),
                       status=True,
                       compilation=compilation)
 
