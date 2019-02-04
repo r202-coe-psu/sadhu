@@ -1,6 +1,14 @@
 {% extends '/administration/challenges/index.html' %}
 {% import '/base/error-handler.html' as eh %}
 
+{% block additional_head %}
+{{ super() }}
+
+<style type="text/css">
+  {{ style }}
+</style>
+{% endblock %}
+
 {% block breadcrumbs %}
 {{ super() }}
 <a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}" class="breadcrumb">{{ challenge.name }}</a>
@@ -17,8 +25,8 @@
 		</div>
 
 		<h5>Problem Statement</h5>
-		<div>
-			{{ challenge.problem_statement }}
+    <div>
+	    {{ markdown(challenge.problem_statement, extensions=['fenced_code', 'codehilite']) | safe }}
 		</div>
 
 		<h5>Input Format</h5>
@@ -33,8 +41,8 @@
 		</div>
 
 		<h5>Output Format</h5>
-		<div>
-			{{ challenge.output_format }}
+    <div>
+      {{ markdown(challenge.output_format, extensions=['fenced_code', 'codehilite']) | safe }}
 		</div>
 
 		<h5>Score</h5>

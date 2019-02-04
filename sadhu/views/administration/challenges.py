@@ -5,9 +5,15 @@ from flask import (Blueprint,
                    url_for)
 from flask_login import current_user
 
+
+import markdown
+from pygments.formatters import HtmlFormatter
+
+
 from sadhu import acl
 from sadhu import forms
 from sadhu import models
+
 
 module = Blueprint('administration.challenges',
                    __name__,
@@ -169,5 +175,13 @@ def edit_testcase(challenge_id, testcase_id):
 @acl.allows.requires(acl.is_lecturer)
 def view(challenge_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
+    md = markdown.markdown(challenge.problem_statement,
+            extensions=['fenced_code', 'codehilite'])
+
+    formatter = HtmlFormatter(linenos=True)
+    style = formatter.get_style_defs('.codehilite')
+
     return render_template('/administration/challenges/view.html',
+                           markdown=markdown.markdown,
+                           style=style,
                            challenge=challenge)
