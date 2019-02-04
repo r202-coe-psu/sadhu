@@ -1,5 +1,6 @@
 {% extends '/challenges/index.html' %}
 {% import '/base/html-renderer.html' as renderer %}
+{% import '/base/solution-style.html' as solution_style %}
 
 {% block additional_head %}
 {{ super() }}
@@ -7,6 +8,20 @@
 <style type="text/css">
   {{ style }}
 </style>
+{% endblock %}
+
+{% block additional_js %}
+  {{ super() }}
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  config: ["MMLorHTML.js"],
+  jax: ["input/TeX", "output/HTML-CSS", "output/NativeMML"],
+  extensions: ["MathMenu.js", "MathZoom.js"]
+});
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename='node_modules/mathjax/MathJax.js') }}"></script>
+
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -26,7 +41,7 @@
 		#}
 		<h5>Problem Statement</h5>
 		<div>
-			{{ markdown(challenge.problem_statement, extensions=['fenced_code', 'codehilite']) | safe }}
+			{{ markdown(challenge.problem_statement, extensions=['fenced_code', 'codehilite', 'mdx_math']) | safe }}
 		</div>
 
 		<h5>Input Format</h5>
@@ -42,7 +57,7 @@
 
 		<h5>Output Format</h5>
 		<div>
-			{{ markdown(challenge.output_format, extensions=['fenced_code', 'codehilite']) | safe }}
+			{{ markdown(challenge.output_format, extensions=['fenced_code', 'codehilite', 'mdx_math']) | safe }}
 		</div>
 
 		<h5>Score</h5>
@@ -94,7 +109,7 @@
 
         <tbody>
           {% for solution in solutions %}
-          <tr class="{{ 'red lighten-4' if not solution.passed }}">
+          <tr class="{{ solution_style.get_solution_class(solution) }}">
               <td>{{ solution.code.filename }}</td>
               <td>{{ solution.submitted_date }}</td>
               <td>{{ solution.status }}</td>

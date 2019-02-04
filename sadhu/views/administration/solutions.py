@@ -6,9 +6,11 @@ from flask import (Blueprint,
 from flask_login import current_user
 
 
-from pygments.lexers import get_lexer_for_filename
+from pygments.lexers import get_lexer_for_filename, get_lexer_by_name
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
+
+import difflib
 
 from sadhu import acl
 from sadhu import forms
@@ -38,9 +40,14 @@ def view(solution_id):
     formated_code = highlight(code, lexer, formatter)
     style = formatter.get_style_defs('.highlight')
 
+    console_lexer = get_lexer_by_name("console")
     return render_template('/administration/solutions/view.html',
                            solution=solution,
                            formated_code=formated_code,
+                           console_lexer=console_lexer,
+                           formatter=formatter,
+                           highlight=highlight,
+                           difflib=difflib,
                            style=style)
 
 

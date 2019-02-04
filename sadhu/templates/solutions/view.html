@@ -8,6 +8,20 @@
 </style>
 {% endblock %}
 
+{% block additional_js %}
+  <script type="text/javascript">
+      options = {};
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('.collapsible');
+      var instances = M.Collapsible.init(elems, options);
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('.modal');
+      var instances = M.Modal.init(elems, options);
+    });
+  </script>
+{% endblock %}
+
 {% block breadcrumbs %}
 <a href="{{ url_for('administration.solutions.index') }}" class="breadcrumb">Solutions</a>
 {% endblock %}
@@ -32,7 +46,7 @@
   {% for t in solution.test_results %}
     <div class="row {{ 'red lighten-4' if not t.validated }}">
       <div class="col s12">
-        <h5>Testcase {{ loop.index }}</h5>
+        <h5>Test Case {{ loop.index }}</h5>
         <div>
           Valid: {{ t.validated }}
         </div>
@@ -41,13 +55,33 @@
 
     {% if t.public %}
     <div class="row">
+      <div class="col s12">
+        <a class="waves-effect waves-light btn modal-trigger" href="#modal{{ loop.index }}">Deep Result Analysis</a>
+        <div id="modal{{ loop.index }}" class="modal">
+          <div class="modal-content">
+            <h4>Test Case {{ loop.index }}</h4>
+            <div>
+      {{ difflib.HtmlDiff(linejunk=difflib.IS_LINE_JUNK).make_file(t.output.splitlines(keepends=True), t.expected_result.splitlines(keepends=True)) | safe }}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">OK</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
       <div class="col s6">
         <h6 class="class-panel blue lighten-4">Your Output</h6>
-        <pre>{{ t.output }}</pre>
+        <code>
+          {{ highlight(t.output, console_lexer, formatter) | safe }}
+        </code>
       </div>
       <div class="col s6">
         <h6 class="class-panel blue lighten-4">Expected Output</h6>
-        <pre>{{ t.expected_result }}</pre>
+        <code>
+          {{ highlight(t.expected_result, console_lexer, formatter) | safe }}
+        </code>
       </div>
     </div>
     {% endif %}

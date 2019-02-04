@@ -13,6 +13,7 @@ class TestResult(me.EmbeddedDocument):
 
     expected_result = me.StringField()
     output = me.StringField()
+    diff = me.StringField()
 
     timeout = me.BooleanField(default=False, required=True)
     validated = me.BooleanField(default=False, required=True)

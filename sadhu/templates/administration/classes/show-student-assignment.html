@@ -1,4 +1,5 @@
 {% extends '/base/default-dashboard.html' %}
+{% import '/base/solution-style.html' as solution_style %}
 
 {% block breadcrumbs %}
 <a href="{{ url_for('administration.classes.index') }}" class="breadcrumb">Class</a>
@@ -28,9 +29,9 @@
 					<th>Operation</th>
 				</tr>
 			</thead>
-			<tbody>
+      <tbody>
         {% for solution in challenge.get_solutions(class_, student).order_by('-id')  %}
-          <tr class="{{ 'red lighten-4' if not solution.passed}}">
+          <tr class="{{ solution_style.get_solution_class(solution) }}">
           <td>
             {{ solution.submitted_date }}
           </td>

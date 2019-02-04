@@ -114,7 +114,7 @@ class Tester:
                 
                 is_validate = True
 
-                if abs(len(output_data) - len(testcase_data)) > 1:
+                if abs(len(output_data) - len(testcase_data)) > 2:
                     is_validate = False
                 else:
                     for t_output, p_output in zip(testcase_data, output_data):
