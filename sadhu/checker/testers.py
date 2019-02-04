@@ -108,8 +108,8 @@ class Tester:
             if output and output.returncode == 0:
                 test_result.output = output.stdout.decode()
 
-                output_data = test_result.output.split('\n')
-                testcase_data = test_result.expected_result.split('\n')
+                output_data = test_result.output.splitlines()
+                testcase_data = test_result.expected_result.splitlines()
 
                 
                 is_validate = True
