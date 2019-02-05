@@ -48,9 +48,13 @@
       {% endfor %}
     </div>
     <div>
+      {% if class_.owner == current_user %}
       <a class="btn-floating waves-effect waves-light red" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="material-icons">edit</i></a>
       <a class="btn-floating waves-effect waves-light red" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="material-icons">people</i></a>
       <a class="btn-floating waves-effect waves-light red" href="{{ url_for('administration.classes.add_teaching_assistant', class_id=class_.id) }}"><i class="material-icons">assistant</i></a>
+    {% elif class_.is_teaching_assistant(current_user) %}
+      <a class="btn-floating waves-effect waves-light red" href="{{ url_for('teaching_assistants.classes.list_students', class_id=class_.id) }}"><i class="material-icons">people</i></a>
+    {% endif %}
     </div>
   </div>
 </div>
@@ -78,7 +82,9 @@
 					<td>{{ ass_time.started_date if ass_time else '-' }}</td>
 					<td>{{ ass_time.ended_date if ass_time else '-' }}</td>
 					<td>
-            <a href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i class="material-icons">access_alarm</i></a>
+            {% if class_.owner == current_user %}
+              <a href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i class="material-icons">access_alarm</i></a>
+            {% endif %}
 					</td>
 				</tr>
 			{% endfor %}

@@ -5,13 +5,16 @@ from flask import (Blueprint,
                    )
 from flask_login import current_user, login_required
 
-from sadhu import acl
-from sadhu import forms
+
 from sadhu import models
 
-import mongoengine as me
+from . import classes
+from . import solutions
 
-import datetime
+subviews = [classes,
+            solutions
+            ]
+
 
 module = Blueprint('teaching_assistants',
                    __name__,
@@ -24,10 +27,10 @@ module = Blueprint('teaching_assistants',
 @login_required
 def index():
     classes = models.Class.objects(
-            teaching_assistants__user=current_user._get_current_objects())
+            teaching_assistants__user=current_user._get_current_object())
 
-    courses = [class_.course for class_ in classes]
     
     return render_template('/teaching-assistants/index.html',
-                           courses=courses)
+                           classes=classes)
+
 

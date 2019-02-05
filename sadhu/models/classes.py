@@ -73,6 +73,13 @@ class Class(me.Document):
 
     meta = {'collection': 'classes'}
 
+    def is_teaching_assistant(self, user):
+        for ta in self.teaching_assistants:
+            if user == ta.user:
+                return True
+
+        return False
+
     def get_assignment_score(self, user):
         
         total_assignment_score = 0

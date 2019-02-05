@@ -8,8 +8,11 @@ from . import assignments
 from . import challenges
 from . import solutions
 
+from . import teaching_assistants
+
 from . import admin
 from . import administration
+
 
 def get_subblueprints(views=[]):
     blueprints = []
@@ -35,6 +38,7 @@ def register_blueprint(app):
                                     assignments,
                                     challenges,
                                     solutions,
+                                    teaching_assistants,
                                     administration
                                     ])
 

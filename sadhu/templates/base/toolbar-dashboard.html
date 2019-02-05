@@ -39,8 +39,27 @@
     <li><a href="{{ url_for('solutions.index') }}"><i class="material-icons">question_answer</i>Solution</a></li>
     <li><a href="{{ url_for('classes.index') }}"><i class="material-icons">class</i>Class</a></li>
 		<li><a href="{{ url_for('courses.index') }}"><i class="material-icons">subject</i>Course</a></li>
-		{% endif %}
+    {% endif %}
 
+    {% set assistant_classes = current_user.get_teaching_assistant_class() %}
+    {% if assistant_classes | count %}
+      <li>
+        <ul class="collapsible" data-collapsible="accordion" style="padding-left:16px;">
+          <li>
+            <a class="collapsible-header waves-effect waves-cyan"><i class="material-icons">assistant</i>TA <i class="material-icons right" id="more">expand_more</i></a>
+            <div class="collapsible-body">
+              <ul>
+                <li><a style="padding-left:32px;" href="{{ url_for('teaching_assistants.index') }}"><i class="material-icons">dashboard</i>All</a></li>
+                {% for class_ in assistant_classes %}
+                  <li><a style="padding-left:32px;" href="{{ url_for('teaching_assistants.classes.view', class_id=class_.id) }}"><i class="material-icons">class</i>{{ class_.name[:25] }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </li>
+    {% endif %}
+  
     {% if current_user.has_roles(['admin']) %}
     <li>
       <ul class="collapsible" data-collapsible="accordion" style="padding-left:16px;">
@@ -76,3 +95,11 @@
 		</nav>
 	</div>
 </div>
+
+<script>
+  options = {};
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.collapsible');
+    var instances = M.Collapsible.init(elems, options);
+  });
+</script>

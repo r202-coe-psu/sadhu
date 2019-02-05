@@ -4,12 +4,35 @@
 <div class="row">
   <div class="col s12">
     <h3>Hello {{ current_user.first_name }} {{ current_user.last_name }}</h3>
+    <h4>Teaching Assistant Mode</h4>
   </div>
 </div>
 
-
 <div class="row">
   <div class="col s12">
+    <h5>Class</h5>
+    <table>
+      <thead>
+        <tr>
+            <th>Name</th>
+            <th>Operations</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for class_ in classes %}
+        <tr>
+          <td>
+            <a href="{{ url_for('teaching_assistants.classes.view', class_id=class_.id) }}">{{ class_.name }}</a>
+          </td>
+          <td>
+             <a href="{{ url_for('teaching_assistants.classes.view', class_id=class_.id) }}"><i class="material-icons">visibility</i></a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
   </div>
 </div>
 

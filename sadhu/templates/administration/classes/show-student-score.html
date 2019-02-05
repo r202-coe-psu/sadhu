@@ -39,7 +39,11 @@
             {{ assignment.get_score(class_=class_, user=student) }}
           </td>
           <td>
-            <a href="{{ url_for('administration.classes.show_student_assignment', class_id=class_.id, student_id=student.id, assignment_id=assignment.id) }}"><i class="material-icons">visibility</i></a>
+            {% if class_.owner == current_user %}
+              <a href="{{ url_for('administration.classes.show_student_assignment', class_id=class_.id, student_id=student.id, assignment_id=assignment.id) }}"><i class="material-icons">visibility</i></a>
+            {% elif class_.is_teaching_assistant(current_user) %}
+              <a href="{{ url_for('teaching_assistants.classes.show_student_assignment', class_id=class_.id, student_id=student.id, assignment_id=assignment.id) }}"><i class="material-icons">visibility</i></a>
+            {% endif %}
 		      </td>
 
 				</tr>

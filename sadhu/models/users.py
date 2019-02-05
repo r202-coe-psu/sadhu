@@ -29,3 +29,10 @@ class User(me.Document, UserMixin):
             if role in self.roles:
                 return True
         return False
+
+    def get_teaching_assistant_class(self):
+        from sadhu import models
+        classes = models.Class.objects(
+                teaching_assistants__user=self)
+
+        return classes
