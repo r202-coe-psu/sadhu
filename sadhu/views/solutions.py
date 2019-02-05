@@ -33,7 +33,7 @@ def index():
 
 
 @module.route('/<solution_id>/')
-@login_required
+@acl.allows.requires(acl.is_solution_owner)
 def view(solution_id):
     solution = models.Solution.objects(
             id=solution_id,

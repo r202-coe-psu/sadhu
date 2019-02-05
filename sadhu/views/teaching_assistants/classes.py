@@ -32,8 +32,7 @@ def index():
 
 
 @module.route('/<class_id>')
-@login_required
-#@acl.allows.requires(acl.is_lecturer)
+@acl.allows.requires(acl.is_teaching_assistant)
 def view(class_id):
     class_ = models.Class.objects.get(id=class_id)
     return render_template('/administration/classes/view.html',
@@ -41,7 +40,7 @@ def view(class_id):
 
 
 @module.route('/<class_id>/list_students')
-@login_required
+@acl.allows.requires(acl.is_teaching_assistant)
 def list_students(class_id):
 
     class_ = models.Class.objects.get(
@@ -56,8 +55,7 @@ def list_students(class_id):
                            class_=class_)
 
 @module.route('/<class_id>/students/<student_id>')
-# @acl.allows.requires(acl.is_lecturer)
-@login_required
+@acl.allows.requires(acl.is_teaching_assistant)
 def show_student_score(class_id, student_id):
     class_ = models.Class.objects.get(id=class_id)
     student = models.User.objects.get(id=student_id)
@@ -70,8 +68,7 @@ def show_student_score(class_id, student_id):
 
 
 @module.route('/<class_id>/students/<student_id>/assignments/<assignment_id>')
-# @acl.allows.requires(acl.is_lecturer)
-@login_required
+@acl.allows.requires(acl.is_teaching_assistant)
 def show_student_assignment(class_id, student_id, assignment_id):
     class_ = models.Class.objects.get(id=class_id)
     student = models.User.objects.get(id=student_id)

@@ -26,7 +26,7 @@ def index():
 
 
 @module.route('/<class_id>/edit', methods=['GET', 'POST'])
-@acl.allows.requires(acl.is_lecturer)
+@acl.allows.requires(acl.is_class_owner)
 def edit(class_id):
     courses = models.Course.objects()
 
@@ -83,7 +83,7 @@ def create():
 
 
 @module.route('/<class_id>')
-@acl.allows.requires(acl.is_lecturer)
+@acl.allows.requires(acl.is_class_owner)
 def view(class_id):
     class_ = models.Class.objects.get(id=class_id)
     return render_template('/administration/classes/view.html',
@@ -91,7 +91,7 @@ def view(class_id):
 
 @module.route('/<class_id>/set-assignment-time/<assignment_id>',
               methods=['GET', 'POST'])
-@acl.allows.requires(acl.is_lecturer)
+@acl.allows.requires(acl.is_class_owner)
 def set_assignment_time(class_id, assignment_id):
     class_ = models.Class.objects.get(id=class_id)
     assignment = models.Assignment.objects.get(id=assignment_id)
@@ -129,7 +129,7 @@ def set_assignment_time(class_id, assignment_id):
 
 
 @module.route('/<class_id>/students')
-@acl.allows.requires(acl.is_lecturer)
+@acl.allows.requires(acl.is_class_owner)
 def list_students(class_id):
     class_ = models.Class.objects.get(id=class_id)
     enrollments = class_.enrollments
@@ -140,7 +140,7 @@ def list_students(class_id):
                            enrollments=enrollments)
 
 @module.route('/<class_id>/students/<student_id>')
-@acl.allows.requires(acl.is_lecturer)
+@acl.allows.requires(acl.is_class_owner)
 def show_student_score(class_id, student_id):
     class_ = models.Class.objects.get(id=class_id)
     student = models.User.objects.get(id=student_id)
@@ -153,7 +153,7 @@ def show_student_score(class_id, student_id):
 
 
 @module.route('/<class_id>/students/<student_id>/assignments/<assignment_id>')
-@acl.allows.requires(acl.is_lecturer)
+@acl.allows.requires(acl.is_class_owner)
 def show_student_assignment(class_id, student_id, assignment_id):
     class_ = models.Class.objects.get(id=class_id)
     student = models.User.objects.get(id=student_id)
@@ -165,7 +165,7 @@ def show_student_assignment(class_id, student_id, assignment_id):
                            assignment=assignment)
 
 @module.route('/<class_id>/teaching-assistants/add', methods=['GET', 'POST'])
-@acl.allows.requires(acl.is_lecturer)
+@acl.allows.requires(acl.is_class_owner)
 def add_teaching_assistant(class_id):
     class_ = models.Class.objects().get(id=class_id)
     users = models.User.objects().order_by('first_name')
