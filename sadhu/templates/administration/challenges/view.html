@@ -94,9 +94,9 @@ MathJax.Hub.Config({
 
       <tbody>
         {% for tc in challenge.test_cases %}
-        <tr>
-          <td>{{ tc.input_string }}</td>
-          <td>{{ tc.output_string }}</td>
+        <tr valign="top">
+          <td><pre>{{ tc.input_string }}</pre></td>
+          <td><pre>{{ tc.output_string }}</pre></td>
           <td>{{ tc.public }}</td>
           <td>{{ tc.created_date }}</td>
           <td>
