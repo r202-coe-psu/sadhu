@@ -50,7 +50,7 @@ def view(solution_id):
     style = formatter.get_style_defs('.highlight')
 
     console_lexer = get_lexer_by_name("console")
-    return render_template('/solutions/view.html',
+    return render_template('/administration/solutions/view.html',
                            solution=solution,
                            challenge=challenge,
                            formated_code=formated_code,
