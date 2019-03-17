@@ -149,7 +149,7 @@ class CTester(Tester):
 
     def prepair_executable(self, filename):
         exe_file = filename[:filename.rfind('.')]
-        compilation = ['gcc', '-Wall', filename, '-o', exe_file]
+        compilation = ['gcc', '-Wall', '-lm', filename, '-o', exe_file]
         
         output = subprocess.run(compilation)
 
