@@ -56,16 +56,23 @@
 <div class="row">
   <div class="col s12">
   {% for t in solution.test_results %}
-    <div class="row {{ 'red lighten-4' if not t.validated }}">
+    <div class="row {{ 'red lighten-4' if not t.validated else 'green lighten-4' }}">
       <div class="col s12">
         <h5>Test Case {{ loop.index }}</h5>
         <div>
-          Valid: {{ t.validated }}
+          <ul>
+            <li>
+              Valid: {{ t.validated }}
+            </li>
+            <li>
+              Public: {{ t.public }}
+            </li>
+          </ul>
         </div>
       </div>
     </div>
 
-    {% if t.public %}
+    {% if t.public or solution.enrolled_class.owner == current_user or solution.enrolled_class.is_teaching_assistant(current_user) %}
     <div class="row">
       <div class="col s12">
         <a class="waves-effect waves-light btn modal-trigger" href="#modal{{ loop.index }}">Deep Result Analysis</a>
