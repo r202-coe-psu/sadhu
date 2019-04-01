@@ -91,7 +91,8 @@ def add_testcase(challenge_id):
                     filename=form.input_file.data.filename,
                     content_type=form.input_file.data.content_type)
         else:
-            test_case.input_string = form.input_file.data.read()
+            data = form.input_file.data.read()
+            test_case.input_string = data.replace('\r', '')
 
     if form.output_file.data:
         if form.is_outputfile.data:
@@ -107,7 +108,7 @@ def add_testcase(challenge_id):
     if (not test_case.output_string) or len(test_case.output_string) == 0:
         test_case.output_string = form.output_string.data
 
-    test_case.is_inputfile = form.is_inputfile.data
+    test_case.is_inputfile = form.is_inputfile.data.replace('/r', '')
     test_case.is_outputfile = form.is_outputfile.data
     
     test_case.save()
@@ -137,14 +138,17 @@ def edit_testcase(challenge_id, testcase_id):
     data.pop('csrf_token')
 
     test_case.update(**data)
+    test_case.input_string = test_case.input_string.replace('\r', '')
 
     if form.input_file.data:
+
         if form.is_inputfile.data:
             test_case.input_file.put(form.input_file.data,
                     filename=form.input_file.data.filename,
                     content_type=form.input_file.data.content_type)
         else:
-            test_case.input_string = form.input_file.data.read()
+            data = form.input_file.data.read()
+            test_case.input_string = data.replace('\r', '')
 
     if form.output_file.data:
         if form.is_outputfile.data:
