@@ -103,12 +103,12 @@ def add_testcase(challenge_id):
             test_case.output_string = form.output_file.data.read()
 
     if (not test_case.input_string) or len(test_case.input_string) == 0:
-        test_case.input_string = form.input_string.data
+        test_case.input_string = form.input_string.data.replace('\r', '')
 
     if (not test_case.output_string) or len(test_case.output_string) == 0:
         test_case.output_string = form.output_string.data
 
-    test_case.is_inputfile = form.is_inputfile.data.replace('/r', '')
+    test_case.is_inputfile = form.is_inputfile.data
     test_case.is_outputfile = form.is_outputfile.data
     
     test_case.save()
