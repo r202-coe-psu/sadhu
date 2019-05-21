@@ -14,7 +14,7 @@ class Server:
         self.queue = queue.Queue()
 
         self.solc = testrunners.SolutionController(self.queue)
-        self.test_runners = testrunners.TestRunner(self.queue)
+        self.test_runners = testrunners.TestRunner(self.queue, settings)
         self.test_runners.start()
 
         logging.basicConfig(level=logging.DEBUG,

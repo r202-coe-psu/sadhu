@@ -12,14 +12,14 @@ logger = logging.getLogger(__name__)
 
 
 class TestRunner(threading.Thread):
-    def __init__(self, queue):
+    def __init__(self, queue, settings):
         super().__init__()
 
         self.queue = queue
         self.daemon = True
         self.running = False
 
-        settings = dict()
+        self.settings = settings
         self.testers = dict(
                 C=testers.CTester(settings),
                 Python=testers.PythonTester(settings)
