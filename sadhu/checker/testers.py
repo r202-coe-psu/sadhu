@@ -152,9 +152,7 @@ class CTester(Tester):
 
     def prepair_executable(self, filename):
         exe_file = filename[:filename.rfind('.')]
-        compilation = self.compiler_options.extend(
-                [filename, '-o', exe_file])
-        
+        compilation = self.compiler_options + [filename, '-o', exe_file]
         output = subprocess.run(compilation)
 
         result = dict(executable=exe_file,
@@ -177,4 +175,4 @@ class PythonTester(Tester):
                 self.settings['TESTRUNNER_PYTHON_RUNNER'].split(' ') ]
 
     def build_executable_options(self, filename):
-        return self.runner_options.extend([filename])
+        return self.runner_options + [filename]
