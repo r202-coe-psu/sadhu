@@ -3,10 +3,8 @@ services:
     mongodb:
         image: mongo
         container_name: sadhu-mongodb
-        ports:
-            - 27017:27017
         volumes:
-            - ../deployment/mongodb/data/db:/data/db
+            - ../deployment/sadhu/mongodb/data/db:/data/db
             - /etc/localtime:/etc/localtime:ro
         restart: always
         networks:
@@ -21,7 +19,7 @@ services:
         ports:
             - 9000:9000
         links:
-            - sadhu-mongodb
+            - mongodb
         networks:
             - sadhu_nw
         restart: always
@@ -34,11 +32,13 @@ services:
             - ../deployment:/deployment
             - /etc/localtime:/etc/localtime:ro
         links:
-            - sadhu-mongodb
+            - mongodb
         networks:
             - sadhu_nw
         restart: always
-        command: SADHU_SETTINGS=$(pwd)/sadhu-production.cfg sadhu-checker
+        environment:
+            - /app/sadhu-production.cfg
+        command: sadhu-checker
 
 networks:
     sadhu_nw:
