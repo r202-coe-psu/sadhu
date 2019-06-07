@@ -1,6 +1,17 @@
 {% extends '/administration/assignments/index.html' %}
 {% import '/base/error-handler.html' as eh %}
 
+{%- macro get_challenge_status_style(class_, challenge) %}
+{%- set style = 'yellow lighten-4' -%}
+{%- set user_score = challenge.score - challenge.get_solution_score(class_, current_user) -%}
+{%- if user_score == 0 %}
+  {%- set style = 'green lighten-4' -%}
+{% elif user_score > 0%}
+  {%- set style = 'red lighten-4' -%}
+{% endif -%}
+{{ style }}
+{%- endmacro %}
+
 {% block additional_js %}
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -43,12 +54,13 @@
 					<th>Name</th>
 					<th>Description</th>
 					<th>Score</th>
+					<th>Your Score</th>
 					<th>Submitted</th>
 				</tr>
 			</thead>
 			<body>
-{% for challenge in assignment.challenges %}
-				<tr>
+        {% for challenge in assignment.challenges %}
+          <tr class="{{ get_challenge_status_style(class_, challenge) }}">
 					<td>
 						<a href="{{ url_for('challenges.view', challenge_id=challenge.id, **request.args) }}">{{ challenge.name }}</a>
 					</td>
@@ -57,12 +69,15 @@
 					</td>
 					<td>
 						{{ challenge.score }}
+          </td>
+					<td>
+            {{ '{:.2f}'.format(challenge.get_solution_score(class_, current_user)) }}
 					</td>
           <td>
-            {{'Submitted' if challenge.get_solutions(class_, current_user) else 'Waiting' }}
+            {{'Done' if challenge.is_done(class_, current_user) else 'Waiting' }}
 					</td>
 				</tr>
-{% endfor %}
+        {% endfor %}
 			</body>
 		</table>
 		{% endif %}

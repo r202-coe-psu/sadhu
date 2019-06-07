@@ -30,6 +30,11 @@ MathJax.Hub.Config({
 {% endblock %}
 
 {% block content %}
+<div class="row grey lighten-2">
+  <div class="col s12">
+    Assignment: <a href="{{ url_for('assignments.practice', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
+  </div>
+</div>
 <div class="row">
   <div class="col s12">
 		<h3>{{ challenge.name }}</h3>
@@ -114,7 +119,7 @@ MathJax.Hub.Config({
               <td>{{ solution.submitted_date }}</td>
               <td>{{ solution.status }}</td>
               <td>{{ solution.passed }}</td>
-              <td>{{ solution.score }}</td>
+              <td>{{ '{:.2f}'.format(solution.score) }}</td>
               <td>
                 {% if solution.status == 'complete' %}
                   <a href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="material-icons">visibility</i></a>

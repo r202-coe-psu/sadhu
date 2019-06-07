@@ -1,4 +1,4 @@
-{% macro get_solution_class(solution) -%}
+{%- macro get_solution_class(solution) -%}
 {%- set class_str = '' -%}
 {% if solution.passed -%}
   {% set class_str = 'green lighten-4' %}

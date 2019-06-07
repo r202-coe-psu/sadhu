@@ -1,8 +1,6 @@
 import mongoengine as me
 import datetime
 
-from .users import User
-from .classes import Class
 
 class TestResult(me.EmbeddedDocument):
     test_case = me.ReferenceField('TestCase', required=True, dbref=True)
@@ -74,6 +72,7 @@ class TestCase(me.Document):
 
     meta = {'collection': 'test_cases'}
 
+
 class Challenge(me.Document):
     name = me.StringField(required=True)
     description = me.StringField(required=True)
@@ -113,7 +112,7 @@ class Challenge(me.Document):
         solutions = self.get_solutions(class_, user)
         if not solutions:
             return None
-    
+
         best_solution = None
         if solutions.count() > 0:
             best_solution = solutions[0]
@@ -121,12 +120,19 @@ class Challenge(me.Document):
         for solution in solutions:
             if solution.score > best_solution.score:
                 best_solution = solution
-        
+
         return best_solution
-        
-    def get_score(self, class_, user):
+
+    def get_solution_score(self, class_, user):
         solution = self.get_best_solution(class_, user)
         if solution:
             return solution.score
 
         return 0
+
+    def is_done(self, class_, user):
+
+        if self.get_solution_score(class_, user) == self.score:
+            return True
+
+        return False

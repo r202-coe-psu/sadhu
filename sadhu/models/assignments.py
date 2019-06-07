@@ -1,6 +1,8 @@
 import mongoengine as me
 import datetime
 
+from .classes import Class
+
 
 class Assignment(me.Document):
     name = me.StringField(required=True)
@@ -77,7 +79,6 @@ class Assignment(me.Document):
         from sadhu import models
 
         challenge_checker = dict()
-    
         solutions = models.Solution.objects(
                 owner=user,
                 enrolled_class=class_,
@@ -88,4 +89,38 @@ class Assignment(me.Document):
 
         return challenge_checker
 
+    def count_done_challenges(self, class_, user):
+        count = 0
+        for challenge in self.challenges:
+            if challenge.is_done(class_, user):
+                count += 1
 
+        return count
+
+
+def get_assignment_schedule(user):
+    now = datetime.datetime.now()
+
+    available_classes = Class.objects(
+            (me.Q(limited_enrollment__grantees=user.email) |
+                me.Q(limited_enrollment__grantees=user.username)) &
+            (me.Q(started_date__lte=now) &
+                me.Q(ended_date__gte=now))
+            ).order_by('ended_date')
+
+    ass_schedule = []
+    for class_ in available_classes:
+        if not class_.is_enrolled(user.id):
+            continue
+
+        for ass_t in class_.assignment_schedule:
+            if ass_t.started_date <= now and now < ass_t.ended_date:
+                ass_schedule.append(
+                        dict(assignment_schedule=ass_t,
+                             class_=class_))
+
+    def order_by_ended_date(e):
+        return e['assignment_schedule'].ended_date
+
+    ass_schedule.sort(key=order_by_ended_date)
+    return ass_schedule
