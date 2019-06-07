@@ -23,6 +23,7 @@ class Tester:
         self.timeout = 60 # time in second
         directory = settings.get('SADHU_CHECKER_DIRECTORY', '/tmp')
         self.directory = directory if directory[-1] != '/' else directory[:-1]
+        self.settings = settings
 
     def prepare_file(self, solution):
         p = Path('{}/{}/{}'.format(self.directory,
@@ -146,11 +147,12 @@ class Tester:
 class CTester(Tester):
     def __init__(self, settings):
         super().__init__(settings)
+        self.compiler_options = [ s.strip() for s in \
+                self.settings['TESTRUNNER_C_COMPILER'].split(' ') ]
 
     def prepair_executable(self, filename):
         exe_file = filename[:filename.rfind('.')]
-        compilation = ['gcc', '-Wall', '-lm', filename, '-o', exe_file]
-        
+        compilation = self.compiler_options + [filename, '-o', exe_file]
         output = subprocess.run(compilation)
 
         result = dict(executable=exe_file,
@@ -169,5 +171,8 @@ class PythonTester(Tester):
     def __init__(self, settings):
         super().__init__(settings)
 
+        self.runner_options = [ s.strip() for s in \
+                self.settings['TESTRUNNER_PYTHON_RUNNER'].split(' ') ]
+
     def build_executable_options(self, filename):
-        return ['python', filename]
+        return self.runner_options + [filename]
