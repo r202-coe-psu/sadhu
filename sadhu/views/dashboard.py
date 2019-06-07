@@ -9,8 +9,11 @@ import datetime
 module = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 subviews = []
 
+
 def index_admin():
-    return render_template('/dashboard/index-admin.html')
+    return render_template('/dashboard/index-admin.html',
+                           now=datetime.datetime.now())
+
 
 def index_user():
 
@@ -18,12 +21,11 @@ def index_user():
     now = datetime.datetime.now()
 
     available_classes = models.Class.objects(
-            (me.Q(limited_enrollment__grantees=user.email) | 
-                 me.Q(limited_enrollment__grantees=user.username)) &
+            (me.Q(limited_enrollment__grantees=user.email) |
+                me.Q(limited_enrollment__grantees=user.username)) &
             (me.Q(started_date__lte=now) &
-                 me.Q(ended_date__gte=now))
+                me.Q(ended_date__gte=now))
             ).order_by('ended_date')
-
 
     ass_schedule = []
     for class_ in available_classes:
@@ -43,8 +45,10 @@ def index_user():
 
     return render_template('/dashboard/index.html',
                            available_classes=available_classes,
-                           assignment_schedule=ass_schedule
+                           assignment_schedule=ass_schedule,
+                           now=datetime.datetime.now(),
                            )
+
 
 @module.route('/')
 @login_required

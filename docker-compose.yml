@@ -1,32 +1,46 @@
 version: '3'
 services:
-        mongodb:
-                image: mongo
-                container_name: mongodb-sadhu
-                ports:
-                        - 27017:27017
-                volumes:
-                        - ./data/db:/data/db
-                restart: always
-                # networks:
-                #         - sadhu_nw
-        web:
-                build:
-                        context: .
-                image: sadhu-image
-                container_name: sadhu-web
-                volumes:
-                        - .:/app
-                ports:
-                        - 8080:8080
-                links:
-                        - mongodb
-                depends_on:
-                        - mongodb
-                # networks:
-                # - sadhu_nw
-                command: sadhu-web --host 0.0.0.0 --port 8080
-# networks:
-#         sadhu_nw:
-#                 driver: bridge
-        
+    mongodb:
+        image: mongo
+        container_name: sadhu-mongodb
+        ports:
+            - 27017:27017
+        volumes:
+            - ../deployment/mongodb/data/db:/data/db
+            - /etc/localtime:/etc/localtime:ro
+        restart: always
+        networks:
+            - sadhu_nw
+    web:
+        build: .
+        image: sadhu-image
+        container_name: sadhu-web
+        volumes:
+            - ../deployment:/deployment
+            - /etc/localtime:/etc/localtime:ro
+        ports:
+            - 9000:9000
+        links:
+            - sadhu-mongodb
+        networks:
+            - sadhu_nw
+        restart: always
+        command: /app/scripts/sadhu-uwsgi.sh
+    checker:
+        build: .
+        image: sadhu-image
+        container_name: sadhu-checker
+        volumes:
+            - ../deployment:/deployment
+            - /etc/localtime:/etc/localtime:ro
+        links:
+            - sadhu-mongodb
+        networks:
+            - sadhu_nw
+        restart: always
+        command: SADHU_SETTINGS=$(pwd)/sadhu-production.cfg sadhu-checker
+
+networks:
+    sadhu_nw:
+        driver: bridge
+      
