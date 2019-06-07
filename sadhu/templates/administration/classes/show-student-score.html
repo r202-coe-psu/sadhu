@@ -32,7 +32,7 @@
           </td>
           <td>
             {% for challenge in assignment.challenges %}
-              {{ challenge.get_score(class_, student) }} 
+              {{ challenge.get_solution_score(class_, student) }} 
             {% endfor %}
           </td>
           <td>

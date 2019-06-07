@@ -77,7 +77,7 @@
           </div>
           <div class="row">
             <div class="col s12">
-              <button name="create" type="submit" class="waves-effect waves-light btn">Create</button>
+              <button name="create" type="submit" class="waves-effect waves-light btn">{{ 'Create' if 'create' in request.path else 'Edit' }}</button>
             </div>
           </div>
         </div>
