@@ -4,8 +4,9 @@
 
 {% block content %}
 <div class="row" style="min-height: 40vh;">
-  <div class="col s6">
-    <h3>Login</h3>
+  <div class="col s12 center">
+    <div>
+      <h3>Login</h3>
     {#
     <div class="row">
       <div class="col s12">
@@ -14,17 +15,14 @@
     </div>
     #}
 
-    <div class="row">
-      <div class="col s4">
-        <a href="{{ url_for('accounts.login_engpsu') }}" class="waves-effect waves-light btn blue">PSU Eng</a>
+      <div class="row">
+        <a href="{{ url_for('accounts.login_engpsu') }}" class="waves-effect waves-light btn-large red accent-4"><i class="material-icons left">settings</i> PSU ENGINEERING</a>
       </div>
-      <div class="col s4">
-        <a href="{{ url_for('loginpass_google.login') }}" class="waves-effect waves-light btn blue">Google</a>
-        </div>
+      <div class="row">
+        <a href="{{ url_for('loginpass_google.login') }}" class="waves-effect waves-light btn-large blue"><i class="material-icons left">G</i> Google</a>
       </div>
+
     </div>
-
-
   </div>
 </div>
 {% endblock %}

@@ -1,4 +1,5 @@
 import datetime
+
 from flask import (Blueprint,
                    render_template,
                    url_for,
@@ -7,8 +8,9 @@ from flask import (Blueprint,
                    request)
 from flask_login import login_user, logout_user, login_required, current_user
 
-from sadhu import models
-from sadhu import oauth2
+from .. import models
+from .. import oauth2
+from .. import forms
 
 module = Blueprint('accounts', __name__)
 
@@ -16,7 +18,7 @@ module = Blueprint('accounts', __name__)
 def get_user_and_remember():
     client = oauth2.oauth2_client
     result = client.principal.get('me')
-    print('got: ', result.json())
+    # print('got: ', result.json())
     data = result.json()
 
     user = models.User.objects(
@@ -47,46 +49,48 @@ def login():
     return render_template('/accounts/login.html')
 
 
-@module.route('/login-principal')
-def login_principal():
-    client = oauth2.oauth2_client
-    redirect_uri = url_for('accounts.authorized_principal',
-                       _external=True)
-    response = client.principal.authorize_redirect(redirect_uri)
+# @module.route('/login-principal')
+# def login_principal():
+#     client = oauth2.oauth2_client
+#     redirect_uri = url_for('accounts.authorized_principal',
+#                            _external=True)
+#     response = client.principal.authorize_redirect(redirect_uri)
 
-    return response
+#     return response
+
 
 @module.route('/login-engpsu')
 def login_engpsu():
     client = oauth2.oauth2_client
     redirect_uri = url_for('accounts.authorized_engpsu',
-                       _external=True)
+                           _external=True)
     response = client.engpsu.authorize_redirect(redirect_uri)
     return response
 
-@module.route('/authorized-principal')
-def authorized_principal():
-    client = oauth2.oauth2_client
+# @module.route('/authorized-principal')
+# def authorized_principal():
+#     client = oauth2.oauth2_client
 
-    try:
-        token = client.principal.authorize_access_token()
-    except Exception as e:
-        print(e)
-        return redirect(url_for('accounts.login'))
+#     try:
+#         token = client.principal.authorize_access_token()
+#     except Exception as e:
+#         print(e)
+#         return redirect(url_for('accounts.login'))
 
-    get_user_and_remember()
-    oauth2token = models.OAuth2Token(
-            name=client.principal.name,
-            user=current_user._get_current_object(),
-            access_token=token.get('access_token'),
-            token_type=token.get('token_type'),
-            refresh_token=token.get('refresh_token', None),
-            expires=datetime.datetime.utcfromtimestamp(
-                token.get('expires_at'))
-            )
-    oauth2token.save()
+#     get_user_and_remember()
+#     oauth2token = models.OAuth2Token(
+#             name=client.principal.name,
+#             user=current_user._get_current_object(),
+#             access_token=token.get('access_token'),
+#             token_type=token.get('token_type'),
+#             refresh_token=token.get('refresh_token', None),
+#             expires=datetime.datetime.utcfromtimestamp(
+#                 token.get('expires_at'))
+#             )
+#     oauth2token.save()
 
-    return redirect(url_for('dashboard.index'))
+#     return redirect(url_for('dashboard.index'))
+
 
 @module.route('/authorized-engpsu')
 def authorized_engpsu():
@@ -99,7 +103,7 @@ def authorized_engpsu():
 
     userinfo_response = client.engpsu.get('userinfo')
     userinfo = userinfo_response.json()
- 
+
     user = models.User.objects(username=userinfo.get('username')).first()
 
     if not user:
@@ -129,7 +133,7 @@ def authorized_engpsu():
             access_token=token.get('access_token'),
             token_type=token.get('token_type'),
             refresh_token=token.get('refresh_token', None),
-            expires=datetime.datetime.utcfromtimestamp(
+            expires=datetime.datetime.fromtimestamp(
                 token.get('expires_in'))
             )
     oauth2token.save()
@@ -142,3 +146,33 @@ def authorized_engpsu():
 def logout():
     logout_user()
     return redirect(url_for('site.index'))
+
+
+@module.route('/accounts')
+@login_required
+def index():
+
+    return render_template('/accounts/index.html')
+
+
+@module.route('/accounts/edit-profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = forms.accounts.Profile(
+            obj=current_user,
+            **current_user.metadata
+            )
+    if not form.validate_on_submit():
+        return render_template('/accounts/edit-profile.html', form=form)
+
+    user = current_user._get_current_object()
+    user.first_name = form.first_name.data
+    user.last_name = form.first_name.data
+
+    for key in ['thai_first_name', 'thai_last_name', 'student_id',
+                'organization']:
+        user.metadata[key] = form.data[key]
+
+    user.save()
+
+    return redirect(url_for('dashboard.index'))

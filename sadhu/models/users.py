@@ -21,6 +21,7 @@ class User(me.Document, UserMixin):
                                     auto_now=True)
 
     resources = me.DictField()
+    metadata = me.DictField()
 
     meta = {'collection': 'users'}
 
@@ -36,3 +37,8 @@ class User(me.Document, UserMixin):
                 teaching_assistants__user=self)
 
         return classes
+
+    def get_image(self):
+        if 'google' in self.resources:
+            return self.resources['google'].get('picture', None)
+        return None

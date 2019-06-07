@@ -10,8 +10,8 @@ RUN pip3 install flask
 RUN python3.7 setup.py develop
 RUN pip3 install uwsgi
 ENV SADHU_SETTINGS=/app/sadhu-production.cfg
-ENV FLASK_ENV=prodoction
-ENV AUTHLIB_INSECURE_TRANSPORT=true
+#ENV FLASK_ENV=prodoction
+#ENV AUTHLIB_INSECURE_TRANSPORT=true
 
 
 #EXPOSE 8080

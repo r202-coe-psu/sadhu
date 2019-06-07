@@ -1,79 +1,81 @@
 <ul id="slide-out" class="sidenav sidenav-fixed">
-   <li>
-			<div class="userView blue darken-2">
-					{#
-					<div class="background">
-							<img src="images/office.jpg">
-					</div>
-					#}
-					{#
-					<a href="#!user"><img class="circle" src="images/yuna.jpg"></a>
-					#}
-          <a href="#!name"><span class="white-text name">{{ current_user.first_name }} {{ current_user.last_name }}</span></a><br/>
-					<a href="#!email"><span class="white-text email">{{ current_user.email }}</span></a>
-			</div>
-    </li>
-    <li><a href="{{ url_for('dashboard.index') }}"><i class="material-icons">dashboard</i>Dashboard</a></li>
+  <li>
+    <div class="row blue darken-2">
+      <div style="padding-top: 10px;">
+      <div class="col s4">
+        {%- if current_user.get_image() %}
+        <a href="{{ url_for('accounts.index') }}"><img class="circle" src="{{ current_user.get_image() }}"></a>
+        {% endif -%}
+      </div>
+      <div class="col s8">
+        <a href="{{ url_for('accounts.index') }}"><span class="white-text name">{{ current_user.first_name }} {{ current_user.last_name }}</span></a><br/>
+        <a href="{{ url_for('accounts.index') }}"><span class="white-text email">{{ current_user.email }}</span></a>
+      </div>
+      </div>
+		</div>
+  </li>
+  <li><a href="{{ url_for('dashboard.index') }}"><i class="material-icons">dashboard</i>Dashboard</a></li>
 
-    {% if current_user.has_roles(['lecturer', 'admin']) %}
-    {#
-    <li>
-      <ul class="collapsible" data-collapsible="accordion" style="padding-left:16px;">
-        <li><a class="collapsible-header waves-effect waves-cyan"><i class="material-icons">assignment</i>Assignment <i class="material-icons right" id="more">expand_more</i></a>
-          <div class="collapsible-body">
-            <ul>
-              <li><a style="padding-left:32px;" href="{{ url_for('administration.assignments.index') }}"><i class="material-icons">list</i>List</a></li>
-              <li><a style="padding-left:32px;" href="{{ url_for('administration.assignments.create') }}"><i class="material-icons">create</i>Create</a></li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-    </li>
-    #}
-
-		<li><a href="{{ url_for('administration.courses.index') }}"><i class="material-icons">subject</i>Course</a></li>
-    <li><a href="{{ url_for('administration.assignments.index') }}"><i class="material-icons">assignment</i>Assignment</a></li>
-    <li><a href="{{ url_for('administration.challenges.index') }}"><i class="material-icons">question_answer</i>Challenge</a></li>
-    <li><a href="{{ url_for('administration.classes.index') }}"><i class="material-icons">class</i>Class</a></li>
-		{% else %}
-    <li><a href="{{ url_for('solutions.index') }}"><i class="material-icons">question_answer</i>Solution</a></li>
-    <li><a href="{{ url_for('classes.index') }}"><i class="material-icons">class</i>Class</a></li>
-		<li><a href="{{ url_for('courses.index') }}"><i class="material-icons">subject</i>Course</a></li>
-    {% endif %}
-
-    {% set assistant_classes = current_user.get_teaching_assistant_class() %}
-    {% if assistant_classes | count %}
-      <li>
-        <ul class="collapsible" data-collapsible="accordion" style="padding-left:16px;">
-          <li>
-            <a class="collapsible-header waves-effect waves-cyan"><i class="material-icons">assistant</i>TA <i class="material-icons right" id="more">expand_more</i></a>
-            <div class="collapsible-body">
-              <ul>
-                <li><a style="padding-left:32px;" href="{{ url_for('teaching_assistants.index') }}"><i class="material-icons">dashboard</i>All</a></li>
-                {% for class_ in assistant_classes %}
-                  <li><a style="padding-left:32px;" href="{{ url_for('teaching_assistants.classes.view', class_id=class_.id) }}"><i class="material-icons">class</i>{{ class_.name[:25] }}</a></li>
-                {% endfor %}
-              </ul>
-            </div>
-          </li>
-        </ul>
+  {% if current_user.has_roles(['lecturer', 'admin']) %}
+  {#
+  <li>
+    <ul class="collapsible" data-collapsible="accordion" style="padding-left:16px;">
+      <li><a class="collapsible-header waves-effect waves-cyan"><i class="material-icons">assignment</i>Assignment <i class="material-icons right" id="more">expand_more</i></a>
+        <div class="collapsible-body">
+          <ul>
+            <li><a style="padding-left:32px;" href="{{ url_for('administration.assignments.index') }}"><i class="material-icons">list</i>List</a></li>
+            <li><a style="padding-left:32px;" href="{{ url_for('administration.assignments.create') }}"><i class="material-icons">create</i>Create</a></li>
+          </ul>
+        </div>
       </li>
-    {% endif %}
-  
-    {% if current_user.has_roles(['admin']) %}
+    </ul>
+  </li>
+  #}
+
+  <li><a href="{{ url_for('administration.courses.index') }}"><i class="material-icons">subject</i>Course</a></li>
+  <li><a href="{{ url_for('administration.assignments.index') }}"><i class="material-icons">assignment</i>Assignment</a></li>
+  <li><a href="{{ url_for('administration.challenges.index') }}"><i class="material-icons">question_answer</i>Challenge</a></li>
+  <li><a href="{{ url_for('administration.classes.index') }}"><i class="material-icons">class</i>Class</a></li>
+  {% else %}
+  <li><a href="{{ url_for('solutions.index') }}"><i class="material-icons">question_answer</i>Solution</a></li>
+  <li><a href="{{ url_for('classes.index') }}"><i class="material-icons">class</i>Class</a></li>
+  <li><a href="{{ url_for('courses.index') }}"><i class="material-icons">subject</i>Course</a></li>
+  {% endif %}
+
+  {% set assistant_classes = current_user.get_teaching_assistant_class() %}
+  {% if assistant_classes | count %}
     <li>
       <ul class="collapsible" data-collapsible="accordion" style="padding-left:16px;">
-        <li><a class="collapsible-header waves-effect waves-cyan"><i class="material-icons">supervisor_account</i>Admin <i class="material-icons right" id="more">expand_more</i></a>
+        <li>
+          <a class="collapsible-header waves-effect waves-cyan"><i class="material-icons">assistant</i>TA <i class="material-icons right" id="more">expand_more</i></a>
           <div class="collapsible-body">
             <ul>
-              <li><a style="padding-left:32px;" href="{{ url_for('administration.assignments.index') }}"><i class="material-icons">assignment</i>Assignment</a></li>
+              <li><a style="padding-left:32px;" href="{{ url_for('teaching_assistants.index') }}"><i class="material-icons">dashboard</i>All</a></li>
+              {% for class_ in assistant_classes %}
+                <li><a style="padding-left:32px;" href="{{ url_for('teaching_assistants.classes.view', class_id=class_.id) }}"><i class="material-icons">class</i>{{ class_.name[:25] }}</a></li>
+              {% endfor %}
             </ul>
           </div>
         </li>
       </ul>
     </li>
-    {% endif %}
-    <li><a href="{{ url_for('accounts.logout') }}"><i class="material-icons">exit_to_app</i>Logout</a></li>
+  {% endif %}
+
+  {% if current_user.has_roles(['admin']) %}
+  <li>
+    <ul class="collapsible" data-collapsible="accordion" style="padding-left:16px;">
+      <li><a class="collapsible-header waves-effect waves-cyan"><i class="material-icons">supervisor_account</i>Admin <i class="material-icons right" id="more">expand_more</i></a>
+        <div class="collapsible-body">
+          <ul>
+            <li><a style="padding-left:32px;" href="{{ url_for('administration.assignments.index') }}"><i class="material-icons">assignment</i>Assignment</a></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </li>
+  {% endif %}
+  <li><a href="{{ url_for('accounts.index') }}"><i class="material-icons">account_circle</i>Account</a></li>
+  <li><a href="{{ url_for('accounts.logout') }}"><i class="material-icons">exit_to_app</i>Logout</a></li>
 </ul>
                     
 {# end slide-out menu #}

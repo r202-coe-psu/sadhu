@@ -42,7 +42,6 @@ class Assignment(me.Document):
                 enrolled_class=class_,
                 challenge__in=self.challenges)
 
-
         return solutions
 
     def get_score(self, class_, user):
@@ -64,7 +63,7 @@ class Assignment(me.Document):
                         score=s.score)
 
         total_assignment_score = sum(
-                [d['challenge'].score for d in best_solutions.values()])
+                [c.score for c in self.challenges])
         total_solution_score = sum(
                 [d['score'] for d in best_solutions.values()])
 
@@ -73,7 +72,6 @@ class Assignment(me.Document):
             score = total_solution_score/total_assignment_score * self.score
 
         return score
-
 
     def check_user_submission(self, class_, user):
         from sadhu import models
