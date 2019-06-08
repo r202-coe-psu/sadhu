@@ -11,8 +11,6 @@ from sadhu import models
 import datetime
 import markdown
 from pygments.formatters import HtmlFormatter
-from pygments.lexers import get_lexer_by_name
-from pygments import highlight
 
 module = Blueprint('challenges',
                    __name__,
@@ -110,8 +108,6 @@ def view(challenge_id):
 
     form = forms.challenges.Solution()
 
-    console_lexer = get_lexer_by_name("console")
-
     return render_template(
             '/challenges/view.html',
             challenge=challenge,
@@ -121,9 +117,6 @@ def view(challenge_id):
             form=form,
             markdown=markdown.markdown,
             style=style,
-            highlight=highlight,
-            console_lexer=console_lexer,
-            formatter=formatter,
             )
 
 
