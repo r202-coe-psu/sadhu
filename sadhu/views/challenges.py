@@ -5,13 +5,14 @@ from flask import (Blueprint,
                    url_for)
 from flask_login import current_user, login_required
 
-from sadhu import acl
 from sadhu import forms
 from sadhu import models
 
 import datetime
 import markdown
 from pygments.formatters import HtmlFormatter
+from pygments.lexers import get_lexer_by_name
+from pygments import highlight
 
 module = Blueprint('challenges',
                    __name__,
@@ -108,6 +109,9 @@ def view(challenge_id):
         challenge_status.save()
 
     form = forms.challenges.Solution()
+
+    console_lexer = get_lexer_by_name("console")
+
     return render_template(
             '/challenges/view.html',
             challenge=challenge,
@@ -116,7 +120,11 @@ def view(challenge_id):
             show_submission=show_submission,
             form=form,
             markdown=markdown.markdown,
-            style=style)
+            style=style,
+            highlight=highlight,
+            console_lexer=console_lexer,
+            formatter=formatter,
+            )
 
 
 @module.route('/<challenge_id>/submit-solution', methods=['GET', 'POST'])

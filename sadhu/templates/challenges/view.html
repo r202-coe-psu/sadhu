@@ -74,6 +74,27 @@ MathJax.Hub.Config({
 		<div>
       {{ challenge.tags | join(', ') }}
     </div>
+
+    {%- if challenge.test_cases | count > 0 %}
+		<h5>Public Test Case</h5>
+      <table>
+        <thead>
+          <tr>
+              <th>Input</th>
+              <th>System Output</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {%- for t in challenge.test_cases if t.public %}
+          <tr>
+            <td><pre>{{ t.input_string }}</pre></td>
+            <td><pre>{{ t.output_string }}</pre></td>
+          </tr>
+          {% endfor -%}
+        </tbody>
+      </table>
+    {% endif -%}
   </div>
 </div>
 
