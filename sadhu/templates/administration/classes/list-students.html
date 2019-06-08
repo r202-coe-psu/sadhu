@@ -34,7 +34,7 @@
 					</td>
           <td>
             {% set score = class_.get_assignment_score(enrollment.user) %}
-            {{ score['total_user_score'] }} / {{ score['total_score'] }}
+            {{ '{:.2f}'.format(score['total_user_score']) }} / {{ score['total_score'] }}
 		      </td>
           <td>
             {% if class_.owner == current_user %}

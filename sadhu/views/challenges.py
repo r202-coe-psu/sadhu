@@ -74,8 +74,9 @@ def view(challenge_id):
                 id=request.args.get('class_id')).first()
     challenge = models.Challenge.objects.get(id=challenge_id)
 
+    user = current_user._get_current_object()
     solutions = models.Solution.objects(
-            owner=current_user._get_current_object(),
+            owner=user,
             enrolled_class=class_,
             challenge=challenge).order_by('-id')
 
@@ -86,15 +87,25 @@ def view(challenge_id):
 
     now = datetime.datetime.now()
 
-    show_submission = assignment_time.started_date <= now and \
-            now < assignment_time.ended_date
-
-    md = markdown.markdown(challenge.problem_statement,
-            extensions=['fenced_code', 'codehilite'])
+    show_submission = (assignment_time.started_date <= now
+                       and now < assignment_time.ended_date)
 
     formatter = HtmlFormatter(linenos=True)
     style = formatter.get_style_defs('.codehilite')
 
+    challenge_status = models.ChallengeStatus.objects(
+            user=user,
+            enrolled_class=class_,
+            challenge=challenge,
+            assignment=assignment).first()
+    if not challenge_status:
+        challenge_status = models.ChallengeStatus(
+                enrolled_class=class_,
+                assignment=assignment,
+                challenge=challenge,
+                user=user
+                )
+        challenge_status.save()
 
     form = forms.challenges.Solution()
     return render_template(
@@ -128,7 +139,7 @@ def submit_solution(challenge_id):
                 assignment=assignment,
                 show_submission=now < assignment_time.ended_date,
                 form=form)
-    
+
     if not now < assignment_time.ended_date:
         return redirect(url_for('challenges.view',
                                 challenge_id=challenge.id,

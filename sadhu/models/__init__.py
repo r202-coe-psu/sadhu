@@ -7,7 +7,11 @@ from . import assignments
 
 from .users import User
 from .oauth2 import OAuth2Token
-from .challenges import Challenge, Solution, TestCase, TestResult
+from .challenges import (Challenge,
+                         Solution,
+                         TestCase,
+                         TestResult,
+                         ChallengeStatus)
 from .courses import Course, LANGUAGE_CHOICES
 from .classes import (Class,
                       Enrollment,
@@ -16,13 +20,20 @@ from .classes import (Class,
                       TeachingAssistant)
 from .assignments import Assignment
 
-__all__ = [users, User,
-           oauth2, OAuth2Token,
-           challenges, Challenge, Solution, TestCase, TestResult,
-           courses, Course, LANGUAGE_CHOICES,
-           classes, Class, Enrollment, LimitedEnrollment, AssignmentTime,
+__all__ = [users,
+           User,
+           oauth2,
+           OAuth2Token,
+           challenges,
+           Challenge, Solution,
+           TestCase, TestResult, ChallengeStatus,
+           courses,
+           Course, LANGUAGE_CHOICES,
+           classes,
+           Class, Enrollment, LimitedEnrollment, AssignmentTime,
            TeachingAssistant,
-           assignments, Assignment
+           assignments,
+           Assignment
            ]
 
 

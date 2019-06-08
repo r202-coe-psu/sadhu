@@ -1,14 +1,14 @@
 import mongoengine as me
 import datetime
 
+
 class Enrollment(me.Document):
     user = me.ReferenceField('User', dbref=True, required=True)
     enrolled_class = me.ReferenceField('Class', dbref=True, required=True)
     enrolled_date = me.DateTimeField(required=True,
                                      default=datetime.datetime.now)
-    
-    meta = {'collection': 'enrollments'}
 
+    meta = {'collection': 'enrollments'}
 
 
 class LimitedEnrollment(me.EmbeddedDocument):
@@ -17,6 +17,7 @@ class LimitedEnrollment(me.EmbeddedDocument):
     updated_date = me.DateTimeField(required=True,
                                     auto_now=True,
                                     default=datetime.datetime.now)
+
 
 class AssignmentTime(me.EmbeddedDocument):
     assignment = me.ReferenceField('Assignment', required=True)
@@ -28,6 +29,7 @@ class AssignmentTime(me.EmbeddedDocument):
                                     auto_now=True,
                                     default=datetime.datetime.now)
 
+
 class TeachingAssistant(me.EmbeddedDocument):
     user = me.ReferenceField('User', dbref=True, required=True)
     started_date = me.DateTimeField(required=True,
@@ -37,7 +39,6 @@ class TeachingAssistant(me.EmbeddedDocument):
     updated_date = me.DateTimeField(required=True,
                                     auto_now=True,
                                     default=datetime.datetime.now)
-
 
 
 class Class(me.Document):
@@ -62,7 +63,7 @@ class Class(me.Document):
                                     default=datetime.datetime.now)
 
     ended_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.now)
+                                  default=datetime.datetime.now)
 
     owner = me.ReferenceField('User', dbref=True, required=True)
     teaching_assistants = me.ListField(
@@ -81,7 +82,7 @@ class Class(me.Document):
         return False
 
     def get_assignment_score(self, user):
-        
+
         total_assignment_score = 0
         total_assignment_user_score = 0
         for ass_t in self.assignment_schedule:
@@ -91,7 +92,6 @@ class Class(me.Document):
 
         return dict(total_score=total_assignment_score,
                     total_user_score=total_assignment_user_score)
-
 
     def get_assignment_schedule(self, assignment):
         ass_time = None
@@ -115,4 +115,3 @@ class Class(me.Document):
                 return e
 
         return None
-

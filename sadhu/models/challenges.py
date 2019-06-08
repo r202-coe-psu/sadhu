@@ -73,6 +73,19 @@ class TestCase(me.Document):
     meta = {'collection': 'test_cases'}
 
 
+class ChallengeStatus(me.Document):
+
+    user = me.ReferenceField('User', dbref=True, required=True)
+    challenge = me.ReferenceField('Challenge', dbref=True, required=True)
+    assignment = me.ReferenceField('Assignment', dbref=True, required=True)
+    enrolled_class = me.ReferenceField('Class', dbref=True, required=True)
+
+    first_view = me.DateTimeField(required=True,
+                                  default=datetime.datetime.now)
+
+    meta = {'collection': 'challenge_status'}
+
+
 class Challenge(me.Document):
     name = me.StringField(required=True)
     description = me.StringField(required=True)
@@ -129,6 +142,11 @@ class Challenge(me.Document):
             return solution.score
 
         return 0
+
+    def get_challenge_access(self, class_, user):
+        return ChallengeStatus.objects(enrolled_class=class_,
+                                       challenge=self,
+                                       user=user).first()
 
     def is_done(self, class_, user):
 

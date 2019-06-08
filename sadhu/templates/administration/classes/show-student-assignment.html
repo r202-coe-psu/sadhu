@@ -16,8 +16,16 @@
 
 {% for challenge in assignment.challenges %}
 <div class="row">
-	<div class="col s12">
-    <h6 class="card-panel blue lighten-4">{{ challenge.name }}: {{ challenge.score }}</h6>
+  <div class="col s12">
+    <div class="card-panel blue lighten-4">
+      <h6 style="font-weight: bold;">{{ challenge.name }}: {{ challenge.score }}</h6>
+      {%- set challenge_status = challenge.get_challenge_access(class_, student) -%}
+      {%- set ass_schedule = class_.get_assignment_schedule(assignment) -%}
+      <b>First View: </b> {{ challenge_status.first_view if challenge_status }} <br/>
+      <b>After Start: </b> {{ challenge_status.first_view - ass_schedule.started_date if challenge_status }} <br/>
+      <b>Before End: </b> {{ ass_schedule.ended_date - challenge_status.first_view if challenge_status}}
+
+    </div>
 	  <table>
 			<thead>
 				<tr>

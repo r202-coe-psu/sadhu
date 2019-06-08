@@ -13,11 +13,6 @@ class Assignment(me.Document):
                                dbref=True,
                                required=True)
 
-    # started_date = me.DateTimeField(required=True,
-    #                                 default=datetime.datetime.now)
-    # ended_date = me.DateTimeField(required=True,
-    #                               default=datetime.datetime.now)
-
     created_date = me.DateTimeField(required=True,
                                     default=datetime.datetime.now)
     updated_date = me.DateTimeField(required=True,
