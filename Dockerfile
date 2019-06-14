@@ -11,7 +11,7 @@ WORKDIR /app
 RUN pip3 install flask
 RUN python3.7 setup.py develop
 RUN pip3 install uwsgi
-RUN npm install --prefix sadhu/satatic
+RUN npm install --prefix sadhu/static
 
 ENV SADHU_SETTINGS=/app/sadhu-production.cfg
 #ENV FLASK_ENV=prodoction
