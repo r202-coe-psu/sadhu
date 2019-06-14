@@ -52,10 +52,14 @@
                  End {{ class_.ended_date.date() }} <br>
                  Enroll {{ class_.is_enrolled(current_user.id) }}
               </p>
-        {% if not class_.is_enrolled(current_user.id) %}
-          <a href="{{ url_for('classes.enroll', class_id=class_.id) }}" class="secondary-content"><i class="material-icons">class</i></a>
-        {% endif %}
             </div>
+            {% if not class_.is_enrolled(current_user.id) %}
+            <div class="extra">
+              <div class="ui right floated">
+                <a href="{{ url_for('classes.enroll', class_id=class_.id) }}" class="ui primary button"><i class="users icon"></i>Enroll</a>
+              </div>
+              </div>
+            {% endif %}
           </div>
         </div>
       {% endfor %}
