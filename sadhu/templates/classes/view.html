@@ -1,10 +1,12 @@
-{% extends '/administration/classes/index.html' %}
-{% import '/base/error-handler.html' as eh %}
+{% extends '/classes/index.html' %}
 
+{% block dashboard_title %}
+  Class: {{ class_.name }}
+{% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col s12">
+<div class="ui container">
+  <div class="ui segment">
 		<h3>{{ class_.name }}</h3>
 		<div>
 			{% if enrollment %}
@@ -14,11 +16,7 @@
 
 			{% endif %}
 		</div>
-  </div>
-</div>
 
-<div class="row">
-	<div class="col s12">
 		<div>
 			<b>Description:</b> {{ class_.description }}
 		</div>
@@ -41,13 +39,9 @@
 		<div>
 			<b>Tag:</b> {{ class_.tags | join(', ') }}
 		</div>
-  </div>
-</div>
 
-<div class="row">
-	<div class="col s12">
-		<h5>Assignments</h5>
-		<table>
+		<h3>Assignments</h3>
+		<table class="ui celled blue table">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -70,8 +64,8 @@
 					<td>{{ ass_time.started_date }}</td>
 					<td>{{ ass_time.ended_date }}</td>
           <td>
-            <a href="{{ url_for('assignments.practice', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">
-              <i class="material-icons">visibility</i>
+            <a class="ui circular primary icon button" href="{{ url_for('assignments.practice', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">
+              <i class="eye icon"></i>
             </a>
           </td>
 				</tr>

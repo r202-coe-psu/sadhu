@@ -1,23 +1,17 @@
-{% extends '/administration/assignments/index.html' %}
-{% import '/base/error-handler.html' as eh %}
+{% extends '/assignments/index.html' %}
 
-{% block additional_js %}
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('select').formSelect();
-		});
-	</script>
+{% block dashboard_title %}Assignment: {{ assignment.name }}{% endblock %}
+
+{% block breadcrumbs %}
+{{ super() }}
+<i class="right angle icon divider"></i>
+<div class="active section">{{ assignment.name }}</div>
 {% endblock %}
 
-{% block content %}
-<div class="row">
-  <div class="col s12">
-		<h3>{{ assignment.name }}</h3>
-  </div>
-</div>
 
-<div class="row">
-	<div class="col s12">
+{% block content %}
+<div class="ui container">
+	<div class="ui segment">
 		<div>
 			<p>Course <a href="{{ url_for('courses.view', course_id=assignment.course.id) }}">{{ assignment.course.name }}</a></p>
       {#
@@ -35,11 +29,11 @@
 		</div>
   </div>
 </div>
-<div class="row">
-	<div class="col s12">
+
+<div class="ui container" style="margin-top: 20px">
 	
 	{% if assignment.challenges | count > 0 %}
-	 <table>
+    <table class="ui celled table">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -72,7 +66,6 @@
 		</table>
 		{% endif %}
 
-  </div>
 </div>
 
 

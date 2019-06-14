@@ -167,7 +167,7 @@ def edit_profile():
 
     user = current_user._get_current_object()
     user.first_name = form.first_name.data
-    user.last_name = form.first_name.data
+    user.last_name = form.last_name.data
 
     for key in ['thai_first_name', 'thai_last_name', 'student_id',
                 'organization']:
@@ -175,4 +175,4 @@ def edit_profile():
 
     user.save()
 
-    return redirect(url_for('dashboard.index'))
+    return redirect(url_for('accounts.index'))

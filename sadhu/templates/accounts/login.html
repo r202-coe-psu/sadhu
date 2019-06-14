@@ -3,26 +3,43 @@
 {% block title %}Log in{% endblock %}
 
 {% block content %}
-<div class="row" style="min-height: 40vh;">
-  <div class="col s12 center">
+<div class="ui middle aligned center aligned grid" style="height: 500px">
+  <div class="column">
+    <h2 class="ui image header" style="font-size: 3em;">
+      <i class="ui icon praying hands big" ></i> <br/>
+      {# <img src="{{ url_for('static', filename='images/lotus-full-500px.png') }}" width="200px"> #}
+      <div class="content">
+        Login
+      </div>
+    </h2>
     <div>
-      <h3>Login</h3>
-    {#
-    <div class="row">
-      <div class="col s12">
-        <a href="{{ url_for('accounts.login_principal') }}" class="waves-effect waves-light btn blue">Login with Principal</a>
+      <div class="ui large vertical buttons" >
+        <div class="row" style="padding-top: 10px;">
+          <div class="column header" style="text-align: left;">
+            <h3>For PSU Engineering Faculty Member</h3>
+          </div>
+        </div>
+        <div class="row" style="padding-top: 5px;">
+          <a class="ui labeled icon button primary huge" href="{{ url_for('accounts.login_engpsu') }}">
+            <i class="user icon"></i>
+            PSU Passport by Eng
+          </a>
+        </div>
+        <div class="row" style="padding-top: 20px;">
+          <div class="column header" style="text-align: left;">
+            <h3>Other</h3>
+          </div>
+        </div>
+        <div class="row" style="padding-top: 5px;">
+          <a class="ui labeled icon red button huge" href="{{ url_for('loginpass_google.login') }}">
+            <i class="google icon"></i>
+            Google
+          </a>
+        </div>
       </div>
-    </div>
-    #}
-
-      <div class="row">
-        <a href="{{ url_for('accounts.login_engpsu') }}" class="waves-effect waves-light btn-large red accent-4"><i class="material-icons left">settings</i> PSU ENGINEERING</a>
-      </div>
-      <div class="row">
-        <a href="{{ url_for('loginpass_google.login') }}" class="waves-effect waves-light btn-large blue"><i class="material-icons left">G</i> Google</a>
-      </div>
-
     </div>
   </div>
 </div>
+
+
 {% endblock %}

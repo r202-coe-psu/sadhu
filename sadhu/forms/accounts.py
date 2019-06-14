@@ -139,10 +139,10 @@ class Profile(FlaskForm):
             'First Name',
             validators=[validators.InputRequired()])
     last_name = fields.StringField(
-            'First Name',
+            'Last Name',
             validators=[validators.InputRequired()])
 
     student_id = fields.StringField('Student ID')
     thai_first_name = fields.StringField('Thai First Name')
-    thai_last_name = fields.StringField('Thai First Name')
+    thai_last_name = fields.StringField('Thai Last Name')
     organization = fields.StringField('Organization')

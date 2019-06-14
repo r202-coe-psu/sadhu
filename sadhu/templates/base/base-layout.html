@@ -4,37 +4,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>{% block title  %}{{ config.get('APP_TITLE') }}{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/materialize-css/dist/css/materialize.min.css') }}">
-    <link href="{{ url_for('static', filename='node_modules/google-material-design-icons/icons.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/fomantic-ui-css/semantic.min.css') }}">
+    <script src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/fomantic-ui-css/semantic.min.js') }}"></script>
+    <style type="text/css">
+      body {
+        background-color: #DADADA;
+      }
+    </style>
+    
+    {% block default_head %}{% endblock %}
     {% block additional_head %}{% endblock %}
   </head>
 
   <body>
-    <header> 
-    {% block header %}
-      {% include "/base/toolbar.html" %}
-      {% if request.path == '/' %}
-        {% include "/base/banner.html" %}
-      {% else %}
-        <div style="padding-top:50px;"></div>
-      {% endif %}
-    {% endblock %}
-    </header>
-
-    <main>
-    {% block main %}{% endblock %}
-    </main>
-
-    <footer>
-      {% include "/base/footer.html" %}
-    </footer>
+    {% block body %}{% endblock %}
   </body>
-  <script src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='node_modules/materialize-css/dist/js/materialize.min.js') }}"></script>
-  <script type="text/javascript">
-    $(document).ready(function(){
-      $('.sidenav').sidenav();
-    });
-	</script>
 	{% block additional_js %}{% endblock %}
 </html>

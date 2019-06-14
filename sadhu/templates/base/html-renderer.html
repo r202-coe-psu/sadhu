@@ -1,12 +1,12 @@
 {% import '/base/error-handler.html' as eh %}
 
 {% macro render_field(field, class_='') -%}
-{%- set style = '%s' | format(eh.get_validate_class(field.errors)) -%}
+{%- set style = 'field %s' | format(eh.get_validate_class(field.errors)) -%}
 {%- if class_ != '' -%}
-{%- set style = '%s %s' | format(class_, eh.get_validate_class(field.errors)) -%}
+{%- set style = 'field %s %s' | format(class_, eh.get_validate_class(field.errors)) -%}
 {%- endif -%}
-{{ field(class_=style) }}
 {{ field.label }}
+{{ field(class_=style) }}
 {{ eh.get_error_messages(field.errors) }}
 {%- endmacro %}
 

@@ -10,21 +10,33 @@
 
 {% block additional_js %}
   <script type="text/javascript">
-    options = {};
-    document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('.modal');
-      var instances = M.Modal.init(elems, options);
+    $(document).ready(function(){
+      {% for t in solution.test_results %}
+        {% if t.public or solution.enrolled_class.owner == current_user or solution.enrolled_class.is_teaching_assistant(current_user) %}
+          $("{{ '#show-modal-{:03}'.format(loop.index) }}").click(function(){
+            $("{{ '#modal-{:03}'.format(loop.index) }}").modal('show');
+       });
+        {% endif %}
+      {% endfor %}
     });
   </script>
 {% endblock %}
 
+{% block dashboard_title %}
+Submitted Solutions
+{% endblock %}
+
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.solutions.index') }}" class="breadcrumb">Solutions</a>
+  {% if current_user.has_roles(['admin']) %}
+    <a href="{{ url_for('administration.solutions.index') }}" class="section">Solutions</a>
+  {% else %}
+    <a href="{{ url_for('solutions.index') }}" class="section">Solutions</a>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col s12">
+<div>
+  <div class="ui segment">
     <h3>Solution for {{ solution.challenge.name }}</h3>
     <b>Submitter:</b> {{ solution.owner.first_name }} {{ solution.owner.last_name }}<br/>
     <b>Submitted Date:</b> {{ solution.submitted_date }}<br/>
@@ -33,7 +45,7 @@
     <b>Challenge:</b> {{ solution.challenge.name }}<br/>
     <b>Pass Testcase:</b> {{ solution.passed }}<br/>
     <b>Status:</b> {{ solution.status }}<br/>
-    <b>Score:</b> {{ solution.score }}<br/>
+    <b>Score:</b> {{ '{:.2f}'.format(solution.score) }}<br/>
     {% if 'compilation' in solution.metadata %}
     <div>
       <b>Prepair Status</b>
@@ -53,12 +65,12 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col s12">
+<div style="margin-top: 20px;">
+  <div class="ui segment">
   {% for t in solution.test_results %}
-    <div class="row {{ 'red lighten-4' if not t.validated else 'green lighten-4' }}">
-      <div class="col s12">
-        <h5>Test Case {{ loop.index }}</h5>
+    <div class="ui message {{ 'negative' if not t.validated else 'positive' }}">
+      <div>
+        <h3>Test Case {{ loop.index }}</h3>
         <div>
           <ul>
             <li>
@@ -73,47 +85,59 @@
     </div>
 
     {% if t.public or solution.enrolled_class.owner == current_user or solution.enrolled_class.is_teaching_assistant(current_user) %}
-    <div class="row">
-      <div class="col s12">
-        <a class="waves-effect waves-light btn modal-trigger" href="#modal{{ loop.index }}">Deep Result Analysis</a>
-        <div id="modal{{ loop.index }}" class="modal">
-          <div class="modal-content">
-            <h4>Test Case {{ loop.index }}</h4>
-            <div>
-              {%- set output_str = t.output %}
-              {% if output_str == None %}
-              {% set output_str = '' %}
-              {% endif -%}
-{{ difflib.HtmlDiff(linejunk=difflib.IS_LINE_JUNK).make_file(output_str.splitlines(keepends=True), t.expected_result.splitlines(keepends=True)) | safe }}
-            </div>
-          </div>
-          <div class="modal-footer">
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat">OK</a>
+    {# modal description #}
+    <div class="ui large modal" id="modal-{{'{:03}'.format(loop.index)}}">
+      <div class="header">
+        Deep Result Analysis
+      </div>
+      <div class="content">
+        <div class="description">
+          <div class="ui header">Test Case {{ loop.index }}</div>
+          <div>
+                {%- set output_str = t.output %}
+                  {% if output_str == None %}
+                  {% set output_str = '' %}
+                  {% endif -%}
+                  {{ difflib.HtmlDiff(
+                  wrapcolumn=70, linejunk=difflib.IS_LINE_JUNK).make_file(output_str.splitlines(keepends=True), t.expected_result.splitlines(keepends=True)) | safe }}
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col s6">
-        <h6 class="class-panel blue lighten-4">Your Output</h6>
-        <code>
-          {{ highlight(output_str, console_lexer, formatter) | safe }}
-        </code>
-      </div>
-      <div class="col s6">
-        <h6 class="class-panel blue lighten-4">Expected Output</h6>
-        <code>
-          {{ highlight(t.expected_result, console_lexer, formatter) | safe }}
-        </code>
+      <div class="actions">
+        <div class="ui cancel button">
+          Close
+        </div>
       </div>
     </div>
+
+    <button class="ui primary button" id="{{ 'show-modal-{:03}'.format(loop.index) }}">Deep Result Analysis</button>
+    {# show result #}
+    <div class="ui segment">
+      <div>
+        <h3 class="ui blue header">Your Output</h3>
+        <div>
+          <code>
+            {{ highlight(output_str, console_lexer, formatter) | safe }}
+          </code>
+        </div>
+      </div>
+      <div>
+        <h3 class="ui blue header">Expected Output</h3>
+        <div>
+          <code>
+            {{ highlight(t.expected_result, console_lexer, formatter) | safe }}
+          </code>
+        </div>
+      </div>
+    </div>
+    <div class="ui divider"></div>
     {% endif %}
   {% endfor %}
   </div>
 </div>
 
-<div class="row">
-  <div class="col s12">
+<div style="margin-top: 20px;">
+  <div class="ui segment">
     <code>
       {{ formated_code | safe }}
     </code>

@@ -1,26 +1,17 @@
 {% extends '/base/default-dashboard.html' %}
 
+{% block dashboard_title %}
+  Assignments
+{% endblock %}
 {% block breadcrumbs %}
-<a href="{{ url_for('assignments.index', **request.args.to_dict()) }}" class="breadcrumb">Assignments</a>
+<a href="{{ url_for('assignments.index', **request.args.to_dict()) }}" class="section">Assignments</a>
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col s12">
-    <h3>Assignments</h3>
-    <div>
-      {#
-      <a href="{{ url_for('assignments.create') }}" class="btn-floating waves-effect waves-light tooltipped red" data-position="bottom" data-tooltip="Create assignment"><i class="material-icons">add</i></a>
-      <a href="{{ url_for('assignments.index') }}" class="btn-floating waves-effect waves-light tooltipped green" data-position="bottom" data-tooltip="Question list"><i class="material-icons">list</i></a>
-      #}
-    </div>
-  </div>
-</div>
 
-<div class="row">
-  <div class="col s12">
+<div class="ui container">
 	{%- if assignment_schedule %}
-	 <table>
+	<table class="ui celled table">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -36,27 +27,20 @@
           {%- set assignment_time = schedule['assignment_schedule'] -%}
           {%- set class_ = schedule['class_'] -%}
 				<tr>
-					<td>
+					<td data-label="Name">
 						<a href="{{ url_for('assignments.practice', assignment_id=assignment.id, class_id=class_.id) }}">{{ assignment.name }}</a>
 					</td>
-          <td>{{ assignment.description }}</td>
-					<td>{{ assignment_time.ended_date.ctime() }}</td>
-          <td>{{ assignment.count_done_challenges(class_, current_user) }} / {{ assignment.challenges | count }}</td>
-          <td>{{ assignment.get_score(class_, current_user) }} / {{ assignment.score }}</td>
+          <td data-label="Description">{{ assignment.description }}</td>
+					<td data-label="Due Date">{{ assignment_time.ended_date.ctime() }}</td>
+          <td data-label="Progress">{{ assignment.count_done_challenges(class_, current_user) }} / {{ assignment.challenges | count }}</td>
+          <td data-label="Score">{{ '{:.2f}'.format(assignment.get_score(class_, current_user)) }} / {{ assignment.score }}</td>
 				</tr>
         {% endfor -%}
 			</body>
-   </table>
+  </table>
   {% else %}
     <h4>There are no assignment in this time.</h4>
 	{% endif -%}
 	
-  </div>
 </div>
-
-<div class="row">
-  <div class="col s12">
-  </div>
-</div>
-
 {% endblock %}

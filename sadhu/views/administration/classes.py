@@ -55,7 +55,6 @@ def edit(class_id):
     return redirect(url_for('administration.classes.index'))
 
 
-
 @module.route('/create', methods=['GET', 'POST'])
 @acl.allows.requires(acl.is_lecturer)
 def create():
@@ -89,6 +88,7 @@ def view(class_id):
     return render_template('/administration/classes/view.html',
                            class_=class_)
 
+
 @module.route('/<class_id>/set-assignment-time/<assignment_id>',
               methods=['GET', 'POST'])
 @acl.allows.requires(acl.is_class_owner)
@@ -103,11 +103,11 @@ def set_assignment_time(class_id, assignment_id):
                     started_time=ass_time.started_date.time(),
                     ended_date=ass_time.ended_date.date(),
                     ended_time=ass_time.ended_date.time())
-    
+
     form = forms.assignments.AssignmentTimeForm(data=data)
 
     if not form.validate_on_submit():
-        return  render_template(
+        return render_template(
             '/administration/classes/set-assignment-time.html',
             form=form)
     if not ass_time:
@@ -139,6 +139,7 @@ def list_students(class_id):
                            class_=class_,
                            enrollments=enrollments)
 
+
 @module.route('/<class_id>/students/<student_id>')
 @acl.allows.requires(acl.is_class_owner)
 def show_student_score(class_id, student_id):
@@ -159,10 +160,12 @@ def show_student_assignment(class_id, student_id, assignment_id):
     student = models.User.objects.get(id=student_id)
     assignment = models.Assignment.objects.get(id=assignment_id)
 
-    return render_template('/administration/classes/show-student-assignment.html',
-                           class_=class_,
-                           student=student,
-                           assignment=assignment)
+    return render_template(
+            '/administration/classes/show-student-assignment.html',
+            class_=class_,
+            student=student,
+            assignment=assignment)
+
 
 @module.route('/<class_id>/teaching-assistants/add', methods=['GET', 'POST'])
 @acl.allows.requires(acl.is_class_owner)
@@ -171,9 +174,11 @@ def add_teaching_assistant(class_id):
     users = models.User.objects().order_by('first_name')
 
     form = forms.classes.TeachingAssistantAddingForm()
-    form.users.choices = [(str(user.id), 
-                           '{} {}'.format(user.first_name, user.last_name)) \
-                                   for user in users]
+    form.users.choices = [(str(user.id),
+                           '{} {}'.format(
+                               user.first_name,
+                               user.last_name)) for user in users]
+
     if not form.validate_on_submit():
         return render_template(
                 '/administration/classes/add-teaching-assistant.html',

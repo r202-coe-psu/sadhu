@@ -1,17 +1,26 @@
 {% extends '/base/default-dashboard.html' %}
 
+{% block dashboard_title %}Courses{% endblock %}
+
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.courses.index') }}" class="breadcrumb">Courses</a>
+<a href="{{ url_for('administration.courses.index') }}" class="section">Courses</a>
 {% endblock %}
 
 {% block content %}
 <div class="row">
-  <div class="col s12">
-    <h3>Courses</h3>
-    <div>
-      <a href="{{ url_for('administration.courses.create') }}" class="btn-floating waves-effect waves-light tooltipped red" data-position="bottom" data-tooltip="Create assignment"><i class="material-icons">add</i></a>
-      <a href="{{ url_for('administration.assignments.index') }}" class="btn-floating waves-effect waves-light tooltipped blue" data-position="bottom" data-tooltip="Assignment list"><i class="material-icons">list</i></a>
-      <a href="{{ url_for('administration.challenges.index') }}" class="btn-floating waves-effect waves-light tooltipped green" data-position="bottom" data-tooltip="Question list"><i class="material-icons">list</i></a>
+  <div class="column">
+    <div class="ui labeled icon menu">
+      <a class="item" href="{{ url_for('administration.courses.create') }}">
+        <i class="add icon"></i> Add
+      </a>
+      <a class="item" href="{{ url_for('administration.assignments.index') }}">
+        <i class="laptop code icon"></i>
+        Assignments
+      </a>
+      <a class="item" href="{{ url_for('administration.challenges.index') }}">
+        <i class="code icon"></i>
+        Challenges
+      </a>
     </div>
   </div>
 </div>
@@ -20,7 +29,7 @@
 	<div class="col s12">
 
 	{% if courses %}
-	 <table>
+	 <table class="ui celled table">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -30,10 +39,10 @@
 			<body>
 {% for course in courses %}
 				<tr>
-					<td>
+					<td data-label="Name">
 						<a href="{{ url_for('administration.courses.view', course_id=course.id) }}">{{ course.name }}</a>
 					</td>
-		<td>
+		<td data-label="Description">
 			{{ course.description }}
 		</td>
 				</tr>

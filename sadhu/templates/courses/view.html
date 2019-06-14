@@ -1,16 +1,21 @@
 {% extends '/courses/index.html' %}
 {% import '/base/error-handler.html' as eh %}
 
+{% block dashboard_title %}
+Courses: {{ course.name }}
+{% endblock %}
+
+{% block breadcrumbs %}
+{{ super() }}
+<i class="right angle icon divider"></i>
+<div class="active section">{{ course.name }}</div>
+{% endblock %}
+
 
 {% block content %}
-<div class="row">
-  <div class="col s12">
-		<h3>{{ course.name }}</h3>
-  </div>
-</div>
-
-<div class="row">
-	<div class="col s12">
+<div class="ui container">
+  <div class="ui segment">
+		<h2>{{ course.name }}</h2>
 		<div>
 			{{ course.description }}
 		</div>
@@ -20,9 +25,9 @@
   </div>
 </div>
 
-<div class="row">
-	<div class="col s12">
-    <h5>Class</h5>
+<div class="ui container" style="margin-top: 1em;">
+	<div class="ui segment">
+    <h3>Class</h3>
 		{% if classes %}
 			<table>
 				<tbody>
@@ -48,15 +53,16 @@
 	</div>
 </div>
 
-<div class="row">
-	<div class="col s12">
-	{% if course.assignments | count > 0 %}
-	 <table>
+<div class="ui container" style="margin-top: 1em;">
+  <div class="ui segment">
+    {% if course.assignments | count > 0 %}
+      <h2>Assignments</h2>
+	 <table class="ui celled table">
 			<thead>
 				<tr>
 					<th>Name</th>
 					<th>Description</th>
-				</tr>enrollment
+				</tr>
 			</thead>
 			<body>
 {% for assignment in course.assignments %}
