@@ -148,7 +148,7 @@ Challenge: {{ challenge.name }}
                 {% if solution.status == 'complete' %}
                   <a class="ui circular primary icon button" target="blank" href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="eye icon"></i></a>
                 {% else %}
-                  <i class="eye icon"></i>
+                  <i class="eye circular icon"></i>
                 {% endif %}
               </td>
 					</tr>
