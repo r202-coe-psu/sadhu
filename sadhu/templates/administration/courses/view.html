@@ -1,55 +1,53 @@
 {% extends '/administration/courses/index.html' %}
 {% import '/base/error-handler.html' as eh %}
 
+{% block dashboard_title %}Course: {{ course.name }}{% endblock %}
+
+{% block breadcrumps %}
+<i class="right angle icon divider"></i>
+<div class="active section">{{ course.name }}</div>
+{% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col s12">
-		<h3>{{ course.name }}</h3>
-  </div>
-</div>
-
-<div class="row">
-	<div class="col s12">
-		<div>
-			{{ course.description }}
-		</div>
-    <div>
-      for {{ course.languages | join(', ') }}
-    </div>
-		<div>
-			<p>{{ course.tags | join(', ') }}</p>
+  <div class="ui container">
+    <div class="ui segment">
+      <div>
+        {{ course.description }}
+      </div>
+      <div>
+        for {{ course.languages | join(', ') }}
+      </div>
+      <div>
+        <p>{{ course.tags | join(', ') }}</p>
+      </div>
     </div>
   </div>
-</div>
 
 
-<div class="row">
-	<div class="col s12">
+<div class="ui container" style="margin-top: 20px;">
 	
-	{% if course.assignments | count > 0 %}
-	 <table>
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<body>
-{% for assignment in course.assignments %}
-				<tr>
-					<td>
-						<a href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
-					</td>
-		<td>
-			{{ assignment.description }}
-		</td>
-				</tr>
-{% endfor %}
-			</body>
-		</table>
-		{% endif %}
+  {% if course.assignments | count > 0 %}
+  <table class="ui celled table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <body>
+  {% for assignment in course.assignments %}
+        <tr>
+          <td>
+            <a href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
+          </td>
+          <td>
+            {{ assignment.description }}
+          </td>
+        </tr>
+  {% endfor %}
+      </body>
+    </table>
+    {% endif %}
 
-  </div>
 </div>
 {% endblock %}

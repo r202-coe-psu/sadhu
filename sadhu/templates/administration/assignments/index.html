@@ -1,24 +1,23 @@
 {% extends '/base/default-dashboard.html' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.assignments.index') }}" class="breadcrumb">Assignments</a>
+<a href="{{ url_for('administration.assignments.index') }}" class="section">Assignments</a>
 {% endblock %}
 
+{% block dashboard_title %}
+  Assignments
+{% endblock dashboard_title %}
+
 {% block content %}
-<div class="row">
-  <div class="col s12">
-    <h3>Assignments</h3>
-    <div>
-      <a href="{{ url_for('administration.assignments.create') }}" class="btn-floating waves-effect waves-light tooltipped red" data-position="bottom" data-tooltip="Create assignment"><i class="material-icons">add</i></a>
-      <a href="{{ url_for('administration.assignments.index') }}" class="btn-floating waves-effect waves-light tooltipped green" data-position="bottom" data-tooltip="Question list"><i class="material-icons">list</i></a>
+  <div class="ui container">
+    <div class="ui labeled icon menu">
+      <a class="item" href="{{ url_for('administration.assignments.create') }}"><i class="add icon"></i>Add</a>
     </div>
-  </div>
 </div>
 
-<div class="row">
-  <div class="col s12">
+<div class="ui container" style="margin-top: 20px;">
 	{% if assignments %}
-	 <table>
+	 <table class="ui celled table">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -43,13 +42,5 @@
 			</body>
 		</table>
 		{% endif %}
-	
-  </div>
 </div>
-
-<div class="row">
-  <div class="col s12">
-  </div>
-</div>
-
 {% endblock %}

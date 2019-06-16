@@ -25,63 +25,70 @@ MathJax.Hub.Config({
 {% endblock %}
 
 {% block breadcrumbs %}
-{{ super() }}
-<a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}" class="breadcrumb">{{ challenge.name }}</a>
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  <div class="active section">{{ challenge.name }}</div>
+{% endblock %}
+
+{% block dashboard_title %}
+Challenge: {{ challenge.name }}
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col s12">
-    <h3>{{ challenge.name }} <a class='btn-floating btn-large waves-effect waves-light red' href="{{ url_for('administration.challenges.edit', challenge_id=challenge.id) }}"><i class="material-icons">insert_chart</i></a></h3>
+<div class="ui container">
+  <div class="ui segment">
+    <h2 class="ui header">{{ challenge.name }}</h2>
+    <a class='ui button primary circular icon' href="{{ url_for('administration.challenges.edit', challenge_id=challenge.id) }}"><i class="edit icon"></i></a>
 
-		<h5>Description</h5>
+		<h3>Description</h3>
 		<div>
       {{ challenge.description }}
 		</div>
 
-		<h5>Problem Statement</h5>
+		<h3>Problem Statement</h3>
     <div>
 	    {{ markdown(challenge.problem_statement, extensions=['fenced_code', 'codehilite', 'mdx_math', 'tables']) | safe }}
 		</div>
 
-		<h5>Input Format</h5>
+		<h3>Input Format</h3>
 		<div>
 			{{ challenge.input_format if challenge.input_format and challenge.input_format | count > 0 else '-' }}
 		</div>
 
 
-		<h5>Constrains</h5>
+		<h3>Constrains</h3>
 		<div>
 			{{ challenge.constrains if challenge.constrains and challenge.constrains | count > 0 else '-'}}
 		</div>
 
-		<h5>Output Format</h5>
+		<h3>Output Format</h3>
     <div>
       {{ markdown(challenge.output_format, extensions=['fenced_code', 'codehilite', 'mdx_math', 'tables']) | safe }}
 		</div>
 
-		<h5>Score</h5>
+		<h3>Score</h3>
 		<div>
 			{{ challenge.score }}
 		</div>
 
-		<h5>Tags</h5>
+		<h3>Tags</h3>
 		<div>
 			{{ challenge.tags | join(', ') }}
     </div>
   </div>
 </div>
-<div class="row">
-  <div class="col s12">
-    <h5>Test Case</h5>
-    <a class="btn-floating btn-small waves-effect waves-light red" href="{{ url_for('administration.challenges.add_testcase', challenge_id=challenge.id) }}"><i class="material-icons">add</i></a>
-  </div>
-</div>
 
-{% if challenge.test_cases | count > 0 %}
-<div class="row">
-  <div class="col s12">
-    <table>
+<div class="ui container" style="margin-top: 20px;">
+    <h3>Test Case</h3>
+    <div class="ui labeled icon menu">
+      <a class="item" href="{{ url_for('administration.challenges.add_testcase', challenge_id=challenge.id) }}">
+        <i class="add icon"></i>
+      Add
+      </a>
+    </div>
+
+  {% if challenge.test_cases | count > 0 %}
+    <table class="ui celled table">
       <thead>
         <tr>
           <th>Input</th>
@@ -100,14 +107,13 @@ MathJax.Hub.Config({
           <td>{{ tc.public }}</td>
           <td>{{ tc.created_date }}</td>
           <td>
-            <a href="{{ url_for('administration.challenges.edit_testcase', challenge_id=challenge.id, testcase_id=tc.id) }}"><i class="material-icons">edit</i></a>
+            <a href="{{ url_for('administration.challenges.edit_testcase', challenge_id=challenge.id, testcase_id=tc.id) }}" class="ui button icon primary circular"><i class="edit icon"></i></a>
           </td>
         </tr>
-      {% endfor %}
+       {% endfor %}
       </tbody>
     </table>
-  </div>
+  {% endif %}
 </div>
-{% endif %}
 
 {% endblock %}

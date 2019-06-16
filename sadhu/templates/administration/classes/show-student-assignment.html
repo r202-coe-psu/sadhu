@@ -1,6 +1,8 @@
 {% extends '/base/default-dashboard.html' %}
 {% import '/base/solution-style.html' as solution_style %}
 
+{% block dashboard_title %}Classes{% endblock %}
+
 {% block breadcrumbs %}
 <a href="{{ url_for('administration.classes.index') }}" class="breadcrumb">Class</a>
 {% endblock %}
@@ -10,6 +12,10 @@
   <div class="col s12">
     <h3>Show Assignment</h3>
     <h4>{{ student.first_name }} {{ student.last_name }}</h4>
+      <b>Name:</b>{{ student.first_name }} {{ student.last_name }} <br/>
+      <b>Thai Name</b>{{ student.metadata['thai_first_name'] }} {{ student.metadata['thai_last_name'] }}<br/>
+      <b>Student ID</b> {{ student.metadata['student_id'] }} <b>Organization</b> {{ student.metadata['organization'] }}<br/>
+
     <h5>Assignment: {{ assignment.name }}<h5>
   </div>
 </div>

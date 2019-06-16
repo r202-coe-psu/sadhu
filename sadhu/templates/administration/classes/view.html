@@ -1,16 +1,19 @@
 {% extends '/administration/classes/index.html' %}
 {% import '/base/error-handler.html' as eh %}
 
+{% block dashboard_title %}Classes: {{ class_.name }}{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  <div class="active section">{{ class_.name }}</div>
+{% endblock %}
+
 
 {% block content %}
-<div class="row">
-  <div class="col s12">
-		<h3>{{ class_.name }}</h3>
-  </div>
-</div>
 
-<div class="row">
-	<div class="col s12">
+<div class="ui container">
+	<div class="ui segment">
 		<div>
 			<b>Description:</b> {{ class_.description }}
 		</div>
@@ -47,22 +50,25 @@
         {{ ta.user.first_name }} {{ ta.user.last_name }}, 
       {% endfor %}
     </div>
-    <div>
-      {% if class_.owner == current_user %}
-      <a class="btn-floating waves-effect waves-light red" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="material-icons">edit</i></a>
-      <a class="btn-floating waves-effect waves-light red" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="material-icons">people</i></a>
-      <a class="btn-floating waves-effect waves-light red" href="{{ url_for('administration.classes.add_teaching_assistant', class_id=class_.id) }}"><i class="material-icons">assistant</i></a>
-    {% elif class_.is_teaching_assistant(current_user) %}
-      <a class="btn-floating waves-effect waves-light red" href="{{ url_for('teaching_assistants.classes.list_students', class_id=class_.id) }}"><i class="material-icons">people</i></a>
-    {% endif %}
-    </div>
+
   </div>
 </div>
 
-<div class="row">
-	<div class="col s12">
-		<h5>Assignments</h5>
-		<table>
+<div class="ui container" style="margin-top: 1em;">
+    <div class="ui labeled icon menu">
+      {% if class_.owner == current_user %}
+      <a class="item" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="edit icon"></i>Edit</a>
+      <a class="item" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="student icon"></i>Students</a>
+      <a class="item" href="{{ url_for('administration.classes.add_teaching_assistant', class_id=class_.id) }}"><i class="clipboard check icon"></i>TA</a>
+    {% elif class_.is_teaching_assistant(current_user) %}
+      <a class="item" href="{{ url_for('teaching_assistants.classes.list_students', class_id=class_.id) }}"><i class="student icon"></i>Students</a>
+    {% endif %}
+    </div>
+</div>
+
+<div class="ui container" style="margin-top: 1em;">
+		<h2>Assignments</h2>
+		<table class="ui celled table">
 			<thead>
 				<tr>
 						<th>Name</th>
@@ -83,7 +89,7 @@
 					<td>{{ ass_time.ended_date if ass_time else '-' }}</td>
 					<td>
             {% if class_.owner == current_user %}
-              <a href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i class="material-icons">access_alarm</i></a>
+              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i class="alarm clock icon"></i></a>
             {% endif %}
 					</td>
 				</tr>
@@ -91,6 +97,5 @@
 			</tbody>
 		</table>
             	
-  </div>
 </div>
 {% endblock %}

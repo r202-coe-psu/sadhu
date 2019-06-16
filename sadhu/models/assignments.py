@@ -119,3 +119,30 @@ def get_assignment_schedule(user):
 
     ass_schedule.sort(key=order_by_ended_date)
     return ass_schedule
+
+
+def get_past_assignment_schedule(user):
+    now = datetime.datetime.now()
+
+    available_classes = Class.objects(
+            (me.Q(limited_enrollment__grantees=user.email) |
+                me.Q(limited_enrollment__grantees=user.username)) &
+            (me.Q(started_date__lte=now) &
+                me.Q(ended_date__gte=now))
+            ).order_by('ended_date')
+
+    ass_schedule = []
+    for class_ in available_classes:
+        if not class_.is_enrolled(user.id):
+            continue
+
+        for ass_t in class_.assignment_schedule:
+            ass_schedule.append(
+                    dict(assignment_schedule=ass_t,
+                         class_=class_))
+
+    def order_by_ended_date(e):
+        return e['assignment_schedule'].ended_date
+
+    ass_schedule.sort(key=order_by_ended_date)
+    return ass_schedule

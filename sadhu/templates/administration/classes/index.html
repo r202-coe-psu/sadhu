@@ -1,53 +1,50 @@
 {% extends '/base/default-dashboard.html' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.classes.index') }}" class="breadcrumb">Classes</a>
+<a href="{{ url_for('administration.classes.index') }}" class="section">Classes</a>
+{% endblock %}
+
+{% block dashboard_title %}
+Classes
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col s12">
-    <h3>Classes</h3>
-    <div>
-      <a href="{{ url_for('administration.classes.create') }}" class="btn-floating waves-effect waves-light tooltipped red" data-position="bottom" data-tooltip="Create assignment"><i class="material-icons">add</i></a>
-      <a href="{{ url_for('administration.courses.index') }}" class="btn-floating waves-effect waves-light tooltipped blue" data-position="bottom" data-tooltip="Courses list"><i class="material-icons">list</i></a>
+<div class="ui container">
+    <div class="ui labeled icon menu">
+      <a href="{{ url_for('administration.classes.create') }}" class="item"><i class="add icon"></i>Add</a>
+      <a href="{{ url_for('administration.courses.index') }}" class="item"><i class="book icon"></i>Courses</a>
     </div>
-  </div>
 </div>
 
-<div class="row">
-	<div class="col s12">
-
-	{% if classes %}
-	 <table>
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Description</th>
-					<th>Operation</th>
-				</tr>
-			</thead>
-			<body>
-{% for class_ in classes %}
-				<tr>
-					<td>
-						<a href="{{ url_for('administration.classes.view', class_id=class_.id) }}">{{ class_.name }}</a>
-					</td>
-					<td>
-						{{ class_.description }}
+{% if classes %}
+  <div class="ui container" style="margin-top: 20px;">
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Operation</th>
+        </tr>
+      </thead>
+      <tbody>
+    {% for class_ in classes %}
+        <tr>
+          <td>
+            <a href="{{ url_for('administration.classes.view', class_id=class_.id) }}">{{ class_.name }}</a>
           </td>
           <td>
-            <a href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="material-icons">edit</i></a>
-            <a href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="material-icons">people</i></a>
-					</td>
+            {{ class_.description }}
           </td>
-				</tr>
-{% endfor %}
-			</body>
-		</table>
-		{% endif %}
-
+          <td class="single line">
+            <a class="ui circular button primary icon" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="edit icon"></i></a>
+            <a class="ui circular button primary icon" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="users icon"></i></a>
+          </td>
+        </tr>
+    {% endfor %}
+      </tbody>
+    </table>
   </div>
-</div>
+{% endif %}
+
 
 {% endblock %}

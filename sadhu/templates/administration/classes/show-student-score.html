@@ -1,21 +1,21 @@
-{% extends '/base/default-dashboard.html' %}
+{% extends '/administration/classes/index.html' %}
+
+{% block dashboard_title %}Assignment Score: {{ class_.name }}{% endblock %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.courses.index') }}" class="breadcrumb">Courses</a>
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  <div class="active section">{{ class_.name }}</div>
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col s12">
-    <h3>Assignment Score</h3>
-    <h4>{{ student.first_name }} {{ student.last_name }}</h4>
-  </div>
-</div>
-
-<div class="row">
-	<div class="col s12">
-
-	 <table>
+  <div class="ui container">
+    <div class="ui segment">
+      <h2>{{ student.first_name }} {{ student.last_name }} </h2>
+      <b>Thai Name</b>{{ student.metadata['thai_first_name'] }} {{ student.metadata['thai_last_name'] }}<br/>
+      <b>Student ID</b> {{ student.metadata['student_id'] }} <b>Organization</b> {{ student.metadata['organization'] }}<br/>
+    </div>
+	 <table class="ui celled table">
 			<thead>
 				<tr>
           <th>Name</th>
@@ -40,9 +40,9 @@
           </td>
           <td>
             {% if class_.owner == current_user %}
-              <a href="{{ url_for('administration.classes.show_student_assignment', class_id=class_.id, student_id=student.id, assignment_id=assignment.id) }}"><i class="material-icons">visibility</i></a>
+              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.show_student_assignment', class_id=class_.id, student_id=student.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
             {% elif class_.is_teaching_assistant(current_user) %}
-              <a href="{{ url_for('teaching_assistants.classes.show_student_assignment', class_id=class_.id, student_id=student.id, assignment_id=assignment.id) }}"><i class="material-icons">visibility</i></a>
+              <a class="ui icon button circular primary" href="{{ url_for('teaching_assistants.classes.show_student_assignment', class_id=class_.id, student_id=student.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
             {% endif %}
 		      </td>
 
@@ -51,7 +51,6 @@
 			</tbody>
 		</table>
 
-  </div>
 </div>
 
 {% endblock %}

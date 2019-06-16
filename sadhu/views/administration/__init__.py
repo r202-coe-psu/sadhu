@@ -5,7 +5,7 @@ from . import assignments
 from . import challenges
 from . import courses
 from . import classes
-from . import students
+from . import users
 from . import solutions
 
 module = Blueprint('administration',
@@ -15,7 +15,7 @@ subviews = [assignments,
             challenges,
             courses,
             classes,
-            students,
+            users,
             solutions,
             ]
 

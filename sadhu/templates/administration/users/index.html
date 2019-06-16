@@ -1,0 +1,39 @@
+{% extends '/base/default-dashboard.html' %}
+
+{% block breadcrumbs %}
+<a href="{{ url_for('administration.users.index') }}" class="section">Users</a>
+{% endblock %}
+
+{% block content %}
+<div class="ui container">
+
+ <table class="ui celled table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Classes</th>
+      </tr>
+    </thead>
+    <tbody>
+{% for user in users  %}
+      <tr>
+        <td>
+          {{ user.first_name }} {{ user.last_name }}
+          ({{ user.metadata.get('thai_first_name', '') }} {{ user.metadata.get('thai_last_name', '') }})
+          {#
+          <a href="{{ url_for('administration.courses.view', course_id=course.id) }}">{{ course.name }}</a>
+          #}
+        </td>
+        <td>
+          {% for e in user.get_enrollments() %}
+            {{ e.enrolled_class.name }}
+          {% endfor %}
+        </td>
+      </tr>
+{% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+{% endblock %}

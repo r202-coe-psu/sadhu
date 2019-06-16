@@ -1,56 +1,50 @@
 {% extends '/base/default-dashboard.html' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.challenges.index') }}" class="breadcrumb">Challenges</a>
+<a href="{{ url_for('administration.challenges.index') }}" class="section">Challenges</a>
+{% endblock %}
+
+{% block dashboard_title %}
+  Challenges
 {% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col s12">
-    <h3>Challenges</h3>
-    <div>
-      <a href="{{ url_for('administration.challenges.create') }}" class="btn-floating waves-effect waves-light red"><i class="material-icons">add</i></a>
-    </div>
+<div class="ui container">
+  <div class="ui labeled icon menu">
+      <a href="{{ url_for('administration.challenges.create') }}" class="item"><i class="add icon"></i>Add</a>
   </div>
 </div>
 
-<div class="row">
-  <div class="col s12">
-      <table>
-        <thead>
-          <tr>
-              <th>Name</th>
-              <th>Score</th>
-              <th>Tags</th>
-              <th>Operation</th>
-          </tr>
-        </thead>
-        <body>
-  {% for challenge in challenges %}
-          <tr>
-            <td>
-              <a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}">{{ challenge.name }}</a>
-            </td>
-            <td>
-                {{challenge.score}}
-            </td>
-            <td>
-                {{ challenge.tags | join(', ') }}
-            </td>
-            <td>
-              <a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}"><i class="material-icons">visibility</i></a>
-              <a href="{{ url_for('administration.challenges.edit', challenge_id=challenge.id) }}"><i class="material-icons">edit</i></a>
-            </td>
-          </tr>
-  {% endfor %}
-        </body>
-      </table>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col s12">
-  </div>
+<div class="ui container" style="margin-top: 20px;">
+  <table class="ui celled table">
+    <thead>
+      <tr>
+          <th>Name</th>
+          <th>Score</th>
+          <th>Tags</th>
+          <th>Operation</th>
+      </tr>
+    </thead>
+    <body>
+{% for challenge in challenges %}
+      <tr>
+        <td>
+          <a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}">{{ challenge.name }}</a>
+        </td>
+        <td>
+            {{challenge.score}}
+        </td>
+        <td>
+            {{ challenge.tags | join(', ') }}
+        </td>
+        <td>
+          <a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}" class="ui button circular icon primary"><i class="eye icon"></i></a>
+          <a href="{{ url_for('administration.challenges.edit', challenge_id=challenge.id) }}" class="ui button circular icon primary"><i class="edit icon"></i></a>
+        </td>
+      </tr>
+{% endfor %}
+    </body>
+  </table>
 </div>
 
 {% endblock %}

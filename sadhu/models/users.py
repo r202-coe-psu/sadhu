@@ -3,6 +3,7 @@ import datetime
 
 from flask_login import UserMixin
 
+from .classes import Enrollment
 
 class User(me.Document, UserMixin):
     username = me.StringField(required=True, unique=True)
@@ -42,3 +43,6 @@ class User(me.Document, UserMixin):
         if 'google' in self.resources:
             return self.resources['google'].get('picture', None)
         return None
+
+    def get_enrollments(self):
+        return Enrollment.objects(user=self)

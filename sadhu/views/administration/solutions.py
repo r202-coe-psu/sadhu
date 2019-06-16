@@ -21,11 +21,13 @@ module = Blueprint('administration.solutions',
                    url_prefix='/solutions',
                    )
 
+
 @module.route('/')
 @acl.allows.requires(acl.is_lecturer)
 def index():
-    return render_template('/administration/solutions/view.html')
-
+    solutions = models.Solution.object().order_by('-id').limit(20)
+    return render_template('/administration/solutions/view.html',
+                           solutions=solutions)
 
 
 @module.route('/<solution_id>')
@@ -51,13 +53,9 @@ def view(solution_id):
                            style=style)
 
 
-
 @module.route('/<solution_id>/code')
 @acl.allows.requires(acl.is_lecturer)
 def download_code(solution_id):
     solution = models.Solutuib.objects.get(id=solution_id)
     return render_template('/administration/solutions/code.html',
                            solution)
-
-
-

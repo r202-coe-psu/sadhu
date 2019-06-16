@@ -23,9 +23,12 @@ module = Blueprint('assignments',
 def index():
     assignment_schedule = models.assignments.get_assignment_schedule(
             current_user._get_current_object())
-    print(assignment_schedule)
+
+    past_assignment_schedule = models.assignments.get_past_assignment_schedule(
+            current_user._get_current_object())
     return render_template('/assignments/index.html',
-                           assignment_schedule=assignment_schedule)
+                           assignment_schedule=assignment_schedule,
+                           past_assignment_schedule=past_assignment_schedule)
 
 
 @module.route('/<assignment_id>')
