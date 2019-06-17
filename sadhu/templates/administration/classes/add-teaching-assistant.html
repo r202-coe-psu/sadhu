@@ -2,8 +2,13 @@
 {% import '/base/html-renderer.html' as renderer %}
 
 {% block additional_js %}
-  <script type="text/javascript">
-  </script>
+<script type="text/javascript">
+  $('.ui.fluid.dropdown')
+    .dropdown({
+      allowAdditions: true
+    })
+  ;
+</script>
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -21,8 +26,8 @@
   <div class="ui segment">
     <form method="POST" class="ui form">
       {{ form.csrf_token }}
-      {{ renderer.render_select(form.users) }}
-      <button class="waves-effect waves-light btn" type="submit">Add</button>
+      {{ renderer.render_multiple_select(form.users) }}
+      <button class="ui primary button" type="submit">Add</button>
     </form>
   </div>
 </div>
