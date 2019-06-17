@@ -24,9 +24,9 @@ class LimitedEnrollmentForm(Form):
     #         widget=widgets.TextArea())
 
 
-
 class ClassForm(FlaskForm):
-    name = fields.StringField('Name',
+    name = fields.StringField(
+            'Name',
             validators=[validators.InputRequired(),
                         validators.Length(min=3)])
     description = fields.StringField('Description',
@@ -39,8 +39,8 @@ class ClassForm(FlaskForm):
     limited = fields.BooleanField('Limited Class', default=True)
     limited_enrollment = fields.FormField(LimitedEnrollmentForm)
 
-    started_date = fields.DateField('Started Date', format='%d-%m-%Y')
-    ended_date = fields.DateField('Ended Data', format='%d-%m-%Y')
+    started_date = fields.DateField('Started Date', format='%Y-%m-%d')
+    ended_date = fields.DateField('Ended Data', format='%Y-%m-%d')
 
 
     tags = TagListField('Tags',

@@ -15,33 +15,19 @@
     <form method="POST" class="ui form">
       {{ form.csrf_token }}
       <div class="two fields">
-        <div class="field">
-          {{ renderer.render_field(form.first_name) }}
-        </div>
-        <div class="field">
-          {{ renderer.render_field(form.last_name) }}
-        </div>
+        {{ renderer.render_field(form.first_name) }}
+        {{ renderer.render_field(form.last_name) }}
       </div>
       <div class="two fields">
-        <div class="field">
-          {{ renderer.render_field(form.thai_first_name) }}
-        </div>
-        <div class="field">
-          {{ renderer.render_field(form.thai_last_name) }}
-        </div>
+        {{ renderer.render_field(form.thai_first_name) }}
+        {{ renderer.render_field(form.thai_last_name) }}
       </div>
       <div class="two fields">
-        <div class="field">
-          {{ renderer.render_field(form.student_id) }}
-        </div>
-        <div class="field">
-          {{ renderer.render_field(form.organization) }}
-        </div>
+        {{ renderer.render_field(form.student_id) }}
+        {{ renderer.render_field(form.organization) }}
       </div>
 
-      <div class="field">
-        <button name="create" type="submit" class="ui primary button">Change</button>
-      </div>
+      <button name="create" type="submit" class="ui primary button">Change</button>
     </form>
   </div>
 </div>

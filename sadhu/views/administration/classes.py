@@ -109,7 +109,8 @@ def set_assignment_time(class_id, assignment_id):
     if not form.validate_on_submit():
         return render_template(
             '/administration/classes/set-assignment-time.html',
-            form=form)
+            form=form,
+            assignment=assignment)
     if not ass_time:
         ass_time = models.AssignmentTime(assignment=assignment)
 

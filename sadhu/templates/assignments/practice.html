@@ -43,7 +43,7 @@
         <th>Submitted</th>
       </tr>
     </thead>
-    <body>
+    <tbody>
       {% for challenge in assignment.challenges %}
         <tr class="{{ get_challenge_status_style(class_, challenge) }}">
         <td>
@@ -63,7 +63,7 @@
         </td>
       </tr>
       {% endfor %}
-    </body>
+    </tbody>
   </table>
   {% endif %}
 

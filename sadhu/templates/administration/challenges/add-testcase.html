@@ -1,50 +1,39 @@
 {% extends '/administration/challenges/index.html' %}
 {% import '/base/html-renderer.html' as renderer %}
 
+{% block dashboard_title %}
+  TA: {{ class_.name }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  <div class="active section">TA: {{ class_.name }}</div>
+{% endblock %}
+
+
 {% block content %}
-<div class="row">
-  <div class="col s12">
-    <h3>Add TestCase</h3>
-    <form method="POST" action="{{ request.url }}" enctype="multipart/form-data">
-      {{ form.csrf_token }}
-      <div class="row">
-        <div class="col s6">
-          {{ renderer.render_fileinput(form.input_file) }}
-          {{ renderer.render_checkbox(form.is_inputfile) }}
-          <div class="input-field">
+  <div class="ui container">
+    <div class="ui segment">
+      <form method="POST" enctype="multipart/form-data" class="ui form">
+        {{ form.csrf_token }}
+        <div class="two fields">
+          <div class="field">
+            {{ renderer.render_fileinput(form.input_file) }}
+            {{ renderer.render_checkbox(form.is_inputfile) }}
             {{ renderer.render_textarea(form.input_string) }}
           </div>
-        </div>
-        <div class="col s6">
-          {{ renderer.render_fileinput(form.output_file) }}
-          {{ renderer.render_checkbox(form.is_outputfile) }}
-          <div class="input-field">
+          <div class="field">
+            {{ renderer.render_fileinput(form.output_file) }}
+            {{ renderer.render_checkbox(form.is_outputfile) }}
             {{ renderer.render_textarea(form.output_string) }}
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          {{ renderer.render_checkbox(form.public) }} 
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <button name="create" type="submit" class="waves-effect waves-light btn">Submit</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
 
-<div class="row">
-  <div class="col s12">
+        {{ renderer.render_checkbox(form.public) }} 
+        <button name="create" type="submit" class="ui button primary">Submit</button>
+      </form>
+    </div>
   </div>
-</div>
-
-<div class="row">
-  <div class="col s12">
-  </div>
-</div>
 
 {% endblock %}

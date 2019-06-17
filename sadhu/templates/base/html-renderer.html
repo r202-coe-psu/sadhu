@@ -1,12 +1,14 @@
 {% import '/base/error-handler.html' as eh %}
 
 {% macro render_field(field, class_='') -%}
-{%- set style = 'field %s' | format(eh.get_validate_class(field.errors)) -%}
+{%- set style = '%s' | format(eh.get_validate_class(field.errors)) -%}
 {%- if class_ != '' -%}
-{%- set style = 'field %s %s' | format(class_, eh.get_validate_class(field.errors)) -%}
+{%- set style = '%s %s' | format(class_, eh.get_validate_class(field.errors)) -%}
 {%- endif -%}
+<div class="field">
 {{ field.label }}
 {{ field(class_=style) }}
+</div>
 {{ eh.get_error_messages(field.errors) }}
 {%- endmacro %}
 
@@ -17,10 +19,10 @@
 
 
 {% macro render_checkbox(field) -%}
- <label>
+<div class="ui checkbox">
 	{{ field }}
-	<span>{{ field.label.text }}</span>
-</label>
+  {{ field.label }}
+</div>
 {%- endmacro %}
 
 
@@ -37,7 +39,17 @@
 {%- endmacro %}
 
 {% macro render_select(field) -%}
-  {{ field }}
+{{ render_field(field, class_='ui dropdown') }}
+{%- endmacro %}
+
+{% macro render_calendar(field, calendar_id='calendar') -%}
+<div class="field">
   {{ field.label }}
-  {{ eh.get_error_messages(field.errors) }}
+  <div class="ui calendar" id="{{ calendar_id }}">
+    <div class="ui input left icon">
+      <i class="calendar icon"></i>
+      {{ field(autocomplete='off') }}
+    </div>
+  </div>
+</div>
 {%- endmacro %}

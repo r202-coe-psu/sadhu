@@ -111,11 +111,8 @@ Challenge: {{ challenge.name }}
 	<div class="ui segment">
 		<form class="ui form" action="{{ url_for('challenges.submit_solution', challenge_id=challenge.id, class_id=request.args.get('class_id')) }}" enctype="multipart/form-data" method="POST">
 			{{ form.csrf_token }}
-      <div class="field">
-				{{ renderer.render_field(form.code) }}
-			</div>
-			<div class="field">
-				<button name="submit" type="submit" class="ui primary button">Submit</button>
+			{{ renderer.render_field(form.code) }}
+			<button name="submit" type="submit" class="ui primary button">Submit</button>
 			</div>
 		</form>
   </div>

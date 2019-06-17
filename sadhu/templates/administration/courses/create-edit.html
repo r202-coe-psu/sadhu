@@ -4,59 +4,41 @@
 
 {% block additional_js %}
   <script type="text/javascript">
-    $(document).ready(function(){
-      $('select').formSelect();
-    });
+      $('.ui.dropdown')
+        .dropdown()
+      ;
   </script>
 {% endblock %}
 
+{% block dashboard_title %}
+  {% if 'edit' in request.path %}
+    Edit Course: {{ form.name.data }}
+  {% else %}
+    Create Course
+  {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  {% if 'edit' in request.path %}
+    <div class="active section">Edit Course: {{ form.name.data }}</div>
+  {% else %}
+    <div class="active section">Create Course</div>
+  {% endif %}
+{% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col s12">
-    <h3>Create Course</h3>
-    <form method="POST" action="{{ request.url }}">
+<div class="ui container">
+  <div class="ui segment">
+    <form method="POST" class="ui form">
       {{ form.csrf_token }}
-      <div class="row">
-        <div class="col s12">
-          <div class="row">
-            <div class="input-field col s12">
-              {{ renderer.render_field(form.name) }}
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-              {{ renderer.render_field(form.description, 'materialize-textarea') }}
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s4">
-              {{ renderer.render_select(form.languages) }}
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-              {{ renderer.render_field(form.tags) }}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col s12">
-              <button name="create" type="submit" class="waves-effect waves-light btn">Create</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      {{ renderer.render_field(form.name) }}
+      {{ renderer.render_field(form.description) }}
+      {{ renderer.render_select(form.languages) }}
+      {{ renderer.render_field(form.tags) }}
+      <button name="create" type="submit" class="ui button primary">Create</button>
     </form>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col s12">
-  </div>
-</div>
-
-<div class="row">
-  <div class="col s12">
   </div>
 </div>
 

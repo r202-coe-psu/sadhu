@@ -12,23 +12,14 @@ from flask_wtf import FlaskForm
 
 class AssignmentTimeForm(FlaskForm):
     started_date = fields.DateField('Started Date',
-            format='%d-%m-%Y',
-            default=datetime.datetime.now()
-            )
-    started_time = fields.TimeField('Started Time',
-            format='%H:%M',
+            format='%Y-%m-%d %H:%M',
             default=datetime.datetime.now()
             )
 
     ended_date = fields.DateField('Ended Data',
-            format='%d-%m-%Y',
+            format='%d-%m-%Y %H:%M',
             default=datetime.datetime.now()
             )
-    ended_time = fields.TimeField('Ended Time',
-            format='%H:%M',
-            default=datetime.datetime.now()
-            )
-
 
 
 class ChallengeAddingForm(FlaskForm):
