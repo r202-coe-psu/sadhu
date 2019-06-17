@@ -8,15 +8,14 @@
 
 {% block content %}
 
-<div class="row">
-  <div class="col s12">
-      <table>
+<div class="ui container">
+      <table class="ui celled table">
         <thead>
           <tr>
               <th>Name</th>
               <th>Score</th>
               <th>Tags</th>
-              <th>Operation</th>
+              <th>Your Scores</th>
           </tr>
         </thead>
         <body>
@@ -31,19 +30,13 @@
             <td>
                 {{ challenge.tags | join(', ') }}
             </td>
-            <td>
-              xxx
+            <td class="right aligned">
+              {{ '{:.02f}'.format(challenge.get_solution_score(class_, current_user)) }}
             </td>
           </tr>
   {% endfor %}
         </body>
       </table>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col s12">
-  </div>
 </div>
 
 {% endblock %}

@@ -34,7 +34,7 @@
           <td data-label="Description">{{ assignment.description }}</td>
 					<td data-label="Due Date">{{ assignment_time.ended_date.ctime() }}</td>
           <td data-label="Progress">{{ assignment.count_done_challenges(class_, current_user) }} / {{ assignment.challenges | count }}</td>
-          <td data-label="Score">{{ '{:.2f}'.format(assignment.get_score(class_, current_user)) }} / {{ assignment.score }}</td>
+          <td data-label="Score" class="right aligned">{{ '{:.2f}'.format(assignment.get_score(class_, current_user)) }} / {{ assignment.score }}</td>
 				</tr>
         {% endfor -%}
 			</body>
@@ -71,7 +71,7 @@
           <td data-label="Description">{{ assignment.description }}</td>
 					<td data-label="Due Date">{{ assignment_time.ended_date.ctime() }}</td>
           <td data-label="Progress">{{ assignment.count_done_challenges(class_, current_user) }} / {{ assignment.challenges | count }}</td>
-          <td data-label="Score">{{ '{:.2f}'.format(assignment.get_score(class_, current_user)) }} / {{ assignment.score }}</td>
+          <td data-label="Score" class="right aligned">{{ '{:.2f}'.format(assignment.get_score(class_, current_user)) }} / {{ assignment.score }}</td>
 				</tr>
         {% endfor -%}
 			</body>

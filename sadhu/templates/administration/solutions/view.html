@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block dashboard_title %}
-  Submitted Solutions: {{ solution.name }}
+  Submitted Solutions: {{ solution.challenge.name }}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -31,6 +31,8 @@
     <a href="{{ url_for('administration.solutions.index') }}" class="section">Solutions</a>
   {% else %}
     <a href="{{ url_for('solutions.index') }}" class="section">Solutions</a>
+    <i class="right angle icon divider"></i>
+    <a href="{{ url_for('challenges.view', challenge_id=challenge.id, class_id=solution.enrolled_class.id) }}" class="section">{{ solution.enrolled_class.name }}</a>
   {% endif %}
 {% endblock %}
 
@@ -40,9 +42,9 @@
     <h3>Solution for {{ solution.challenge.name }}</h3>
     <b>Submitter:</b> {{ solution.owner.first_name }} {{ solution.owner.last_name }}<br/>
     <b>Submitted Date:</b> {{ solution.submitted_date }}<br/>
-    <b>Class:</b> {{ solution.enrolled_class.name }}<br/>
-    <b>Assignment:</b> {{ solution.assignment.name }}<br/>
-    <b>Challenge:</b> {{ solution.challenge.name }}<br/>
+    <b>Class:</b> <a href="{{ url_for('classes.view', class_id=solution.enrolled_class.id) }}">{{ solution.enrolled_class.name }}</a><br/>
+    <b>Assignment:</b> <a href="{{ url_for('assignments.view', assignment_id=solution.assignment.id) }}">{{ solution.assignment.name }}</a><br/>
+    <b>Challenge:</b> <a href="{{ url_for('challenges.view', challenge_id=solution.challenge.id, class_id=solution.enrolled_class.id) }}">{{ solution.challenge.name }}</a><br/>
     <b>Pass Testcase:</b> {{ solution.passed }}<br/>
     <b>Status:</b> {{ solution.status }}<br/>
     <b>Score:</b> {{ '{:.2f}'.format(solution.score) }}<br/>

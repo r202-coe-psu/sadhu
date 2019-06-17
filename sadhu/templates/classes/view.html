@@ -4,6 +4,12 @@
   Class: {{ class_.name }}
 {% endblock %}
 
+{% block breadcrumbs %}
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  <div class="active section">{{ class_.name }}</div>
+{% endblock %}
+
 {% block content %}
 <div class="ui container">
   <div class="ui segment">
@@ -39,7 +45,9 @@
 		<div>
 			<b>Tag:</b> {{ class_.tags | join(', ') }}
 		</div>
+  </div>
 
+  <div style="margin-top: 1em;">
 		<h3>Assignments</h3>
 		<table class="ui celled blue table">
 			<thead>

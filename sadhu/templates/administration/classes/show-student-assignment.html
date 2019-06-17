@@ -1,4 +1,4 @@
-{% extends '/administrator/classes/index.html' %}
+{% extends '/administration/classes/index.html' %}
 {% import '/base/solution-style.html' as solution_style %}
 
 {% block dashboard_title %}
@@ -13,14 +13,13 @@ Assignment: {{ assignment.name }}
 <div class="ui container">
   <div class="ui segment">
     <h2>{{ student.first_name }} {{ student.last_name }}</h2>
-      <b>Name:</b>{{ student.first_name }} {{ student.last_name }} <br/>
-      <b>Thai Name</b>{{ student.metadata['thai_first_name'] }} {{ student.metadata['thai_last_name'] }}<br/>
-      <b>Student ID</b> {{ student.metadata['student_id'] }} <b>Organization</b> {{ student.metadata['organization'] }}<br/>
+    <b>Name:</b>{{ student.first_name }} {{ student.last_name }} ({{ student.metadata.get('thai_first_name', '') }} {{ student.metadata.get('thai_last_name', '') }}) <br/>
+    <b>Student ID</b> {{ student.metadata['student_id'] }} <b>Organization</b> {{ student.metadata['organization'] }}<br/>
 
   </div>
 </div>
 
-<div class="ui container">
+<div class="ui container" style="margin-top: 1em;">
 {% for challenge in assignment.challenges %}
   <div class="ui segment">
     <h2>{{ challenge.name }}: {{ challenge.score }}</h2>
@@ -30,8 +29,8 @@ Assignment: {{ assignment.name }}
     <b>After Start: </b> {{ challenge_status.first_view - ass_schedule.started_date if challenge_status }} <br/>
     <b>Before End: </b> {{ ass_schedule.ended_date - challenge_status.first_view if challenge_status}}
 
-  </div>
-  <table class="ui celled form">
+
+  <table class="ui celled table">
     <thead>
       <tr>
         <th>Submitted Date</th>
@@ -69,6 +68,7 @@ Assignment: {{ assignment.name }}
       {% endfor %}
     </tbody>
   </table>
+  </div>
 {% endfor %}
 </div>
 

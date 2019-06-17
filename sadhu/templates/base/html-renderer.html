@@ -27,14 +27,17 @@
 
 
 {% macro render_fileinput(field) -%}
-<div class="file-field input-field">
-  <div class="btn btn-small">
-		<span>{{ field.label.text }}</span>
-		{{ field }}
+<div class="field">
+  {{ field.label }}
+  <div class="ui action input">
+    <input type="text" placeholder="File 1" readonly class="attach-file-{{field.name}}">
+    {{ field(style="display: none;") }}
+    <div class="ui icon button attach-file-{{field.name}}">
+      <i class="attach icon"></i>
+    </div>
   </div>
-	<div class="file-path-wrapper">
-		<input class="file-path validate" type="text">
-	</div>
+  {#
+  #}
 </div>
 {%- endmacro %}
 
