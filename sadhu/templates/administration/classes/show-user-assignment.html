@@ -12,9 +12,9 @@ Assignment: {{ assignment.name }}
 {% block content %}
 <div class="ui container">
   <div class="ui segment">
-    <h2>{{ student.first_name }} {{ student.last_name }}</h2>
-    <b>Name:</b>{{ student.first_name }} {{ student.last_name }} ({{ student.metadata.get('thai_first_name', '') }} {{ student.metadata.get('thai_last_name', '') }}) <br/>
-    <b>Student ID</b> {{ student.metadata['student_id'] }} <b>Organization</b> {{ student.metadata['organization'] }}<br/>
+    <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+    <b>Name:</b>{{ user.first_name }} {{ user.last_name }} ({{ user.metadata.get('thai_first_name', '') }} {{ user.metadata.get('thai_last_name', '') }}) <br/>
+    <b>Student ID</b> {{ user.metadata['user_id'] }} <b>Organization</b> {{ user.metadata['organization'] }}<br/>
 
   </div>
 </div>
@@ -23,7 +23,7 @@ Assignment: {{ assignment.name }}
 {% for challenge in assignment.challenges %}
   <div class="ui segment">
     <h2>{{ challenge.name }}: {{ challenge.score }}</h2>
-    {%- set challenge_status = challenge.get_challenge_access(class_, student) -%}
+    {%- set challenge_status = challenge.get_challenge_access(class_, user) -%}
     {%- set ass_schedule = class_.get_assignment_schedule(assignment) -%}
     <b>First View: </b> {{ challenge_status.first_view if challenge_status }} <br/>
     <b>After Start: </b> {{ challenge_status.first_view - ass_schedule.started_date if challenge_status }} <br/>
@@ -42,7 +42,7 @@ Assignment: {{ assignment.name }}
       </tr>
     </thead>
     <tbody>
-      {% for solution in challenge.get_solutions(class_, student).order_by('-id')  %}
+      {% for solution in challenge.get_solutions(class_, user).order_by('-id')  %}
         <tr class="{{ solution_style.get_solution_class(solution) }}">
         <td>
           {{ solution.submitted_date }}
@@ -54,8 +54,8 @@ Assignment: {{ assignment.name }}
           {{ solution.passed }}
         </td>
         <td>{{ solution.test_results | count }}</td>
-        <td>
-          {{ solution.score }}
+        <td class="right aligned">
+          {{ '{:.02f}'.format(solution.score) }}
         </td>
         <td>
           {% if class_.owner == current_user %}

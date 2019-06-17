@@ -25,8 +25,8 @@ module = Blueprint('administration.solutions',
 @module.route('/')
 @acl.allows.requires(acl.is_lecturer)
 def index():
-    solutions = models.Solution.object().order_by('-id').limit(20)
-    return render_template('/administration/solutions/view.html',
+    solutions = models.Solution.objects().order_by('-id').limit(20)
+    return render_template('/administration/solutions/index.html',
                            solutions=solutions)
 
 

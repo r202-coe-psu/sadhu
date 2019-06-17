@@ -11,9 +11,9 @@
 {% block content %}
   <div class="ui container">
     <div class="ui segment">
-      <h2>{{ student.first_name }} {{ student.last_name }} </h2>
-      <b>Thai Name</b>{{ student.metadata['thai_first_name'] }} {{ student.metadata['thai_last_name'] }}<br/>
-      <b>Student ID</b> {{ student.metadata['student_id'] }} <b>Organization</b> {{ student.metadata['organization'] }}<br/>
+      <h2>{{ user.first_name }} {{ user.last_name }} </h2>
+      <b>Thai Name</b>{{ user.metadata['thai_first_name'] }} {{ user.metadata['thai_last_name'] }}<br/>
+      <b>Student ID</b> {{ user.metadata['user_id'] }} <b>Organization</b> {{ user.metadata['organization'] }}<br/>
     </div>
     <table class="ui celled table">
       <thead>
@@ -32,17 +32,17 @@
           </td>
           <td>
             {% for challenge in assignment.challenges %}
-              {{ challenge.get_solution_score(class_, student) }} 
+              {{ '{:.02f}'.format(challenge.get_solution_score(class_, user)) }},
             {% endfor %}
           </td>
           <td>
-            {{ assignment.get_score(class_=class_, user=student) }}
+            {{ '{:.02f}'.format(assignment.get_score(class_=class_, user=user)) }}
           </td>
           <td>
             {% if class_.owner == current_user %}
-              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.show_student_assignment', class_id=class_.id, student_id=student.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
+              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.show_user_assignment', class_id=class_.id, user_id=user.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
             {% elif class_.is_teaching_assistant(current_user) %}
-              <a class="ui icon button circular primary" href="{{ url_for('teaching_assistants.classes.show_student_assignment', class_id=class_.id, student_id=student.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
+              <a class="ui icon button circular primary" href="{{ url_for('teaching_assistants.classes.show_user_assignment', class_id=class_.id, user_id=user.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
             {% endif %}
           </td>
         </tr>
