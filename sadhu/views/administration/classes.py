@@ -20,7 +20,8 @@ module = Blueprint('administration.classes',
 @module.route('/')
 @acl.allows.requires(acl.is_lecturer)
 def index():
-    classes = models.Class.objects(owner=current_user._get_current_object())
+    classes = models.Class.objects(
+            owner=current_user._get_current_object()).order_by('-id')
     return render_template('/administration/classes/index.html',
                            classes=classes)
 
