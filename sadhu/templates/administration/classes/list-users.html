@@ -28,7 +28,7 @@
 {% for enrollment in enrollments  %}
   <tr>
     <td>
-      {{ enrollment.user.metadata.get('user_id', '') }}
+      {{ enrollment.user.metadata.get('student_id', '') }}
     </td>
           <td>
             {{ enrollment.user.first_name }} {{ enrollment.user.last_name }} ({{ enrollment.user.metadata.get('thai_first_name', '') }} {{ enrollment.user.metadata.get('thai_last_name', '') }})
