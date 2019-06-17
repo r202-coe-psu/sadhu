@@ -15,18 +15,18 @@
       <b>Thai Name</b>{{ student.metadata['thai_first_name'] }} {{ student.metadata['thai_last_name'] }}<br/>
       <b>Student ID</b> {{ student.metadata['student_id'] }} <b>Organization</b> {{ student.metadata['organization'] }}<br/>
     </div>
-	 <table class="ui celled table">
-			<thead>
-				<tr>
+    <table class="ui celled table">
+      <thead>
+        <tr>
           <th>Name</th>
           <th>Challenge Score</th>
-					<th>Score</th>
-					<th>Operation</th>
-				</tr>
-			</thead>
-			<tbody>
-{% for assignment in assignments  %}
-				<tr>
+          <th>Score</th>
+          <th>Operation</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for assignment in assignments  %}
+        <tr>
           <td>
             {{ assignment.name }}
           </td>
@@ -44,13 +44,11 @@
             {% elif class_.is_teaching_assistant(current_user) %}
               <a class="ui icon button circular primary" href="{{ url_for('teaching_assistants.classes.show_student_assignment', class_id=class_.id, student_id=student.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
             {% endif %}
-		      </td>
-
-				</tr>
-{% endfor %}
-			</tbody>
-		</table>
-
-</div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
 {% endblock %}

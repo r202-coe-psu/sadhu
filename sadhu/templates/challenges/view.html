@@ -37,9 +37,9 @@ Challenge: {{ challenge.name }}
 {% block content %}
 <div class="ui container">
   <div class="ui info message">
-    <div class="header">
+    <h2 class="header">
       Assignment: <a href="{{ url_for('assignments.practice', assignment_id=assignment.id,  **request.args.to_dict()) }}">{{ assignment.name }}</a>
-    </div>
+    </h2>
   </div>
 </div>
 
@@ -113,46 +113,46 @@ Challenge: {{ challenge.name }}
 			{{ form.csrf_token }}
 			{{ renderer.render_field(form.code) }}
 			<button name="submit" type="submit" class="ui primary button">Submit</button>
-			</div>
 		</form>
   </div>
 </div>
 {% endif %}
+
 <div class="ui container" style="margin-top: 1em;">
   <div class="ui segment">
     {% if solutions %}
-		<table class="ui celled table">
+		  <table class="ui celled table">
         <thead>
           <tr>
-              <th>Filename</th>
-              <th>Submited Date</th>
-              <th>Status</th>
-              <th>Pass</th>
-              <th>Score</th>
-              <th>Operations</th>
+            <th>Filename</th>
+            <th>Submited Date</th>
+            <th>Status</th>
+            <th>Pass</th>
+            <th>Score</th>
+            <th>Operations</th>
           </tr>
         </thead>
 
         <tbody>
           {% for solution in solutions %}
           <tr class="{{ solution_style.get_solution_class(solution) }}">
-              <td>{{ solution.code.filename }}</td>
-              <td>{{ solution.submitted_date }}</td>
-              <td>{{ solution.status }}</td>
-              <td>{{ solution.passed }}</td>
-              <td>{{ '{:.2f}'.format(solution.score) }}</td>
-              <td>
-                {% if solution.status == 'complete' %}
-                  <a class="ui circular primary icon button" target="blank" href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="eye icon"></i></a>
-                {% else %}
-                  <i class="eye circular icon"></i>
-                {% endif %}
-              </td>
+            <td>{{ solution.code.filename }}</td>
+            <td>{{ solution.submitted_date }}</td>
+            <td>{{ solution.status }}</td>
+            <td>{{ solution.passed }}</td>
+            <td>{{ '{:.2f}'.format(solution.score) }}</td>
+            <td>
+              {% if solution.status == 'complete' %}
+                <a class="ui circular primary icon button" target="blank" href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="eye icon"></i></a>
+              {% else %}
+                <i class="eye circular icon"></i>
+              {% endif %}
+            </td>
 					</tr>
           {% endfor %}
         </tbody>
-		 </table>
-	 {% endif %}
+		  </table>
+	  {% endif %}
 	</div>
 </div>
 {% endif %}
