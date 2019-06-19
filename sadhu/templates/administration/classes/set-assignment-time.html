@@ -15,10 +15,12 @@
       }};
     $('#started_date_calendar').calendar({
       formatter: datetime_formatter,
+      ampm: false,
       endCalendar: $('#ended_date_calendar')
     });
     $('#ended_date_calendar').calendar({
       formatter: datetime_formatter,
+      ampm: false,
       startCalendar: $('#started_date_calendar')
     });
   </script>

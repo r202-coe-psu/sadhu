@@ -98,14 +98,8 @@ def set_assignment_time(class_id, assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
 
     ass_time = class_.get_assignment_schedule(assignment)
-    data = dict()
-    if ass_time:
-        data = dict(started_date=ass_time.started_date.date(),
-                    started_time=ass_time.started_date.time(),
-                    ended_date=ass_time.ended_date.date(),
-                    ended_time=ass_time.ended_date.time())
 
-    form = forms.assignments.AssignmentTimeForm(data=data)
+    form = forms.assignments.AssignmentTimeForm(obj=ass_time)
 
     if not form.validate_on_submit():
         return render_template(
@@ -115,13 +109,8 @@ def set_assignment_time(class_id, assignment_id):
     if not ass_time:
         ass_time = models.AssignmentTime(assignment=assignment)
 
-    ass_time.started_date = datetime.datetime.combine(
-            form.started_date.data,
-            form.started_time.data)
-
-    ass_time.ended_date = datetime.datetime.combine(
-            form.ended_date.data,
-            form.ended_time.data)
+    ass_time.started_date = form.started_date.data
+    ass_time.ended_date = form.ended_date.data
 
     if ass_time not in class_.assignment_schedule:
         class_.assignment_schedule.append(ass_time)

@@ -11,13 +11,13 @@ from .fields import TagListField
 from flask_wtf import FlaskForm
 
 class AssignmentTimeForm(FlaskForm):
-    started_date = fields.DateField('Started Date',
+    started_date = fields.DateTimeField('Started Date',
             format='%Y-%m-%d %H:%M',
             default=datetime.datetime.now()
             )
 
-    ended_date = fields.DateField('Ended Data',
-            format='%d-%m-%Y %H:%M',
+    ended_date = fields.DateTimeField('Ended Data',
+            format='%Y-%m-%d %H:%M',
             default=datetime.datetime.now()
             )
 
