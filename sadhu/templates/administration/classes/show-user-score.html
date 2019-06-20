@@ -12,8 +12,9 @@
   <div class="ui container">
     <div class="ui segment">
       <h2>{{ user.first_name }} {{ user.last_name }} </h2>
-      <b>Thai Name</b>{{ user.metadata['thai_first_name'] }} {{ user.metadata['thai_last_name'] }}<br/>
-      <b>Student ID</b> {{ user.metadata['user_id'] }} <b>Organization</b> {{ user.metadata['organization'] }}<br/>
+      <b>Thai Name: </b>{{ user.metadata['thai_first_name'] }} {{ user.metadata['thai_last_name'] }}<br/>
+      <b>Student ID: </b> {{ user.metadata['user_id'] }} <b>Organization</b> {{ user.metadata['organization'] }}<br/>
+      <b>Email: </b> {{ user.email }}
     </div>
     <table class="ui celled table">
       <thead>
