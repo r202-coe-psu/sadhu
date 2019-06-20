@@ -11,9 +11,15 @@
 {% endblock %}
 
 {% block content %}
-<div class="ui container">
-    <h2>Enrolled Students</h2>
-
+  <div class="ui container">
+    <div class="ui segment">
+      <h2>Enrolled Students</h2>
+      <p>
+      <b>Learners: </b> {{ enrollments | count }} <br/>
+      <b>Start Date: </b> {{ class_.started_date.ctime() }} <br/>
+      <b>End Data: </b> {{ class_.ended_date.ctime() }} <br/>
+      </p>
+    </div>
 
 	 <table class="ui celled table">
 			<thead>
