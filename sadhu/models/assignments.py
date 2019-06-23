@@ -1,7 +1,7 @@
 import mongoengine as me
 import datetime
 
-from .classes import Class
+from .classes import Class, Enrollment
 
 
 class Assignment(me.Document):
@@ -97,8 +97,6 @@ def get_assignment_schedule(user):
     now = datetime.datetime.now()
 
     available_classes = Class.objects(
-            (me.Q(limited_enrollment__grantees=user.email) |
-                me.Q(limited_enrollment__grantees=user.username)) &
             (me.Q(started_date__lte=now) &
                 me.Q(ended_date__gte=now))
             ).order_by('ended_date')
@@ -125,21 +123,21 @@ def get_past_assignment_schedule(user):
     now = datetime.datetime.now()
 
     available_classes = Class.objects(
-            (me.Q(limited_enrollment__grantees=user.email) |
-                me.Q(limited_enrollment__grantees=user.username)) &
             (me.Q(started_date__lte=now) &
                 me.Q(ended_date__gte=now))
             ).order_by('ended_date')
 
+
     ass_schedule = []
-    for class_ in available_classes:
+    for class_ in available__classes:
         if not class_.is_enrolled(user.id):
             continue
 
         for ass_t in class_.assignment_schedule:
-            ass_schedule.append(
-                    dict(assignment_schedule=ass_t,
-                         class_=class_))
+            if now > ass_t.ended_date:
+                ass_schedule.append(
+                        dict(assignment_schedule=ass_t,
+                             class_=class_))
 
     def order_by_ended_date(e):
         return e['assignment_schedule'].ended_date

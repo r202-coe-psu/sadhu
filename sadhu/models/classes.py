@@ -102,10 +102,14 @@ class Class(me.Document):
 
         return ass_time
 
-    def is_enrolled(self, user_id):
+    def is_enrolled(self, user_id=None, user=None):
         for e in self.enrollments:
-            if str(user_id) == str(e.user.id):
-                return True
+            if user_id:
+                if str(user_id) == str(e.user.id):
+                    return True
+            if user:
+                if user == e:
+                    return True
 
         return False
 

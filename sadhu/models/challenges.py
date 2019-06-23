@@ -50,6 +50,14 @@ class Solution(me.Document):
 
     meta = {'collection': 'solutions'}
 
+    def count_pass_testcases(self):
+        count = 0
+        for t in self.test_results:
+            if t.validated:
+                count += 1
+
+        return count
+
 
 class TestCase(me.Document):
     input_file = me.FileField()

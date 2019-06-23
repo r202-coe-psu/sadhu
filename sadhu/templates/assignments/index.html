@@ -1,4 +1,5 @@
 {% extends '/base/default-dashboard.html' %}
+{% import '/base/assignment-style.html' as ass_style %}
 
 {% block dashboard_title %}
   Assignments
@@ -27,14 +28,15 @@
           {%- set assignment = schedule['assignment_schedule'].assignment -%}
           {%- set assignment_time = schedule['assignment_schedule'] -%}
           {%- set class_ = schedule['class_'] -%}
-				<tr>
+          {%- set ass_score = assignment.get_score(class_, current_user) -%}
+          <tr class="{{ ass_style.get_assignment_class(ass_score, assignment.score) }}">
 					<td data-label="Name">
 						<a href="{{ url_for('assignments.practice', assignment_id=assignment.id, class_id=class_.id) }}">{{ assignment.name }}</a>
 					</td>
           <td data-label="Description">{{ assignment.description }}</td>
 					<td data-label="Due Date">{{ assignment_time.ended_date.ctime() }}</td>
           <td data-label="Progress">{{ assignment.count_done_challenges(class_, current_user) }} / {{ assignment.challenges | count }}</td>
-          <td data-label="Score" class="right aligned">{{ '{:.2f}'.format(assignment.get_score(class_, current_user)) }} / {{ assignment.score }}</td>
+          <td data-label="Score" class="right aligned">{{ '{:.2f}'.format(ass_score) }} / {{ assignment.score }}</td>
 				</tr>
         {% endfor -%}
 			</body>

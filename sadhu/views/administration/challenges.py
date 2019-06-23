@@ -67,8 +67,6 @@ def edit(challenge_id):
                             challenge_id=challenge.id))
 
 
-
-
 @module.route('/<challenge_id>/add-testcase', methods=['GET', 'POST'])
 @acl.allows.requires(acl.is_lecturer)
 def add_testcase(challenge_id):
@@ -79,15 +77,15 @@ def add_testcase(challenge_id):
         return render_template('/administration/challenges/add-testcase.html',
                                form=form,
                                challenge=challenge)
-        
+
     test_case = models.TestCase(public=form.public.data,
                                 owner=current_user._get_current_object(),
                                 challenge=challenge)
 
-        
     if form.input_file.data:
         if form.is_inputfile.data:
-            test_case.input_file.put(form.input_file.data,
+            test_case.input_file.put(
+                    form.input_file.data,
                     filename=form.input_file.data.filename,
                     content_type=form.input_file.data.content_type)
         else:
@@ -96,7 +94,8 @@ def add_testcase(challenge_id):
 
     if form.output_file.data:
         if form.is_outputfile.data:
-            test_case.output_file.put(form.output_file.data,
+            test_case.output_file.put(
+                    form.output_file.data,
                     filename=form.output_file.data.filename,
                     content_type=form.output_file.data.content_type)
         else:
@@ -110,7 +109,6 @@ def add_testcase(challenge_id):
 
     test_case.is_inputfile = form.is_inputfile.data
     test_case.is_outputfile = form.is_outputfile.data
-    
     test_case.save()
 
     challenge.test_cases.append(test_case)
@@ -120,7 +118,8 @@ def add_testcase(challenge_id):
                             challenge_id=challenge.id))
 
 
-@module.route('/<challenge_id>/testcases/<testcase_id>/edit', methods=['GET', 'POST'])
+@module.route('/<challenge_id>/testcases/<testcase_id>/edit',
+              methods=['GET', 'POST'])
 @acl.allows.requires(acl.is_lecturer)
 def edit_testcase(challenge_id, testcase_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
@@ -131,7 +130,7 @@ def edit_testcase(challenge_id, testcase_id):
         return render_template('/administration/challenges/add-testcase.html',
                                form=form,
                                challenge=challenge)
-    
+
     data = form.data.copy()
     data.pop('input_file')
     data.pop('output_file')
@@ -143,7 +142,8 @@ def edit_testcase(challenge_id, testcase_id):
     if form.input_file.data:
 
         if form.is_inputfile.data:
-            test_case.input_file.put(form.input_file.data,
+            test_case.input_file.put(
+                    form.input_file.data,
                     filename=form.input_file.data.filename,
                     content_type=form.input_file.data.content_type)
         else:
@@ -152,7 +152,8 @@ def edit_testcase(challenge_id, testcase_id):
 
     if form.output_file.data:
         if form.is_outputfile.data:
-            test_case.output_file.put(form.output_file.data,
+            test_case.output_file.put(
+                    form.output_file.data,
                     filename=form.output_file.data.filename,
                     content_type=form.output_file.data.content_type)
         else:
@@ -166,22 +167,16 @@ def edit_testcase(challenge_id, testcase_id):
 
     test_case.is_inputfile = form.is_inputfile.data
     test_case.is_outputfile = form.is_outputfile.data
-    
     test_case.save()
-
 
     return redirect(url_for('administration.challenges.view',
                             challenge_id=challenge.id))
-
 
 
 @module.route('/<challenge_id>')
 @acl.allows.requires(acl.is_lecturer)
 def view(challenge_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
-    md = markdown.markdown(challenge.problem_statement,
-            extensions=['fenced_code', 'codehilite'])
-
     formatter = HtmlFormatter(linenos=True)
     style = formatter.get_style_defs('.codehilite')
 
@@ -189,3 +184,15 @@ def view(challenge_id):
                            markdown=markdown.markdown,
                            style=style,
                            challenge=challenge)
+
+
+@module.route('/<challenge_id>/solutions')
+@acl.allows.requires(acl.is_lecturer)
+def list_solutions(challenge_id):
+    challenge = models.Challenge.objects.get(id=challenge_id)
+    solutions = models.Solution.objects(
+            challenge=challenge).order_by('-id').limit(50)
+
+    return render_template('/administration/challenges/list-solutions.html',
+                           challenge=challenge,
+                           solutions=solutions)
