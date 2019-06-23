@@ -129,7 +129,7 @@ def get_past_assignment_schedule(user):
 
 
     ass_schedule = []
-    for class_ in available__classes:
+    for class_ in available_classes:
         if not class_.is_enrolled(user.id):
             continue
 
