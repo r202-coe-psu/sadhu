@@ -34,7 +34,7 @@ def index():
 @acl.allows.requires(acl.is_lecturer)
 def view(solution_id):
     solution = models.Solution.objects.get(id=solution_id)
-    code = solution.code.read().decode()
+    code = solution.code.read().decode(errors='ignore')
 
     lexer = get_lexer_for_filename(solution.code.filename)
 

@@ -41,7 +41,7 @@ def view(solution_id):
             ).first()
     challenge = solution.challenge
 
-    code = solution.code.read().decode()
+    code = solution.code.read().decode(errors='ignore')
 
     lexer = get_lexer_for_filename(solution.code.filename)
 
