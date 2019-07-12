@@ -39,7 +39,8 @@ def register_blueprint(app):
                                     challenges,
                                     solutions,
                                     teaching_assistants,
-                                    administration
+                                    administration,
+                                    admin
                                     ])
 
     for blueprint in blueprints:

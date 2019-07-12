@@ -54,7 +54,7 @@ def index_user():
 @login_required
 def index():
     user = current_user._get_current_object()
-    if 'lecturer' in user.roles:
+    if 'lecturer' in user.roles or 'admin' in user.roles:
         return index_admin()
     
     return index_user()
