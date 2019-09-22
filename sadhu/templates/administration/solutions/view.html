@@ -32,7 +32,7 @@
   {% else %}
     <a href="{{ url_for('solutions.index') }}" class="section">Solutions</a>
     <i class="right angle icon divider"></i>
-    <a href="{{ url_for('challenges.view', challenge_id=challenge.id, class_id=solution.enrolled_class.id) }}" class="section">{{ solution.enrolled_class.name }}</a>
+    <a href="{{ url_for('challenges.view', challenge_id=solution.challenge.id, class_id=solution.enrolled_class.id) }}" class="section">{{ solution.enrolled_class.name }}</a>
   {% endif %}
 {% endblock %}
 

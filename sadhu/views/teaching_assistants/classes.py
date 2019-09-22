@@ -50,33 +50,33 @@ def list_students(class_id):
     enrollments = class_.enrollments
     enrollments = sorted(enrollments, key=lambda e: e.user.first_name)
 
-    return render_template('/administration/classes/list-students.html',
+    return render_template('/administration/classes/list-users.html',
                            enrollments=enrollments,
                            class_=class_)
 
-@module.route('/<class_id>/students/<student_id>')
+@module.route('/<class_id>/students/<user_id>')
 @acl.allows.requires(acl.is_teaching_assistant)
-def show_student_score(class_id, student_id):
+def show_user_score(class_id, user_id):
     class_ = models.Class.objects.get(id=class_id)
-    student = models.User.objects.get(id=student_id)
+    user = models.User.objects.get(id=user_id)
     assignments = class_.course.assignments
 
-    return render_template('/administration/classes/show-student-score.html',
+    return render_template('/administration/classes/show-user-score.html',
                            class_=class_,
-                           student=student,
+                           user=user,
                            assignments=assignments)
 
 
-@module.route('/<class_id>/students/<student_id>/assignments/<assignment_id>')
+@module.route('/<class_id>/students/<user_id>/assignments/<assignment_id>')
 @acl.allows.requires(acl.is_teaching_assistant)
-def show_student_assignment(class_id, student_id, assignment_id):
+def show_user_assignment(class_id, user_id, assignment_id):
     class_ = models.Class.objects.get(id=class_id)
-    student = models.User.objects.get(id=student_id)
+    user = models.User.objects.get(id=user_id)
     assignment = models.Assignment.objects.get(id=assignment_id)
 
-    return render_template('/administration/classes/show-student-assignment.html',
+    return render_template('/administration/classes/show-user-assignment.html',
                            class_=class_,
-                           student=student,
+                           user=user,
                            assignment=assignment)
 
 
