@@ -8,6 +8,7 @@
   "author": "",
   "license": "UNLICENSED",
   "dependencies": {
+    "brython": "^3.7.5",
     "fomantic-ui-css": "^2.7.5",
     "jquery": "^3.4.1",
     "mathjax": "2.7.5"

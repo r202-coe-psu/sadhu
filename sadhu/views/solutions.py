@@ -2,6 +2,7 @@ from flask import (Blueprint,
                    render_template,
                    request,
                    redirect,
+                   jsonify,
                    url_for)
 from flask_login import current_user, login_required
 
@@ -60,3 +61,18 @@ def view(solution_id):
                            difflib=difflib,
                            style=style)
 
+
+@module.route('/<solution_id>/status')
+@acl.allows.requires(acl.is_solution_owner
+                     or acl.is_lecturer
+                     or acl.is_teaching_assistant)
+def status_api(solution_id):
+    solution = models.Solution.objects(
+            id=solution_id,
+            owner=current_user._get_current_object(),
+            ).first()
+    data = dict(id=solution_id,
+                status=solution.status,
+                score=solution.score,
+                passed=solution.passed)
+    return jsonify(data)

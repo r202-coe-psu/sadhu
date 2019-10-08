@@ -22,19 +22,27 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" src="{{ url_for('static', filename='node_modules/mathjax/MathJax.js') }}"></script>
 
-  <script type="text/javascript">
-    $(".attach-file-code").click(function() {
-      $(this).parent().find("#code").click();
-    });
+<script type="text/javascript">
+  $(".attach-file-code").click(function() {
+    $(this).parent().find("#code").click();
+  });
 
-    $('#code')
-      .on('change', function(e) {
-        var name = e.target.files[0].name;
-        $('.attach-file-code', $(e.target).parent()).val(name);
-      });
+  $('#code')
+    .on('change', function(e) {
+      var name = e.target.files[0].name;
+      $('.attach-file-code', $(e.target).parent()).val(name);
+    });
+</script>
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='node_modules/brython/brython.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='node_modules/brython/brython_stdlib.js') }}"></script>
+  <script type="text/javascript">
+    brython(1);
   </script>
 
 {% endblock %}
+
 
 {% block dashboard_title %}
 Challenge: {{ challenge.name }}
@@ -131,7 +139,80 @@ Challenge: {{ challenge.name }}
 {% endif %}
 
 <div class="ui container" style="margin-top: 1em;">
-    {% if solutions %}
+  {% if solutions %}
+<script type="text/python">
+  from browser import document, html, ajax, timer
+  import json
+
+  sol_status = {}
+  _timer = None
+
+  url = "{{ url_for('solutions.status_api', solution_id='solution_id') }}"
+
+  def set_get_status_timeout():
+    global _timer
+    if _timer:
+      timer.clear_timeout(_timer)
+
+    _timer = timer.set_timeout(get_status_from_server, 15000)
+
+  def on_complete(req):
+    global sol_status
+
+    obj = json.loads(req.text)
+    print('got status', obj)
+
+    old_status = sol_status[obj['id']]
+    if old_status == obj['status']:
+      set_get_status_timeout()
+      return
+  
+    tr = document['solution-'+obj['id']]
+    for td in tr.children:
+      if td.headers == 'status':
+        td.text = obj['status']
+      elif td.headers == 'passed':
+        td.text = obj['passed']
+      elif td.headers == 'score':
+        td.text = obj['score']
+
+    if obj['status'] == 'complete':
+      if obj['passed'] == True:
+        tr.className = 'positive'
+      else:
+        tr.className = 'negative'
+
+      a = document[f'solution-{obj["id"]}-view']
+      a.className = a.className.replace('disabled', '').strip()
+
+      sol_status.pop(obj['id'])
+    else:
+      set_get_status_timeout()
+
+
+
+  def check_solution_status():
+    sol_status = {}
+    trs = document['solution-status'].children
+    for tr in trs:
+      for td in tr.children:
+        if td.headers == 'status' and td.text.strip() != 'complete':
+          solution_id = tr.id.split('-')[-1]
+          sol_status[solution_id] = td.text.strip()
+          break
+    return sol_status
+
+  def get_status_from_server():
+    global sol_status
+    for sol_id in sol_status:
+      request_url = url.replace('solution_id', sol_id)
+      ajax.get(request_url, oncomplete=on_complete)
+
+  sol_status = check_solution_status()
+  if len(sol_status) > 0:
+    get_status_from_server()
+
+</script>
 		  <table class="ui celled table">
         <thead>
           <tr>
@@ -144,19 +225,19 @@ Challenge: {{ challenge.name }}
           </tr>
         </thead>
 
-        <tbody>
+        <tbody id="solution-status">
           {% for solution in solutions %}
-          <tr class="{{ solution_style.get_solution_class(solution) }}">
-            <td>{{ solution.code.filename }}</td>
-            <td>{{ solution.submitted_date }}</td>
-            <td>{{ solution.status }}</td>
-            <td>{{ solution.passed }}</td>
-            <td>{{ '{:.2f}'.format(solution.score) }}</td>
-            <td>
+          <tr id="solution-{{ solution.id }}" class="{{ solution_style.get_solution_class(solution) }}">
+            <td headers="filename">{{ solution.code.filename }}</td>
+            <td headers="submitted_date">{{ solution.submitted_date }}</td>
+            <td headers="status">{{ solution.status }}</td>
+            <td headers="passed">{{ solution.passed }}</td>
+            <td headers="score">{{ '{:.2f}'.format(solution.score) }}</td>
+            <td headers="operation">
               {% if solution.status == 'complete' %}
-                <a class="ui circular primary icon button" target="blank" href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="eye icon"></i></a>
+                <a id="solution-{{ solution.id }}-view" class="ui circular primary icon button" target="blank" href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="eye icon"></i></a>
               {% else %}
-                <i class="eye circular icon"></i>
+                <a id="solution-{{ solution.id }}-view" class="ui circular primary icon button disabled" target="blank" href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="eye icon"></i></a>
               {% endif %}
             </td>
 					</tr>
