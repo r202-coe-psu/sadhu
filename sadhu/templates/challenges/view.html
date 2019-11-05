@@ -154,7 +154,7 @@ Challenge: {{ challenge.name }}
     if _timer:
       timer.clear_timeout(_timer)
 
-    _timer = timer.set_timeout(get_status_from_server, 15000)
+    _timer = timer.set_timeout(get_status_from_server, 5000)
 
   def on_complete(req):
     global sol_status
