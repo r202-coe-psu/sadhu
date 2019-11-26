@@ -5,7 +5,7 @@ from flask import (Blueprint,
                    url_for)
 from flask_login import current_user, login_required
 
-from sadhu import forms
+from .. import forms
 from sadhu import models
 
 import datetime

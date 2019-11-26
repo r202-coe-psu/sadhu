@@ -5,8 +5,7 @@ from flask import (Blueprint,
                    )
 from flask_login import current_user, login_required
 
-from sadhu import acl
-from sadhu import forms
+from .. import forms
 from sadhu import models
 
 module = Blueprint('classes',

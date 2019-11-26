@@ -5,15 +5,13 @@ from flask import (Blueprint,
                    )
 from flask_login import current_user
 
-from sadhu import acl
-from sadhu import forms
+from sadhu.web import acl, forms
 from sadhu import models
 
 module = Blueprint('administration.courses',
                    __name__,
                    url_prefix='/courses',
                    )
-
 
 
 @module.route('/')

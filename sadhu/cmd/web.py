@@ -1,8 +1,8 @@
-import sadhu
+from sadhu import web
 
 def main():
-    options = sadhu.get_program_options()
-    app = sadhu.create_app()
+    options = web.get_program_options()
+    app = web.create_app()
 
     app.run(
         debug=options.debug,

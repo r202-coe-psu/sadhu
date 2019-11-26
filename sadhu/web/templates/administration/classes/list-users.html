@@ -19,6 +19,10 @@
       <b>Start Date: </b> {{ class_.started_date.ctime() }} <br/>
       <b>End Data: </b> {{ class_.ended_date.ctime() }} <br/>
       </p>
+      <p>
+      <a href="{{ url_for('administration.classes.export_attendants', class_id=class_.id) }}" class="ui primary labeled icon button"><i class="download icon"></i>Attendants</a>
+      <a href="{{ url_for('administration.classes.export_scores', class_id=class_.id) }}" class="ui primary labeled icon button"><i class="download icon"></i>Scores</a>
+      </p>
     </div>
 
 	 <table class="ui celled table">

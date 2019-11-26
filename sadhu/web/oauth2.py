@@ -1,6 +1,6 @@
 from flask import g, config, session, redirect, url_for
 from flask_login import current_user, login_user
-from authlib.flask.client import OAuth
+from authlib.integrations.flask_client import OAuth
 import loginpass
 
 from . import models

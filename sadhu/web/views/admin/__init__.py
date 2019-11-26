@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from sadhu import acl
+from sadhu.web import acl
 
 module = Blueprint('admin', __name__, url_prefix='/admin')
 

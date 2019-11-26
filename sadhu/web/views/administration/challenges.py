@@ -10,8 +10,7 @@ import markdown
 from pygments.formatters import HtmlFormatter
 
 
-from sadhu import acl
-from sadhu import forms
+from sadhu.web import acl, forms
 from sadhu import models
 
 

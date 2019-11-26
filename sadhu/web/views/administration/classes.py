@@ -1,15 +1,18 @@
 from flask import (Blueprint,
                    render_template,
                    url_for,
-                   redirect
+                   redirect,
+                   Response,
+                   send_file
                    )
 from flask_login import current_user
 
-from sadhu import acl
-from sadhu import forms
+from sadhu.web import acl, forms
 from sadhu import models
 
 import datetime
+import csv
+import io
 
 module = Blueprint('administration.classes',
                    __name__,
@@ -157,6 +160,96 @@ def show_user_assignment(class_id, user_id, assignment_id):
             class_=class_,
             user=user,
             assignment=assignment)
+
+
+@module.route('/<class_id>/users/export-attendents')
+@acl.allows.requires(acl.is_class_owner)
+def export_attendants(class_id):
+    class_ = models.Class.objects.get(id=class_id)
+    enrollments = models.Enrollment.objects(enrolled_class=class_)
+    users = [e.user for e in enrollments]
+    users.sort(key=lambda u: u.username)
+
+
+    assignments = []
+    for ass_time in class_.assignment_schedule:
+        assignments.append(ass_time.assignment)
+
+    assignments.sort(key=lambda ass: ass.name)
+    header = ['id']
+    subheader = ['no']
+
+    for ass in assignments:
+        header.append(ass.name)
+        subheader.append(len(ass.challenges))
+
+    output =  io.StringIO()
+    writer = csv.writer(output)
+
+    writer.writerow(header)
+    writer.writerow(subheader)
+    for user in users:
+        data = [user.username]
+        for ass in assignments:
+            challenges = ass.check_user_submission(class_, user)
+            data.append(len(challenges))
+        writer.writerow(data)
+
+    return Response(output.getvalue(),
+                    mimetype='text/csv',
+                    headers={
+                        'Content-disposition':
+                        f'attachment; filename={class_.id}-attendants.csv'
+    				})
+
+
+@module.route('/<class_id>/users/export-scores')
+@acl.allows.requires(acl.is_class_owner)
+def export_scores(class_id):
+    class_ = models.Class.objects.get(id=class_id)
+    enrollments = models.Enrollment.objects(enrolled_class=class_)
+    users = [e.user for e in enrollments]
+    users.sort(key=lambda u: u.username)
+
+
+    assignments = []
+    for ass_time in class_.assignment_schedule:
+        assignments.append(ass_time.assignment)
+
+    assignments.sort(key=lambda ass: ass.name)
+    header = ['id']
+    subheader = ['no']
+
+    total_score = 0
+    for ass in assignments:
+        header.append(ass.name)
+        subheader.append(ass.score)
+        total_score += ass.score
+    header.append('total')
+    subheader.append(total_score)
+
+    output =  io.StringIO()
+    writer = csv.writer(output)
+
+    writer.writerow(header)
+    writer.writerow(subheader)
+    for user in users:
+        total_score = 0
+        data = [user.username]
+        for ass in assignments:
+            score = ass.get_score(class_, user)
+            data.append(score)
+            total_score += score
+        data.append(total_score)
+        writer.writerow(data)
+
+    return Response(output.getvalue(),
+                    mimetype='text/csv',
+                    headers={
+                        'Content-disposition':
+                        f'attachment; filename={class_.id}-scores.csv'
+    				})
+
 
 
 @module.route('/<class_id>/teaching-assistants/add', methods=['GET', 'POST'])
