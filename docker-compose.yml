@@ -8,7 +8,7 @@ services:
             - /etc/localtime:/etc/localtime:ro
         restart: always
         networks:
-            - sadhu_nw
+            - default
     web:
         build: .
         image: sadhu-image
@@ -21,7 +21,7 @@ services:
         links:
             - mongodb
         networks:
-            - sadhu_nw
+            - default
         restart: always
         command: /app/scripts/sadhu-uwsgi.sh
     checker:
@@ -34,13 +34,13 @@ services:
         links:
             - mongodb
         networks:
-            - sadhu_nw
+            - default
         restart: always
         environment:
             - /app/sadhu-production.cfg
         command: sadhu-checker
 
 networks:
-    sadhu_nw:
+    default:
         driver: bridge
       
