@@ -62,26 +62,27 @@
 				</tr>
 {% endfor %}
 			</tbody>
-		</table>
+    </table>
 
+{% if unenrollments | count > 0 %}
     <div class="ui segment">
       <h2>Unenrolled Students</h2>
     </div>
 	  <table class="ui celled table">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Score</th>
-					<th>Operation</th>
-				</tr>
-			</thead>
-			<tbody>
-{% for user in unenrollments  %}
-  <tr>
-    <td>
-      {{ user.metadata.get('student_id', user.username) }}
-    </td>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Score</th>
+          <th>Operation</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for user in unenrollments  %}
+        <tr>
+          <td>
+            {{ user.metadata.get('student_id', user.username) }}
+          </td>
           <td>
             {{ user.first_name }} {{ user.last_name }} ({{ user.metadata.get('thai_first_name', '') }} {{ user.metadata.get('thai_last_name', '') }})
 
@@ -102,10 +103,10 @@
             {% endif %}
           </td>
 				</tr>
-{% endfor %}
+      {% endfor %}
 			</tbody>
 		</table>
-
+{% endif %}
 
 </div>
 
