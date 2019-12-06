@@ -2,6 +2,7 @@ from flask import (Blueprint,
                    render_template,
                    url_for,
                    redirect,
+                   request,
                    Response,
                    send_file
                    )
@@ -130,9 +131,28 @@ def list_students(class_id):
     enrollments = sorted(enrollments,
                          key=lambda e: e.user.first_name)
 
+    unenrollments = []
+    never_login = []
+    le = class_.limited_enrollment
+    for grantee in le.grantees:
+        if le.method == 'email':
+            user = models.User.objects(email=grantee).first()
+        elif le.method == 'student_id':
+            user = models.User.objects(username=grantee).first()
+
+        if user is None:
+            never_login.append(grantee)
+            continue
+
+        if not class_.is_enrolled(user=user):
+            unenrollments.append(user)
+
+
     return render_template('/administration/classes/list-users.html',
                            class_=class_,
-                           enrollments=enrollments)
+                           enrollments=enrollments,
+                           unenrollments=unenrollments,
+                           never_login=never_login)
 
 
 @module.route('/<class_id>/users/<user_id>')
@@ -249,6 +269,16 @@ def export_scores(class_id):
                         'Content-disposition':
                         f'attachment; filename={class_.id}-scores.csv'
     				})
+
+
+@module.route('/<class_id>/add-user/<user_id>')
+@acl.allows.requires(acl.is_class_owner)
+def add_user_to_class(class_id, user_id):
+    class_ = models.Class.objects.get(id=class_id)
+    user = models.User.objects.get(id=user_id)
+
+    user.enroll(class_)
+    return redirect(request.referrer)
 
 
 

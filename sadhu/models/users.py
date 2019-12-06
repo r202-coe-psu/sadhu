@@ -46,3 +46,18 @@ class User(me.Document, UserMixin):
 
     def get_enrollments(self):
         return Enrollment.objects(user=self)
+
+    def enroll(self, class_):
+        enrollment = Enrollment.objects(
+                user=self,
+                enrolled_class=class_).first()
+
+        if not enrollment:
+            enrollment = Enrollment(
+                    user=self,
+                    enrolled_class=class_)
+            enrollment.save()
+
+        if enrollment not in class_.enrollments:
+            class_.enrollments.append(enrollment)
+            class_.save()

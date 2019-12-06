@@ -18,6 +18,7 @@
       <b>Learners: </b> {{ enrollments | count }} <br/>
       <b>Start Date: </b> {{ class_.started_date.ctime() }} <br/>
       <b>End Data: </b> {{ class_.ended_date.ctime() }} <br/>
+      <b>Never Login Student: </b> {{ never_login | join(', ') }} <br/>
       </p>
       <p>
       <a href="{{ url_for('administration.classes.export_attendants', class_id=class_.id) }}" class="ui primary labeled icon button"><i class="download icon"></i>Attendants</a>
@@ -25,7 +26,7 @@
       </p>
     </div>
 
-	 <table class="ui celled table">
+	  <table class="ui celled table">
 			<thead>
 				<tr>
 					<th>ID</th>
@@ -38,7 +39,7 @@
 {% for enrollment in enrollments  %}
   <tr>
     <td>
-      {{ enrollment.user.metadata.get('student_id', '') }}
+      {{ enrollment.user.metadata.get('student_id', enrollment.user.username) }}
     </td>
           <td>
             {{ enrollment.user.first_name }} {{ enrollment.user.last_name }} ({{ enrollment.user.metadata.get('thai_first_name', '') }} {{ enrollment.user.metadata.get('thai_last_name', '') }})
@@ -62,6 +63,49 @@
 {% endfor %}
 			</tbody>
 		</table>
+
+    <div class="ui segment">
+      <h2>Unenrolled Students</h2>
+    </div>
+	  <table class="ui celled table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Score</th>
+					<th>Operation</th>
+				</tr>
+			</thead>
+			<tbody>
+{% for user in unenrollments  %}
+  <tr>
+    <td>
+      {{ user.metadata.get('student_id', user.username) }}
+    </td>
+          <td>
+            {{ user.first_name }} {{ user.last_name }} ({{ user.metadata.get('thai_first_name', '') }} {{ user.metadata.get('thai_last_name', '') }})
+
+            {#
+            <a href="{{ url_for('administration.courses.view', course_id=course.id) }}">{{ course.name }}</a>
+            #}
+					</td>
+          <td>
+            {% set score = class_.get_assignment_score(user) %}
+            {{ '{:.2f}'.format(score['total_user_score']) }} / {{ score['total_score'] }}
+		      </td>
+          <td>
+            {% if class_.owner == current_user %}
+              <a href="{{ url_for('administration.classes.show_user_score', class_id=class_.id, user_id=user.id) }}" class="ui icon button primary circular"><i class="eye icon"></i></a>
+              <a href="{{ url_for('administration.classes.add_user_to_class', class_id=class_.id, user_id=user.id) }}" class="ui icon button primary circular"><i class="folder icon"></i></a>
+            {% elif class_.is_teaching_assistant(current_user) %}
+              <a href="{{ url_for('teaching_assistants.classes.show_user_score', class_id=class_.id, user_id=user.id) }}" class="ui icon button primary circular"><i class="eye icon"></i></a>
+            {% endif %}
+          </td>
+				</tr>
+{% endfor %}
+			</tbody>
+		</table>
+
 
 </div>
 

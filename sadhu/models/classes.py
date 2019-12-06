@@ -108,7 +108,7 @@ class Class(me.Document):
                 if str(user_id) == str(e.user.id):
                     return True
             if user:
-                if user == e:
+                if user == e.user:
                     return True
 
         return False

@@ -4,7 +4,7 @@ flask-mongoengine
 flask-login
 flask-allows
 authomatic
-authlib
+authlib==0.12.1
 loginpass
 passlib
 bcrypt
