@@ -290,9 +290,10 @@ def add_teaching_assistant(class_id):
 
     form = forms.classes.TeachingAssistantAddingForm()
     form.users.choices = [(str(user.id),
-                           '{} {}'.format(
+                           '{} {} ({})'.format(
                                user.first_name,
-                               user.last_name)) for user in users]
+                               user.last_name,
+                               user.username)) for user in users]
 
     if not form.validate_on_submit():
         return render_template(
