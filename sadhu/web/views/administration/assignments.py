@@ -53,6 +53,21 @@ def create():
                             assignment_id=assignment.id))
 
 
+@module.route('/<assignment_id>/delete')
+@acl.allows.requires(acl.is_lecturer)
+def delete(assignment_id):
+    assignment = models.Assignment.objects.get(id=assignment_id)
+    course = assignment.course
+    course.assignments.remove(assignment)
+    course.save()
+
+    assignment.delete()
+
+
+    return redirect(url_for('administration.courses.view',
+                            course_id=course.id))
+
+
 @module.route('/<assignment_id>/add-challenges', methods=['GET', 'POST'])
 @acl.allows.requires(acl.is_lecturer)
 def add_challenge(assignment_id):

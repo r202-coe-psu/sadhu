@@ -32,6 +32,7 @@
         <tr>
           <th>Name</th>
           <th>Description</th>
+          <th>Operation</th>
         </tr>
       </thead>
       <body>
@@ -42,6 +43,10 @@
           </td>
           <td>
             {{ assignment.description }}
+          </td>
+          <td>
+            <a href="{{ url_for('administration.assignments.delete', assignment_id=assignment.id) }}" class="ui button icon primary circular"><i class="trash icon"></i></a>
+
           </td>
         </tr>
   {% endfor %}
