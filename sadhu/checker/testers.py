@@ -152,8 +152,8 @@ class CTester(Tester):
 
     def prepair_executable(self, filename):
         exe_file = filename[:filename.rfind('.')]
-        compilation = self.compiler_options + [filename, '-o', exe_file]
-        output = subprocess.run(compilation)
+        compilation = self.compiler_options + [filename, '-o', exe_file, '-lm']
+        output = subprocess.run(compilation, capture_output=True)
 
         result = dict(executable=exe_file,
                       compiled_date=datetime.datetime.now(),
@@ -161,8 +161,11 @@ class CTester(Tester):
                       compilation=compilation)
 
         if output.returncode != 0:
-            result['output'] = output.stdout
-            result['error'] = output.stderr
+            if output.stderr:
+                result['error'] = output.stderr.decode()
+
+        if output.stdout:
+            result['output'] = output.stdout.decode()
 
         return result
 

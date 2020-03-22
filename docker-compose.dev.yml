@@ -1,0 +1,51 @@
+version: '3'
+services:
+    mongodb:
+        image: mongo
+        container_name: sadhu-mongodb
+        volumes:
+            - ../deployment/sadhu/mongodb/data/db:/data/db
+            - /etc/localtime:/etc/localtime:ro
+        # restart: always
+        networks:
+            - default
+    web:
+        build: .
+        image: sadhu-image
+        container_name: sadhu-web
+        volumes:
+            - .:/app
+            - ../deployment:/deployment
+            - /etc/localtime:/etc/localtime:ro
+        ports:
+            - 8080:9000
+        links:
+            - mongodb
+        networks:
+            - default
+        # restart: always
+        environment:
+            FLASK_ENV: production
+            SADHU_SETTINGS: /app/sadhu-development.cfg
+        command: /app/scripts/sadhu-uwsgi.sh
+    checker:
+        build: .
+        image: sadhu-image
+        container_name: sadhu-checker
+        volumes:
+            - .:/app
+            - ../deployment:/deployment
+            - /etc/localtime:/etc/localtime:ro
+        links:
+            - mongodb
+        networks:
+            - default
+        # restart: always
+        environment:
+            SADHU_SETTINGS: /app/sadhu-development.cfg
+        command: sadhu-checker
+
+networks:
+    default:
+        driver: bridge
+      

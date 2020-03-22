@@ -53,15 +53,29 @@
       <b>Prepair Status</b>
       
       {% if 'compiled_date' in solution.metadata['compilation'] %}
-        <div><b>Compile</b> {{ solution.metadata['compilation']['compiled_date'] }}</div>
+        <div><b>Compile:</b> {{ solution.metadata['compilation']['compiled_date'] }}</div>
       {% endif %}
       {% if 'error' in solution.metadata['compilation'] %}
-        <div> {{ solution.metadata['compilation']['error'] }}</div>
-      {% endif %}
-      {% if 'output' in solution.metadata['compilation'] %}
-        <div> {{ solution.metadata['compilation']['output'] }}</div>
+      <div class="ui negative message">
+        <div class="header">
+          Compilation Error
+        </div>
+        <pre>
+{{ solution.metadata['compilation']['error'] }}
+        </pre>
+			</div>
       {% endif %}
 
+      {% if 'output' in solution.metadata['compilation'] %}
+      <div class="ui info message">
+        <div class="header">
+          Compilation Error
+        </div>
+        <pre>
+{{ solution.metadata['compilation']['error'] }}
+        </pre>
+      </div>
+      {% endif %}
     </div>
     {% endif %}
   </div>
