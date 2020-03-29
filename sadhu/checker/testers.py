@@ -107,7 +107,7 @@ class Tester:
                 continue
 
             if output and output.returncode == 0:
-                test_result.output = output.stdout.decode()
+                test_result.output = output.stdout.decode('utf-8', errors='replace')
 
                 output_data = test_result.output.splitlines()
                 testcase_data = test_result.expected_result.splitlines()
@@ -162,10 +162,10 @@ class CTester(Tester):
 
         if output.returncode != 0:
             if output.stderr:
-                result['error'] = output.stderr.decode()
+                result['error'] = output.stderr.decode('utf-8', errors='replace')
 
         if output.stdout:
-            result['output'] = output.stdout.decode()
+            result['output'] = output.stdout.decode('utf-8', errors='replace')
 
         return result
 
