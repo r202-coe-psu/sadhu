@@ -1,0 +1,13 @@
+{% extends '/base/default-dashboard.html' %}
+
+{% block dashboard_title %}
+  Scoreboard
+{% endblock %}
+{% block breadcrumbs %}
+<a href="{{ url_for('classes.index', **request.args.to_dict()) }}" class="section">Class</a>
+{% endblock %}
+
+{% block content %}
+  <div class="ui container">
+  </div>
+{% endblock %}

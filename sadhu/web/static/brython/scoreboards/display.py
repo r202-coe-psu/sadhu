@@ -24,10 +24,19 @@ class ScoreBoard:
         self.running = True
         self.data = {}
         self.widgets = {}
+        self.animate_time = 30000
+
+        self.min_top = 10
+        self.min_left = 50
+        
+        self.max_top = self.height - 50
+        self.max_left = self.width - 50
+
+
 
 
     def display_text(self, data):
-        return f'{data["name"]}\n{data["score"]:.02f}/{data["max_score"]}({data["complete"]}/{data["challenges"]})'
+        return f'{data["name"]}\n{data["score"]:.02f}/{data["max_score"]} ({data["complete"]}/{data["challenges"]})'
 
 
     def draw(self, key, data):
@@ -37,20 +46,13 @@ class ScoreBoard:
                   '#7BC7C1', '#06B8CC', '#06AEC4', '#8DC3D9', '#03669C', '#207EE8',
                   '#8EAAE8', '#69508A', '#EDC0E9', '#BA6EA1', '#D957A7', '#E8157E']
 
-        min_top = self.height - 150
-        min_left = 10
-        
-        max_top = self.height - 30
-        max_left = self.width - 50
-
-        y = random.randrange(min_top, max_top)
-        x = random.randrange(min_left, max_left)
-
+        x = random.randrange(self.min_left, self.max_left)
+        y = self.max_top
 
         if data['max_score'] - data['score'] == 0:
-            y = 0
+            y = self.min_top
         elif data['score'] != 0:
-            y = data['score'] * (self.height / data['max_score'])
+            y = self.height - (data['score'] * (self.height / data['max_score']))
 
         color = random.choice(colors)
         text = fabric.Text.new(
@@ -65,23 +67,59 @@ class ScoreBoard:
                 'selectable': False,
             }
         )
-        self.widgets[key] = data
+        self.widgets[key] = text
 
         self.canvas.add(text)
+        self.animate(text, data)
+
+
+    def animate(self, obj, data):
+
+        padding = (self.max_top-self.min_top) / (data['max_score']+1)
+        max_level_top = self.max_top - int(data['score'] * padding)
+        min_level_top = self.max_top - int((data['score']+1) * padding)
+
+        animate_time = random.randrange(1000, self.animate_time)
+        
+
+        if obj.left < -60:
+            obj.set({
+                'left': self.width + 30
+                })
+
+        xrand = random.randrange(0, 100)
+
+        obj.animate('left', f'-={xrand}', {
+            'onChange': self.canvas.renderAll.bind(self.canvas),
+            'duration': animate_time,
+            'easing': fabric.util.ease.easeOutBounce,
+            })
+
+
+        yrand = random.randrange(min_level_top, max_level_top)
+        obj.animate('top', yrand, {
+            'onChange': self.canvas.renderAll.bind(self.canvas),
+            'duration': animate_time,
+            'easing': fabric.util.ease.easeOutBounce,
+            })
+
+        z = random.randrange(0, 10)
+        obj.moveTo(z)
+
+
 
 
     def update(self, key, data):
-        print('update')
-
-        text = self.widgets[key]
-        text.setText(self.display_text())
-
         y = data['score'] * (self.height / data['max_score'])
-        text.set(
+        obj.set(
             {
                 'top': y
             }
         )
+
+        text = self.widgets[key]
+        text.setText(self.display_text())
+
 
 
     def stop(self):
@@ -108,9 +146,15 @@ class ScoreBoard:
                 oncomplete=self.on_ajax_complete)
 
 
+    def schedule_animate(self):
+        for k, obj in self.widgets.items():
+            self.animate(obj, self.data[k])
+
+
     def run(self):
         self.get_student_scores()
         timer.set_interval(self.get_student_scores, 60000)
+        timer.set_interval(self.schedule_animate, self.animate_time)
 
 
 

@@ -1,0 +1,41 @@
+{% extends '/scoreboards/index.html' %}
+
+{% block additional_js %}
+  <script src="//cdnjs.cloudflare.com/ajax/libs/fabric.js/3.6.3/fabric.js"></script>
+
+  <script type="text/javascript" src="{{ url_for('static', filename='node_modules/brython/brython.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='node_modules/brython/brython_stdlib.js') }}"></script>
+  <script src="{{ url_for('static', filename='brython/scoreboards.brython.js') }}"></script>
+
+  <script type="text/javascript">
+    brython(1);
+  </script>
+{% endblock %}
+
+{% block dashboard_title %}Scoreboard: {{ class_.name }}{% endblock %}
+
+{% block breadcrumbs %}
+{{ super() }}
+<i class="right angle icon divider"></i>
+<div class="active section">{{ class_.name }}</div>
+{% endblock %}
+
+
+{% block content %}
+  <div>
+    <canvas id="scoreboard" style="width: 100%!important; height: 80vh;"></canvas>
+  </div>
+  <script type="text/python">
+    from scoreboards import display
+    from browser import document
+
+    score_board = display.ScoreBoard(
+        'scoreboard',
+        width=document['scoreboard'].parent.width,
+        height=document['scoreboard'].parent.height,
+        data_url="{{ url_for('scoreboards.list_assignment_scores', class_id=class_.id, assignment_id=assignment.id) }}"
+        )
+    score_board.run()
+  </script>
+{% endblock %}
+
