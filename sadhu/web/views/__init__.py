@@ -7,6 +7,7 @@ from . import classes
 from . import assignments
 from . import challenges
 from . import solutions
+from . import scoreboards
 
 from . import teaching_assistants
 
@@ -38,6 +39,7 @@ def register_blueprint(app):
                                     assignments,
                                     challenges,
                                     solutions,
+                                    scoreboards,
                                     teaching_assistants,
                                     administration,
                                     admin

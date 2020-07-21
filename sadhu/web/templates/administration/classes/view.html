@@ -89,8 +89,9 @@
 					<td>{{ ass_time.ended_date if ass_time else '-' }}</td>
 					<td>
             {% if class_.owner == current_user %}
-              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i class="alarm clock icon"></i></a>
+              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i class="clock icon"></i></a>
             {% endif %}
+            <a class="ui icon button circular primary" href="{{ url_for('scoreboards.show_assignment_scores', class_id=class_.id, assignment_id=assignment.id) }}"><i class="award icon"></i></a>
 					</td>
 				</tr>
 			{% endfor %}

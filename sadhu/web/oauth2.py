@@ -1,7 +1,6 @@
 from flask import g, config, session, redirect, url_for
 from flask_login import current_user, login_user
-# from authlib.integrations.flask_client import OAuth
-from authlib.flask.client import OAuth
+from authlib.integrations.flask_client import OAuth
 import loginpass
 
 from . import models
@@ -27,7 +26,7 @@ def update_token(name, token):
 
 oauth2_client = OAuth()
 
-def handle_authorize_google(remote, token, user_info):
+def handle_authorize(remote, token, user_info):
 
     if not user_info:
         return redirect(url_for('accounts.login'))
@@ -40,8 +39,8 @@ def handle_authorize_google(remote, token, user_info):
         user = models.User(
             username=user_info.get('name'),
             email=user_info.get('email'),
-            first_name=user_info.get('given_name'),
-            last_name=user_info.get('family_name'),
+            first_name=user_info.get('given_name', ''),
+            last_name=user_info.get('family_name', ''),
             status='active')
         user.resources[remote.name] = user_info
         email = user_info.get('email')
@@ -117,12 +116,13 @@ def init_oauth(app):
                            fetch_token=fetch_token,
                            update_token=update_token)
     
-    oauth2_client.register('principal')
+    # oauth2_client.register('principal')
     oauth2_client.register('engpsu')
     # oauth2_client.register('google')
+    backends = [loginpass.Google]
 
-    google_bp = loginpass.create_flask_blueprint(
-            loginpass.Google,
+    loginpass_bp = loginpass.create_flask_blueprint(
+            backends,
             oauth2_client,
-            handle_authorize_google)
-    app.register_blueprint(google_bp, url_prefix='/google')
+            handle_authorize)
+    app.register_blueprint(loginpass_bp)

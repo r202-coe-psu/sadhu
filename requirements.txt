@@ -3,11 +3,14 @@ requests
 flask-mongoengine
 flask-login
 flask-allows
-authomatic
-authlib==0.12.1
+authlib
 loginpass
 passlib
 bcrypt
 pygments
 markdown
-python-markdown-math 
+python-markdown-math
+email_validator
+brython
+
+watchdog

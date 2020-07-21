@@ -1,0 +1,64 @@
+#!/usr/bin/env python
+import sys
+import time
+import logging
+from watchdog.observers import Observer
+from watchdog.events import LoggingEventHandler, PatternMatchingEventHandler
+import os
+import pathlib
+import subprocess
+
+BRYTHON_PATH = 'sadhu/web/static/brython'
+
+def cls():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def when_file_changed(filename, path):
+    cls() 
+    print('change:', filename)
+
+    packagename = pathlib.Path(filename[len(path):]).parts[1]
+
+    subprocess.run(['python',
+                    '-m',
+                    'brython',
+                    '--make_package',
+                    packagename],
+                   cwd=pathlib.Path(path).resolve())
+
+
+class ModifiedHandler(PatternMatchingEventHandler):
+    patterns = ["*.py"]
+    base_path = ''
+
+    def on_created(self, event):
+        when_file_changed(event.src_path, path)
+
+    def on_any_event(self, event):
+        pass
+
+    def on_modified(self, event):
+        pass
+
+    def set_based_path(self, path):
+        self.based_path = path
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
+    path = sys.argv[1] if len(sys.argv) > 1 else BRYTHON_PATH
+    # event_handler = LoggingEventHandler()
+    event_handler = ModifiedHandler()
+    event_handler.set_based_path(path)
+    observer = Observer()
+    observer.schedule(event_handler, path, recursive=True)
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()

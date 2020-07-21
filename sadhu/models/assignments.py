@@ -85,6 +85,7 @@ class Assignment(me.Document):
         return challenge_checker
 
     def count_done_challenges(self, class_, user):
+        # very slow need update
         count = 0
         for challenge in self.challenges:
             if challenge.is_done(class_, user):
