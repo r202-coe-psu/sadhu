@@ -20,6 +20,7 @@ class ScoreBoard:
                     'height': height,
                     'backgroundColor': 'black',
                     'selectable': False,
+                    'renderOnAddRemove': False,
                 })
         self.running = True
         self.data = {}
@@ -82,9 +83,9 @@ class ScoreBoard:
         animate_time = random.randrange(1000, self.animate_time)
         
 
-        if obj.left < -60:
+        if obj.left < -10:
             obj.set({
-                'left': self.width + 30
+                'left': self.width + 10
                 })
 
         xrand = random.randrange(0, 100)
@@ -98,7 +99,7 @@ class ScoreBoard:
 
         yrand = random.randrange(min_level_top, max_level_top)
         obj.animate('top', yrand, {
-            'onChange': self.canvas.renderAll.bind(self.canvas),
+            # 'onChange': self.canvas.renderAll.bind(self.canvas),
             'duration': animate_time,
             'easing': fabric.util.ease.easeOutBounce,
             })
@@ -145,6 +146,8 @@ class ScoreBoard:
     def schedule_animate(self):
         for k, obj in self.widgets.items():
             self.animate(obj, self.data[k])
+
+        self.canvas.renderAll()
 
 
     def run(self):
