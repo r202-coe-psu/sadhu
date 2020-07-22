@@ -58,7 +58,7 @@ class Class(me.Document):
 
     limited = me.BooleanField(required=True, default=False)
     limited_enrollment = me.EmbeddedDocumentField(LimitedEnrollment)
-    enrollments = me.ListField(me.ReferenceField('Enrollment', dbref=True))
+    # enrollments = me.ListField(me.ReferenceField('Enrollment', dbref=True))
     started_date = me.DateTimeField(required=True,
                                     default=datetime.datetime.now)
 
@@ -72,7 +72,12 @@ class Class(me.Document):
                                                   dbref=True,
                                                   required=True))
 
-    meta = {'collection': 'classes'}
+    meta = {'collection': 'classes',
+            'strict': False}
+
+
+    def get_enrollments(self):
+        return Enrollment.objects(enrolled_class=self).all()
 
     def is_teaching_assistant(self, user):
         for ta in self.teaching_assistants:
@@ -103,18 +108,21 @@ class Class(me.Document):
         return ass_time
 
     def is_enrolled(self, user_id=None, user=None):
-        for e in self.enrollments:
-            if user_id:
-                if str(user_id) == str(e.user.id):
-                    return True
-            if user:
-                if user == e.user:
-                    return True
+        from .users import User
+        if user_id:
+            user = User.objects.get(id=user_id)
+            if not user:
+                return False
+
+        if user:
+            enrollment = Enrollment.objects(user=user, enrolled_class=self).first()
+            if enrollment:
+                return True
 
         return False
 
     def get_enrolled_information(self, user_id):
-        for e in self.enrollments:
+        for e in self.get_enrollments():
             if str(user_id) == str(e.user.id):
                 return e
 

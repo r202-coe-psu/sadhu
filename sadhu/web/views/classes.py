@@ -45,8 +45,6 @@ def enroll(class_id):
                 user=current_user._get_current_object(),
                 enrolled_class=class_)
         enrollment.save()
-        class_.enrollments.append(enrollment)
-        class_.save()
 
     return redirect(url_for('classes.view', class_id=class_.id))
 

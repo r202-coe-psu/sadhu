@@ -91,7 +91,9 @@
             {% if class_.owner == current_user %}
               <a class="ui icon button circular primary" href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i class="clock icon"></i></a>
             {% endif %}
-            <a class="ui icon button circular primary" href="{{ url_for('scoreboards.show_assignment_scores', class_id=class_.id, assignment_id=assignment.id) }}"><i class="award icon"></i></a>
+            {% if class_.owner == current_user or current_user in class_.contributors or class_.is_teaching_assistant(current_user) %}
+              <a class="ui icon button circular primary" href="{{ url_for('scoreboards.show_assignment_scores', class_id=class_.id, assignment_id=assignment.id) }}"><i class="award icon"></i></a>
+            {% endif %}
 					</td>
 				</tr>
 			{% endfor %}

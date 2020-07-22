@@ -31,7 +31,7 @@ def list_assignment_scores(class_id, assignment_id):
     challenge_count = len(assignment.challenges)
 
     data = dict()
-    for e in class_.enrollments:
+    for e in class_.get_enrollments():
         data[str(e.user.id)] = dict(
                 name=e.user.first_name,
                 score=assignment.get_score(class_, e.user),

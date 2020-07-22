@@ -11,6 +11,6 @@ pygments
 markdown
 python-markdown-math
 email_validator
-brython
 
+brython
 watchdog

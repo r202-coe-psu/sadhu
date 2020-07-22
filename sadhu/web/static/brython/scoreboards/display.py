@@ -107,19 +107,15 @@ class ScoreBoard:
         obj.moveTo(z)
 
 
-
-
     def update(self, key, data):
-        y = data['score'] * (self.height / data['max_score'])
+        obj = self.widgets[key]
         obj.set(
             {
-                'top': y
+                'text': self.display_text(data)
             }
         )
 
-        text = self.widgets[key]
-        text.setText(self.display_text())
-
+        self.animate(obj, data)
 
 
     def stop(self):
