@@ -47,7 +47,7 @@ def list_students(class_id):
             id=class_id,
             teaching_assistants__user=current_user._get_current_object())
     
-    enrollments = class_.enrollments
+    enrollments = class_.get_enrollments()
     enrollments = sorted(enrollments, key=lambda e: e.user.first_name)
 
     return render_template('/administration/classes/list-users.html',
