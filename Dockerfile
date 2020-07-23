@@ -11,8 +11,7 @@ RUN python3 -m pip install flask uwsgi
 RUN python3 setup.py develop
 RUN npm install --prefix sadhu/web/static
 
-RUN cd /app/sadhu/web/static/brython
-RUN for i in $(ls -d */); do python3 -m brython --make_package ${i%%/}; done
+RUN cd /app/sadhu/web/static/brython; for i in $(ls -d */); do python3 -m brython --make_package ${i%%/}; done
 
 ENV SADHU_SETTINGS=/app/sadhu-production.cfg
 ENV FLASK_ENV=prodoction
