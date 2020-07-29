@@ -60,6 +60,8 @@ class ScoreBoard:
             self.display_text(data),
             {
                 'fontSize': 16,
+                'fontWeight': 'bold',
+                'shadow': 'white 0 0 1px',
                 'left': x,
                 'top': y,
                 'fill': color,
@@ -79,19 +81,19 @@ class ScoreBoard:
         padding = (self.max_top-self.min_top) / (data['max_score']+1)
         max_level_top = self.max_top - int(data['score'] * padding)
         min_level_top = self.max_top - int((data['score']+1) * padding)
-
-        animate_time = random.randrange(1000, self.animate_time)
+        
+        animate_time = random.randrange(1000, self.animate_time-10000)
         
 
-        if obj.left < -10:
+        if obj.left < -50:
             obj.set({
-                'left': self.width + 10
+                'left': self.width + 50
                 })
 
-        xrand = random.randrange(0, 100)
+        xrand = random.randrange(0, 200)
 
         obj.animate('left', f'-={xrand}', {
-            'onChange': self.canvas.renderAll.bind(self.canvas),
+            # 'onChange': self.canvas.renderAll.bind(self.canvas),
             'duration': animate_time,
             'easing': fabric.util.ease.easeOutBounce,
             })
@@ -99,13 +101,15 @@ class ScoreBoard:
 
         yrand = random.randrange(min_level_top, max_level_top)
         obj.animate('top', yrand, {
-            # 'onChange': self.canvas.renderAll.bind(self.canvas),
+            'onChange': self.canvas.renderAll.bind(self.canvas),
             'duration': animate_time,
             'easing': fabric.util.ease.easeOutBounce,
             })
 
-        z = random.randrange(0, 10)
-        obj.moveTo(z)
+        # z = random.randrange(0, 10)
+        # obj.moveTo(z)
+
+        self.canvas.bringToFront(obj)
 
 
     def update(self, key, data):
@@ -145,9 +149,11 @@ class ScoreBoard:
 
     def schedule_animate(self):
         for k, obj in self.widgets.items():
-            self.animate(obj, self.data[k])
+            is_animate = random.choice([True, False, False])
+            if is_animate:
+                self.animate(obj, self.data[k])
 
-        self.canvas.renderAll()
+        # self.canvas.renderAll()
 
 
     def run(self):
