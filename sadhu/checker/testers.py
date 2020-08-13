@@ -112,10 +112,11 @@ class Tester:
                 output_data = test_result.output.splitlines()
                 testcase_data = test_result.expected_result.splitlines()
 
-                
                 is_validate = True
 
-                if abs(len(output_data) - len(testcase_data)) > 2:
+                if len(output_data) == 0:
+                    is_validate = False
+                if abs(len(output_data) - len(testcase_data)) != 0:
                     is_validate = False
                 else:
                     for t_output, p_output in zip(testcase_data, output_data):
