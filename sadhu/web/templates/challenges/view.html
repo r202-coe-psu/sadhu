@@ -116,7 +116,7 @@ Challenge: {{ challenge.name }}
         {%- for t in challenge.test_cases if t.public %}
         <tr>
           <td><pre>{{ t.input_string }}</pre></td>
-          <td><pre>{{ t.output_string }}</pre></td>
+          <td>{{ t.output_string }}</td>
         </tr>
         {% endfor -%}
       </tbody>

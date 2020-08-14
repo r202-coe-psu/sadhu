@@ -8,7 +8,8 @@ from flask_login import current_user
 
 import markdown
 from pygments.formatters import HtmlFormatter
-
+from pygments.lexers import get_lexer_for_filename, get_lexer_by_name
+from pygments import highlight
 
 from sadhu.web import acl, forms
 from sadhu import models
@@ -177,12 +178,18 @@ def edit_testcase(challenge_id, testcase_id):
 def view(challenge_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
     formatter = HtmlFormatter(linenos=True)
+    console_formatter = HtmlFormatter(linenos=True, )
+    console_lexer = get_lexer_by_name("console")
     style = formatter.get_style_defs('.codehilite')
 
     return render_template('/administration/challenges/view.html',
                            markdown=markdown.markdown,
                            style=style,
-                           challenge=challenge)
+                           formatter=formatter,
+                           console_formatter=console_formatter,
+                           challenge=challenge,
+                           console_lexer=console_lexer,
+                           highlight=highlight)
 
 
 @module.route('/<challenge_id>/solutions')
