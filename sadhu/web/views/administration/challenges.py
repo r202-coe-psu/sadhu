@@ -178,7 +178,7 @@ def edit_testcase(challenge_id, testcase_id):
 def view(challenge_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
     formatter = HtmlFormatter(linenos=True)
-    console_formatter = HtmlFormatter(linenos=True, )
+    console_formatter = HtmlFormatter(style='monokai', prestyles='white-space: pre-wrap;')
     console_lexer = get_lexer_by_name("console")
     style = formatter.get_style_defs('.codehilite')
 

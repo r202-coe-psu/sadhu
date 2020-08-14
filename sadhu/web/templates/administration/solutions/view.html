@@ -105,7 +105,7 @@
 
     {% if t.public or solution.enrolled_class.owner == current_user or solution.enrolled_class.is_teaching_assistant(current_user) %}
     {# modal description #}
-    <div class="ui large modal" id="modal-{{'{:03}'.format(loop.index)}}">
+    <div class="ui fullscreen modal" id="modal-{{'{:03}'.format(loop.index)}}">
       <div class="header">
         Deep Result Analysis
       </div>
