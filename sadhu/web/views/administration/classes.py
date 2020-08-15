@@ -43,7 +43,8 @@ def edit(class_id):
     # form.limited_enrollment = le_form
     course_choices = [(str(c.id), c.name) for c in courses]
     form.course.choices = course_choices
-    form.course.data = str(class_.course.id)
+    if request.method == 'GET':
+        form.course.data = str(class_.course.id)
     method_choices = [('email', 'Email'), ('student_id', 'Student ID')]
     form.limited_enrollment.method.choices = method_choices
 
@@ -57,6 +58,15 @@ def edit(class_id):
     course = models.Course.objects.get(id=form.course.data)
     class_.course = course
     class_.save()
+    return redirect(url_for('administration.classes.index'))
+
+
+@module.route('/<class_id>/delete')
+@acl.allows.requires(acl.is_class_owner)
+def delete(class_id):
+
+    class_ = models.Class.objects.get(id=class_id)
+    class_.delete()
     return redirect(url_for('administration.classes.index'))
 
 
@@ -290,10 +300,11 @@ def add_teaching_assistant(class_id):
 
     form = forms.classes.TeachingAssistantAddingForm()
     form.users.choices = [(str(user.id),
-                           '{} {} ({})'.format(
+                           '{} {} ({}, {})'.format(
                                user.first_name,
                                user.last_name,
-                               user.username)) for user in users]
+                               user.username,
+                               user.email)) for user in users]
 
     if not form.validate_on_submit():
         return render_template(

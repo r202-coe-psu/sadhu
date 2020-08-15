@@ -45,7 +45,9 @@
 {{ render_field(field, class_='ui fluid dropdown') }}
 {%- endmacro %}
 
-
+{% macro render_search_multiple_select(field) -%}
+{{ render_field(field, class_='ui fluid search dropdown') }}
+{%- endmacro %}
 
 {% macro render_calendar(field, calendar_id='calendar') -%}
 <div class="field">
