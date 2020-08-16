@@ -35,8 +35,8 @@ MathJax.Hub.Config({
 </script>
 
 
-<script type="text/javascript" src="{{ url_for('static', filename='node_modules/brython/brython.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='node_modules/brython/brython_stdlib.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='node_modules/brython/brython.js') | add_date_url}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='node_modules/brython/brython_stdlib.js') | add_date_url}}"></script>
   <script type="text/javascript">
     brython(1);
   </script>

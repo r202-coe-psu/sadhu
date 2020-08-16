@@ -34,6 +34,7 @@ Assignment: {{ assignment.name }}
     <thead>
       <tr>
         <th>Submitted Date</th>
+        <th>File Name</th>
         <th>Status</th>
         <th>Pass</th>
         <th>Test Case</th>
@@ -46,6 +47,9 @@ Assignment: {{ assignment.name }}
         <tr class="{{ solution_style.get_solution_class(solution) }}">
         <td>
           {{ solution.submitted_date }}
+        </td>
+        <td>
+          {{ solution.code.filename }}
         </td>
         <td>
           {{ solution.status }}
