@@ -1,0 +1,60 @@
+{% extends '/administration/classes/index.html' %}
+{% import '/base/assignment-style.html' as ass_style %}
+
+{% block dashboard_title %}Assignment Score: {{ class_.name }}{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  <div class="active section">{{ class_.name }}</div>
+{% endblock %}
+
+{% block content %}
+  <div class="ui container">
+    <div class="ui segment">
+      
+      <h2>{{ assignment.name }} </h2>
+      <b>Description: </b>{{ assignment.desctiption }}<br/>
+      <b>Challenges: </b>
+      <ul>
+      {% for c in assignment.challenges %}
+        <li>{{ c.name }}</li>
+      {% endfor %}
+      </ul>
+    </div>
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Challenge Score</th>
+          <th>Score</th>
+          <th>Operation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          {%- set ass_score = assignment.get_score(class_, user) -%}
+        <tr class="{{ ass_style.get_assignment_class(ass_score, assignment.score) }}">
+          <td>{{ user.first_name }} {{ user.last_name }}</td>
+          <td>
+            {% for challenge in assignment.challenges %}
+              {{ '{:.02f}'.format(challenge.get_solution_score(class_, user)) }},
+            {% endfor %}
+          </td>
+          <td>
+            {{ '{:.02f}'.format(ass_score) }}
+          </td>
+          <td>
+            {% if class_.owner == current_user %}
+              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.show_user_assignment', class_id=class_.id, user_id=user.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
+            {% elif class_.is_teaching_assistant(current_user) %}
+              <a class="ui icon button circular primary" href="{{ url_for('teaching_assistants.classes.show_user_assignment', class_id=class_.id, user_id=user.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}
