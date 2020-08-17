@@ -39,7 +39,7 @@
             {% endfor %}
           </td>
           <td>
-            {{ '{:.02f}'.format(assignment.get_score(class_=class_, user=user)) }}
+            {{ '{:.02f}'.format(ass_score) }}
           </td>
           <td>
             {% if class_.owner == current_user %}

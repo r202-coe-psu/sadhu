@@ -192,17 +192,20 @@ def show_user_assignment(class_id, user_id, assignment_id):
             assignment=assignment)
 
 
-# @module.route('/<class_id>/assignments/<assignment_id>/users')
+@module.route('/<class_id>/assignments/<assignment_id>/users')
 # @acl.allows.requires(acl.is_class_owner)
-# def list_assignment_users(class_id, assignment_id):
-#     class_ = models.Class.objects.get(id=class_id)
-#     assignment = models.Assignment.objects.get(id=assignment_id)
+def list_assignment_users(class_id, assignment_id):
+    class_ = models.Class.objects.get(id=class_id)
+    assignment = models.Assignment.objects.get(id=assignment_id)
+    enrollments = class_.get_enrollments()
+    users = [e.user for e in enrollments]
+    users.sort(key=lambda u: u.first_name)
 
-#     return render_template(
-#             '/administration/classes/show-user-assignment.html',
-#             class_=class_,
-#             user=user,
-#             assignment=assignment)
+    return render_template(
+            '/administration/classes/list-assignment-users.html',
+            class_=class_,
+            users=users,
+            assignment=assignment)
 
 
 @module.route('/<class_id>/users/export-attendents')
