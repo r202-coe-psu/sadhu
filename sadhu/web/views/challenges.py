@@ -90,7 +90,7 @@ def view(challenge_id):
                        and now < assignment_time.ended_date)
 
     formatter = HtmlFormatter(linenos=True)
-    style = formatter.get_style_defs('.highlight')
+    style = formatter.get_style_defs('.codehilite')
 
     challenge_status = models.ChallengeStatus.objects(
             user=user,
