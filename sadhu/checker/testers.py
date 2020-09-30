@@ -109,8 +109,8 @@ class Tester:
             if output and output.returncode == 0:
                 test_result.output = output.stdout.decode('utf-8', errors='replace')
 
-                output_data = test_result.output.splitlines()
-                testcase_data = test_result.expected_result.splitlines()
+                output_data = test_result.output.strip().splitlines()
+                testcase_data = test_result.expected_result.strip().splitlines()
 
                 is_validate = True
 
@@ -123,7 +123,7 @@ class Tester:
                         if t_output.rstrip() != p_output.rstrip():
                             is_validate = False
                             break
-                
+
                 test_result.validated = is_validate
                 if is_validate:
                     pass_tests += 1
