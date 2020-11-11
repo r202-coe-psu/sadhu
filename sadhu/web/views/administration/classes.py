@@ -222,8 +222,8 @@ def export_attendants(class_id):
         assignments.append(ass_time.assignment)
 
     assignments.sort(key=lambda ass: ass.name)
-    header = ['id']
-    subheader = ['no']
+    header = ['id', 'name', 'lastname']
+    subheader = ['no', '', '']
 
     for ass in assignments:
         header.append(ass.name)
@@ -235,7 +235,23 @@ def export_attendants(class_id):
     writer.writerow(header)
     writer.writerow(subheader)
     for user in users:
-        data = [user.username]
+        sid = user.metadata.get('student_id')
+        data = []
+        if sid:
+            data.append(sid)
+        else:
+            data.append(user.username)
+
+        if user.metadata.get('thai_first_name'):
+            data.append(user.metadata.get('thai_first_name'))
+        else:
+            data.append(user.first_name)
+
+        if user.metadata.get('thai_last_name'):
+            data.append(user.metadata.get('thai_last_name'))
+        else:
+            data.append(user.last_name)
+
         for ass in assignments:
             challenges = ass.check_user_submission(class_, user)
             data.append(len(challenges))
@@ -263,8 +279,9 @@ def export_scores(class_id):
         assignments.append(ass_time.assignment)
 
     assignments.sort(key=lambda ass: ass.name)
-    header = ['id']
-    subheader = ['no']
+
+    header = ['id', 'name', 'lastname']
+    subheader = ['no', '', '']
 
     total_score = 0
     for ass in assignments:
@@ -281,7 +298,28 @@ def export_scores(class_id):
     writer.writerow(subheader)
     for user in users:
         total_score = 0
-        data = [user.username]
+
+        sid = user.metadata.get('student_id')
+        data = []
+        if sid:
+            data.append(sid)
+        else:
+            data.append(user.username)
+
+        if user.metadata.get('thai_first_name'):
+            data.append(user.metadata.get('thai_first_name'))
+        else:
+            data.append(user.first_name)
+
+        if user.metadata.get('thai_last_name'):
+            data.append(user.metadata.get('thai_last_name'))
+        else:
+            data.append(user.last_name)
+
+
+
+
+
         for ass in assignments:
             score = ass.get_score(class_, user)
             data.append(score)
