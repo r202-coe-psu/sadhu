@@ -63,6 +63,7 @@ def create_or_edit(course_id):
     contributors = [
             models.User.objects.get(id=c_id) for c_id in form.contributors.data]
     course.contributors = contributors
+    course.active = True
     course.save()
 
     return redirect(url_for('administration.courses.index'))

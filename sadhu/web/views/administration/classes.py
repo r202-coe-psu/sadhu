@@ -74,7 +74,7 @@ def delete(class_id):
 @acl.allows.requires(acl.is_admin_or_lecturer)
 def create():
     form = forms.classes.ClassForm()
-    courses = models.Course.objects(active=True)
+    courses = models.Course.objects()
 
     course_choices = [(str(c.id), c.name) for c in courses]
     form.course.choices = course_choices
