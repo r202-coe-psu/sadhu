@@ -1,17 +1,19 @@
 {% extends '/administration/classes/index.html' %}
 {% import '/base/error-handler.html' as eh %}
+{% import '/base/solution-style.html' as solution_style %}
 
 {% block dashboard_title %}Classes: {{ class_.name }}{% endblock %}
 
 {% block breadcrumbs %}
   {{ super() }}
   <i class="right angle icon divider"></i>
-  <div class="active section">{{ class_.name }}</div>
+  <div class="section">{{ class_.name }}</div>
+  <i class="right angle icon divider"></i>
+  <a href="{{ url_for('administration.solutions.index') }}" class="active section">Solutions</a>
 {% endblock %}
 
 
 {% block content %}
-
 <div class="ui container">
 	<div class="ui segment">
 		<div>
@@ -68,39 +70,57 @@
 </div>
 
 <div class="ui container" style="margin-top: 1em;">
-		<h2>Assignments</h2>
-		<table class="ui celled table">
-			<thead>
-				<tr>
-						<th>Name</th>
-						<th>Challenges</th>
-						<th>Scores</th>
-						<th>Start Date</th>
-						<th>End Date</th>
-						<th>Operation</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for assignment in class_.course.assignments %}
-					<tr>{% set ass_time=class_.get_assignment_schedule(assignment) %}
-					<td>{{ assignment.name }}</td>
-					<td>{{ assignment.challenges | count }}</td>
-					<td>{{ assignment.score }}</td>
-					<td>{{ ass_time.started_date if ass_time else '-' }}</td>
-					<td>{{ ass_time.ended_date if ass_time else '-' }}</td>
-					<td>
-            {% if class_.owner == current_user %}
-              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i class="clock icon"></i></a>
+  <h2>Last 50 solutions</h2>
+  <table class="ui celled table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Challenge Name</th>
+        <th>Class Name</th>
+        <th>Submitted Date</th>
+        <th>Check Status</th>
+        <th>Pass Test</th>
+        <th>Score</th>
+        <th>Operation</th>
+      </tr>
+    </thead>
+    <tbody>
+{% for solution in solutions %}
+  <tr class="{{ solution_style.get_solution_class(solution) }}">
+    <td>
+      <a href="{{ url_for('administration.classes.show_user_score', class_id=solution.enrolled_class.id, user_id=solution.owner.id) }}">{{ solution.owner.first_name }}</a>
+      </td>
+        <td>
+          <a href="{{ url_for('administration.challenges.list_solutions', challenge_id=solution.challenge.id, class_id=solution.enrolled_class.id) }}">{{ solution.challenge.name }}</a>
+        </td>
+        <td>
+          <a href="{{ url_for('administration.classes.view', class_id=solution.enrolled_class.id) }}">{{ solution.enrolled_class.name }}</a>
+        </td>
+        <td>
+          {{ solution.submitted_date.ctime() }}
+        </td>
+        <td>
+          {{ solution.status }}
+        </td>
+        <td>
+          {{ solution.passed }}
+        </td>
+        <td>
+          {{ '{:.2f}'.format(solution.score) }}
+        </td>
+        <td>
+            {% if solution.status == 'complete' %}
+              <a href="{{ url_for('administration.solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="ui circular primary icon button"><i class="eye icon"></i></a>
+            {% else %}
+              <i class="eye icon"></i>
             {% endif %}
-            {% if class_.owner == current_user or current_user in class_.contributors or class_.is_teaching_assistant(current_user) %}
-              <a class="ui icon button circular primary" href="{{ url_for('scoreboards.show_assignment_scores', class_id=class_.id, assignment_id=assignment.id) }}"><i class="award icon"></i></a>
-              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.list_assignment_users', class_id=class_.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
-            {% endif %}
-					</td>
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
-            	
+        </td>
+      </tr>
+{% endfor %}
+    </tbody>
+  </table>
+
+
+
 </div>
 {% endblock %}

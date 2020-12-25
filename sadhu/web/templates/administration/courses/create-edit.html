@@ -37,7 +37,12 @@
       {{ renderer.render_field(form.description) }}
       {{ renderer.render_select(form.languages) }}
       {{ renderer.render_field(form.tags) }}
-      <button name="create" type="submit" class="ui button primary">Create</button>
+      {{ renderer.render_search_multiple_select(form.contributors) }}
+      {% if 'edit' in request.path %}
+        <button name="create" type="submit" class="ui button primary">Edit</button>
+      {% else %}
+        <button name="create" type="submit" class="ui button primary">Create</button>
+      {% endif %}
     </form>
   </div>
 </div>

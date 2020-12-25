@@ -28,6 +28,15 @@ def index():
     return render_template('/administration/solutions/index.html',
                            solutions=solutions)
 
+@module.route('/classes/<class_id>')
+@acl.allows.requires(acl.is_lecturer)
+def class_solution(class_id):
+    class_ = models.Class.objects.get(id=class_id)
+    solutions = models.Solution.objects(enrolled_class=class_).order_by('-id').limit(50)
+    return render_template('/administration/solutions/index.html',
+                           solutions=solutions)
+
+
 
 @module.route('/<solution_id>')
 @acl.allows.requires(acl.is_lecturer)

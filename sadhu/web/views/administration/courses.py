@@ -1,7 +1,8 @@
 from flask import (Blueprint,
                    render_template,
                    url_for,
-                   redirect
+                   redirect,
+                   request,
                    )
 from flask_login import current_user
 
@@ -17,16 +18,35 @@ module = Blueprint('administration.courses',
 @module.route('/')
 @acl.allows.requires(acl.is_lecturer)
 def index():
-    courses = models.Course.objects(owner=current_user._get_current_object())
+    user = current_user._get_current_object()
+    owner_courses = models.Course.objects(owner=user)
+    contributed_courses = models.Course.objects(
+            contributors=user)
+
     return render_template('/administration/courses/index.html',
-                           courses=courses)
+                           owner_courses=owner_courses,
+                           contributed_courses=contributed_courses)
 
 
-@module.route('/create', methods=['GET', 'POST'])
+@module.route('/create', defaults={'course_id': None}, methods=['GET', 'POST'])
+@module.route('/<course_id>/edit', methods=['GET', 'POST'])
 @acl.allows.requires(acl.is_lecturer)
-def create():
+def create_or_edit(course_id):
     form = forms.courses.CourseForm()
+    course = None
+    if course_id:
+        course = models.Course.objects.get(id=course_id)
+        form = forms.courses.CourseForm(obj=course)
+       
+        if request.method == 'GET':
+            form.contributors.data  = [
+                str(u.id) for u in course.contributors ]
+    
     form.languages.choices = models.LANGUAGE_CHOICES.copy()
+
+    users = models.User.objects(status='active')
+    form.contributors.choices  = [
+            (str(u.id), f'{u.first_name} {u.last_name} ({u.email})') for u in users ]
     if not form.validate_on_submit():
         # if not form.languages.data:
         #     form.languages.choices.insert(0, ('', 'Select Language'))
@@ -36,9 +56,15 @@ def create():
                                form=form)
     data = form.data.copy()
     data.pop('csrf_token')
-    course = models.Course(**data)
-    course.owner = current_user._get_current_object()
+    if not course:
+        course = models.Course(**data)
+        course.owner = current_user._get_current_object()
+
+    contributors = [
+            models.User.objects.get(id=c_id) for c_id in form.contributors.data]
+    course.contributors = contributors
     course.save()
+
     return redirect(url_for('administration.courses.index'))
 
 @module.route('/<course_id>')

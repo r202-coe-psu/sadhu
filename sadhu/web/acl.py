@@ -22,6 +22,10 @@ def is_staff(ident, request):
 def is_lecturer(ident, request):
     return 'lecturer' in ident.roles
 
+def is_admin_or_lecturer(ident, request):
+    return 'admin' in ident.roles or 'lecturer' in ident.roles
+
+
 def is_teaching_assistant(ident, request):
     class_id = request.view_args.get('class_id', None)
     solution_id = request.view_args.get('solution_id', None)

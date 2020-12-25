@@ -71,10 +71,10 @@ def delete(class_id):
 
 
 @module.route('/create', methods=['GET', 'POST'])
-@acl.allows.requires(acl.is_lecturer)
+@acl.allows.requires(acl.is_admin_or_lecturer)
 def create():
     form = forms.classes.ClassForm()
-    courses = models.Course.objects()
+    courses = models.Course.objects(active=True)
 
     course_choices = [(str(c.id), c.name) for c in courses]
     form.course.choices = course_choices
@@ -385,3 +385,14 @@ def add_teaching_assistant(class_id):
     class_.save()
 
     return redirect(url_for('administration.classes.view', class_id=class_id))
+
+@module.route('/<class_id>/solutions')
+@acl.allows.requires(acl.is_lecturer)
+def list_class_solutions(class_id):
+    class_ = models.Class.objects.get(id=class_id)
+    solutions = models.Solution.objects(enrolled_class=class_).order_by('-id').limit(50)
+    return render_template('/administration/classes/solutions.html',
+                           solutions=solutions,
+                           class_=class_)
+
+

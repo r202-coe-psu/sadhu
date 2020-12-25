@@ -18,7 +18,7 @@ class Course(me.Document):
                                     auto_now=True)
 
     assignments = me.ListField(
-            me.ReferenceField('Assignment', dbref=True, requiree=True))
+            me.ReferenceField('Assignment', dbref=True, required=True))
 
     owner = me.ReferenceField('User', dbref=True, required=True)
     contributors = me.ListField(me.ReferenceField('User',
@@ -26,6 +26,9 @@ class Course(me.Document):
                                                   required=True))
 
     languages = me.ListField(me.StringField(required=True, choices=LANGUAGE_CHOICES))
+
+    active = me.BooleanField(default=True, required=True)
+
 
     meta = {'collection': 'courses'}
 

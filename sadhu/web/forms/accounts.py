@@ -1,7 +1,6 @@
 from wtforms import Form
 from wtforms import fields
 from wtforms import validators
-from wtforms.fields import html5
 
 from flask_wtf import FlaskForm
 from flask import request
@@ -68,7 +67,7 @@ def validate_old_password(form, field):
 
 
 class LoginForm(FlaskForm):
-    name = fields.TextField(
+    name = fields.StringField(
             'Username or Email',
             validators=[validators.InputRequired()])
     password = fields.PasswordField(
@@ -78,11 +77,11 @@ class LoginForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
-    username = fields.TextField(
+    username = fields.StringField(
             'Username',
             validators=[validators.InputRequired(),
                         validators.Length(min=3), validate_username])
-    email = html5.EmailField(
+    email = fields.EmailField(
             'Email',
             validators=[validators.InputRequired(),
                         validators.Email(), validate_email])
@@ -96,10 +95,10 @@ class RegisterForm(FlaskForm):
     password_conf = fields.PasswordField(
             'Password Confirm',
             validators=[validators.InputRequired()])
-    first_name = fields.TextField(
+    first_name = fields.StringField(
             'First Name',
             validators=[validators.InputRequired()])
-    last_name = fields.TextField(
+    last_name = fields.StringField(
             'Last Name',
             validators=[validators.InputRequired()])
     agree_term = fields.BooleanField(
@@ -125,12 +124,12 @@ class PasswordForm(Form):
 
 
 class DisplayNameForm(Form):
-    display_name = fields.TextField(
+    display_name = fields.StringField(
             'Display Name',
             validators=[validators.InputRequired(), validate_display_name])
-    first_name = fields.TextField(
+    first_name = fields.StringField(
             'First Name', validators=[validators.InputRequired()])
-    last_name = fields.TextField(
+    last_name = fields.StringField(
             'Last Name', validators=[validators.InputRequired()])
 
 

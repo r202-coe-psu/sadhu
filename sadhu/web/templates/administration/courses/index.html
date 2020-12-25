@@ -7,10 +7,10 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
+<div class="row" style="padding-top: 1ex">
   <div class="column">
     <div class="ui labeled icon menu">
-      <a class="item" href="{{ url_for('administration.courses.create') }}">
+      <a class="item" href="{{ url_for('administration.courses.create_or_edit') }}">
         <i class="add icon"></i> Add
       </a>
       <a class="item" href="{{ url_for('administration.assignments.index') }}">
@@ -25,33 +25,46 @@
   </div>
 </div>
 
-<div class="row">
-	<div class="col s12">
-
-	{% if courses %}
-	 <table class="ui celled table">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<body>
-{% for course in courses %}
-				<tr>
-					<td data-label="Name">
-						<a href="{{ url_for('administration.courses.view', course_id=course.id) }}">{{ course.name }}</a>
-					</td>
-		<td data-label="Description">
-			{{ course.description }}
-		</td>
-				</tr>
-{% endfor %}
-			</body>
-		</table>
+<div class="row" style="padding-top: 1ex">
+  <div class="column">
+    {% if owner_courses %}
+      <h2>Own Course</h2>
+      {{ render_table(owner_course) }}
 		{% endif %}
-
+    {% if contributed_courses %}
+      <h2>Contributed Course</h2>
+      {{ render_table(contributed_courses) }}
+		{% endif %}
   </div>
 </div>
 
 {% endblock %}
+
+{% macro render_table(courses) %}
+	<table class="ui celled table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Operation</th>
+      </tr>
+    </thead>
+    <body>
+{% for course in courses %}
+				<tr>
+          <td data-label="Name">
+            <a href="{{ url_for('administration.courses.view', course_id=course.id) }}">{{ course.name }}</a>
+          </td>
+          <td data-label="Description">
+            {{ course.description }}
+          </td>
+          <td data-label="Operation">
+            {% if course.owner == current_user %}
+              <a href="{{ url_for('administration.courses.create_or_edit', course_id=course.id) }}"><i class="edit icon"></i></a>
+            {% endif %}
+          </td>
+				</tr>
+{% endfor %}
+    </body>
+  </table>
+{% endmacro %}

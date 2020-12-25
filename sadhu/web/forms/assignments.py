@@ -2,7 +2,6 @@ from wtforms import Form
 from wtforms import fields
 from wtforms import validators
 from wtforms import widgets
-from wtforms.fields import html5
 
 import datetime
 
@@ -13,12 +12,13 @@ from flask_wtf import FlaskForm
 class AssignmentTimeForm(FlaskForm):
     started_date = fields.DateTimeField('Started Date',
             format='%Y-%m-%d %H:%M',
-            default=datetime.datetime.now()
+            default=datetime.datetime.now(),
+            widget=widgets.TextInput(),
             )
 
     ended_date = fields.DateTimeField('Ended Data',
             format='%Y-%m-%d %H:%M',
-            default=datetime.datetime.now()
+            widget=widgets.TextInput(),
             )
 
 

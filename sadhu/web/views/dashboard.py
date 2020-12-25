@@ -11,8 +11,35 @@ subviews = []
 
 
 def index_admin():
+    user = current_user._get_current_object()
+    now = datetime.datetime.now()
+
+    available_classes = models.Class.objects(
+            me.Q(owner=user) &
+            (me.Q(started_date__lte=now) &
+                me.Q(ended_date__gte=now))
+            ).order_by('ended_date')
+
+    ass_schedule = []
+    for class_ in available_classes:
+
+        for ass_t in class_.assignment_schedule:
+            if ass_t.started_date <= now and now < ass_t.ended_date:
+                ass_schedule.append(
+                        dict(assignment_schedule=ass_t,
+                             class_=class_))
+
+    def order_by_ended_date(e):
+        return e['assignment_schedule'].ended_date
+
+    ass_schedule.sort(key=order_by_ended_date)
+
     return render_template('/dashboard/index-admin.html',
-                           now=datetime.datetime.now())
+                           available_classes=available_classes,
+                           assignment_schedule=ass_schedule,
+                           now=datetime.datetime.now(),
+                           )
+
 
 
 def index_user():

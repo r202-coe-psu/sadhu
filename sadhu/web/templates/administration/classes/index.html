@@ -9,15 +9,13 @@ Classes
 {% endblock %}
 
 {% block content %}
-<div class="ui container">
     <div class="ui labeled icon menu">
       <a href="{{ url_for('administration.classes.create') }}" class="item"><i class="add icon"></i>Add</a>
       <a href="{{ url_for('administration.courses.index') }}" class="item"><i class="book icon"></i>Courses</a>
     </div>
-</div>
 
 {% if classes %}
-  <div class="ui container" style="margin-top: 20px;">
+  <div style="margin-top: 1ex;">
     <table class="ui celled table">
       <thead>
         <tr>

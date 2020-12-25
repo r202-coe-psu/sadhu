@@ -2,7 +2,6 @@ from wtforms import Form
 from wtforms import fields
 from wtforms import validators
 from wtforms import widgets
-from wtforms.fields import html5
 
 from .fields import TagListField
 
@@ -19,6 +18,8 @@ class CourseForm(FlaskForm):
     languages = fields.SelectMultipleField('Languages',
             validators=[validators.InputRequired()],
             )
+    contributors = fields.SelectMultipleField('Contributors')
+
     tags = TagListField('Tags',
             validators=[validators.InputRequired(),
                         validators.Length(min=3)])

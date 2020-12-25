@@ -2,7 +2,6 @@ from wtforms import Form
 from wtforms import fields
 from wtforms import validators
 from wtforms import widgets
-from wtforms.fields import html5
 
 from flask_wtf import FlaskForm
 
@@ -25,10 +24,10 @@ class URIListField(fields.Field):
 
 
 class OAuthProjectForm(FlaskForm):
-    name = fields.TextField('Name',
+    name = fields.StringField('Name',
             validators=[validators.InputRequired(),
                         validators.Length(min=3)])
-    description = fields.TextField('Description',
+    description = fields.StringField('Description',
             validators=[validators.InputRequired()])
     confidential = fields.BooleanField(default=False)
 
