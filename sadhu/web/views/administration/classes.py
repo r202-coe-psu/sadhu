@@ -30,10 +30,39 @@ def index():
                            classes=classes)
 
 
+@module.route('/create', methods=['GET', 'POST'])
+@acl.allows.requires(acl.is_admin_or_lecturer)
+def create():
+    user = current_user._get_current_object()
+    form = forms.classes.ClassForm()
+    courses = models.Course.objects(active=True, contributors=user)
+
+    course_choices = [(str(c.id), c.name) for c in courses]
+    form.course.choices = course_choices
+    method_choices = [('email', 'Email'), ('student_id', 'Student ID')]
+    form.limited_enrollment.method.choices = method_choices
+
+    if not form.validate_on_submit():
+        return render_template('/administration/classes/create-edit.html',
+                               form=form)
+    data = form.data.copy()
+    data.pop('csrf_token')
+    # data.pop('limited_enrollment')
+
+    class_ = models.Class(**data)
+    course = models.Course.objects.get(id=form.course.data)
+    class_.course = course
+    class_.owner = current_user._get_current_object()
+    class_.save()
+    return redirect(url_for('administration.classes.index'))
+
+
+
 @module.route('/<class_id>/edit', methods=['GET', 'POST'])
 @acl.allows.requires(acl.is_class_owner)
 def edit(class_id):
-    courses = models.Course.objects()
+    user = current_user._get_current_object()
+    courses = models.Course.objects(active=True, contributors=user)
 
     class_ = models.Class.objects.get(id=class_id)
     form = forms.classes.ClassForm(obj=class_)
@@ -67,32 +96,6 @@ def delete(class_id):
 
     class_ = models.Class.objects.get(id=class_id)
     class_.delete()
-    return redirect(url_for('administration.classes.index'))
-
-
-@module.route('/create', methods=['GET', 'POST'])
-@acl.allows.requires(acl.is_admin_or_lecturer)
-def create():
-    form = forms.classes.ClassForm()
-    courses = models.Course.objects()
-
-    course_choices = [(str(c.id), c.name) for c in courses]
-    form.course.choices = course_choices
-    method_choices = [('email', 'Email'), ('student_id', 'Student ID')]
-    form.limited_enrollment.method.choices = method_choices
-
-    if not form.validate_on_submit():
-        return render_template('/administration/classes/create-edit.html',
-                               form=form)
-    data = form.data.copy()
-    data.pop('csrf_token')
-    # data.pop('limited_enrollment')
-
-    class_ = models.Class(**data)
-    course = models.Course.objects.get(id=form.course.data)
-    class_.course = course
-    class_.owner = current_user._get_current_object()
-    class_.save()
     return redirect(url_for('administration.classes.index'))
 
 
