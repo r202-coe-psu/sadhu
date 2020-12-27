@@ -77,6 +77,12 @@ def index_user():
                            )
 
 
+@module.route('/me')
+@login_required
+def user_dashboard():
+    return index_user()
+
+
 @module.route('/')
 @login_required
 def index():

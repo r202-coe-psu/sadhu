@@ -172,6 +172,24 @@ def edit_testcase(challenge_id, testcase_id):
     return redirect(url_for('administration.challenges.view',
                             challenge_id=challenge.id))
 
+@module.route('/<challenge_id>/testcases/<testcase_id>/delete')
+@acl.allows.requires(acl.is_lecturer)
+def delete_testcase(challenge_id, testcase_id):
+    challenge = models.Challenge.objects.get(id=challenge_id)
+    test_case = models.TestCase.objects.get(id=testcase_id)
+    if test_case.input_file:
+        test_case.input_file.delete()
+
+    if test_case.output_file:
+        test_case.output_file.delete()
+
+    challenge.test_cases.remove(test_case)
+    test_case.delete()
+    challenge.save()
+
+    return redirect(url_for('administration.challenges.view',
+                            challenge_id=challenge.id))
+
 
 @module.route('/<challenge_id>')
 @acl.allows.requires(acl.is_lecturer)

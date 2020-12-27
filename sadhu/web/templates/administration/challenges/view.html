@@ -108,6 +108,7 @@ Challenge: {{ challenge.name }}
           <td>{{ tc.created_date }}</td>
           <td>
             <a href="{{ url_for('administration.challenges.edit_testcase', challenge_id=challenge.id, testcase_id=tc.id) }}" class="ui button icon primary circular"><i class="edit icon"></i></a>
+            <a href="{{ url_for('administration.challenges.delete_testcase', challenge_id=challenge.id, testcase_id=tc.id) }}" class="ui button icon primary circular"><i class="trash icon"></i></a>
           </td>
         </tr>
        {% endfor %}

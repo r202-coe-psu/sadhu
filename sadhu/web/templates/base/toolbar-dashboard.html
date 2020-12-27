@@ -11,6 +11,7 @@
 
 <a class="item" href="{{ url_for('dashboard.index') }}"><i class="icon dashboard"></i>Dashboard</a>
 {% if current_user.has_roles(['lecturer', 'admin']) %}
+<a class="item" href="{{ url_for('dashboard.user_dashboard') }}"><i class="icon dashboard"></i>My Dashboard</a>
   <a class="item" href="{{ url_for('administration.courses.index') }}"><i class="icon book"></i>Course</a>
   <a class="item" href="{{ url_for('administration.assignments.index') }}"><i class="icon laptop code"></i>Assignment</a>
   <a class="item" href="{{ url_for('administration.challenges.index') }}"><i class="icon code"></i>Challenge</a>
