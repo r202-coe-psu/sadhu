@@ -83,7 +83,11 @@
 			<tbody>
 				{% for assignment in class_.course.assignments %}
 					<tr>{% set ass_time=class_.get_assignment_schedule(assignment) %}
-					<td>{{ assignment.name }}</td>
+            <td>
+              <a href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}" target="_blank">
+                {{ assignment.name }}
+              </a>
+            </td>
 					<td>{{ assignment.challenges | count }}</td>
 					<td>{{ assignment.score }}</td>
 					<td>{{ ass_time.started_date if ass_time else '-' }}</td>
