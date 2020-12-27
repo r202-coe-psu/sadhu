@@ -7,6 +7,7 @@ from flask import (Blueprint,
                    send_file
                    )
 from flask_login import current_user
+import mongoengine as me
 
 from sadhu.web import acl, forms
 from sadhu import models
@@ -35,7 +36,10 @@ def index():
 def create():
     user = current_user._get_current_object()
     form = forms.classes.ClassForm()
-    courses = models.Course.objects(active=True, contributors=user)
+    courses = models.Course.objects(
+            active=True,
+            me.Q(contributors=user) | me.Q(owner=user)
+            )
 
     course_choices = [(str(c.id), c.name) for c in courses]
     form.course.choices = course_choices
@@ -62,7 +66,10 @@ def create():
 @acl.allows.requires(acl.is_class_owner)
 def edit(class_id):
     user = current_user._get_current_object()
-    courses = models.Course.objects(active=True, contributors=user)
+    courses = models.Course.objects(
+            active=True,
+            me.Q(contributors=user) | me.Q(owner=user)
+            )
 
     class_ = models.Class.objects.get(id=class_id)
     form = forms.classes.ClassForm(obj=class_)
