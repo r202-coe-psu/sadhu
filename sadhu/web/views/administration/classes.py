@@ -41,7 +41,6 @@ def create():
             (me.Q(contributors=user) | me.Q(owner=user))
             )
 
-    print('courses', courses)
     course_choices = [(str(c.id), c.name) for c in courses]
     form.course.choices = course_choices
     method_choices = [('email', 'Email'), ('student_id', 'Student ID')]
@@ -69,7 +68,7 @@ def edit(class_id):
     user = current_user._get_current_object()
     courses = models.Course.objects(
             me.Q(active=True) &
-            me.Q(me.Q(contributors=user) | me.Q(owner=user))
+            (me.Q(contributors=user) | me.Q(owner=user))
             )
 
     print('courses', courses)
