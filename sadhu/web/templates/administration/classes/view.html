@@ -56,7 +56,7 @@
 
 <div class="ui container" style="margin-top: 1em;">
     <div class="ui labeled icon menu">
-      {% if class_.owner == current_user %}
+    {% if class_.owner == current_user %}
       <a class="item" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="edit icon"></i>Edit</a>
       <a class="item" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="student icon"></i>Students</a>
       <a class="item" href="{{ url_for('administration.classes.add_teaching_assistant', class_id=class_.id) }}"><i class="clipboard check icon"></i>TA</a>
@@ -84,9 +84,15 @@
 				{% for assignment in class_.course.assignments %}
 					<tr>{% set ass_time=class_.get_assignment_schedule(assignment) %}
             <td>
+              {% if current_user.has_roles(["lecturer"]) %}
               <a href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}" target="_blank">
                 {{ assignment.name }}
               </a>
+            {% else %}
+              <a href="{{ url_for('assignments.view', assignment_id=assignment.id, class_id=class_.id) }}" target="_blank">
+                {{ assignment.name }}
+              </a>
+            {% endif %}
             </td>
 					<td>{{ assignment.challenges | count }}</td>
 					<td>{{ assignment.score }}</td>

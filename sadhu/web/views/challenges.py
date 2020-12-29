@@ -87,7 +87,8 @@ def view(challenge_id):
     now = datetime.datetime.now()
 
     show_submission = (assignment_time.started_date <= now
-                       and now < assignment_time.ended_date)
+                       and now < assignment_time.ended_date) and class_.is_enrolled(user=user)
+
 
     formatter = HtmlFormatter(linenos=True)
     style = formatter.get_style_defs('.codehilite')

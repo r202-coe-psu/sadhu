@@ -46,8 +46,7 @@
 {% for challenge in assignment.challenges %}
 				<tr>
 					<td>
-            {# <a href="{{ url_for('challenges.view', challenge_id=challenge.id, **request.args) }}">{{ challenge.name }}</a> #}
-            {{ challenge.name }}
+            <a href="{{ url_for('challenges.view', challenge_id=challenge.id, **request.args) }}">{{ challenge.name }}</a>
 					</td>
 					<td>
 						{{ challenge.description }}
