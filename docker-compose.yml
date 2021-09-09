@@ -9,6 +9,10 @@ services:
         restart: always
         networks:
             - default
+        logging:
+            options:
+                max-size: "10m"
+                max-file: "3"
     web:
         build: .
         image: sadhu-image
@@ -24,6 +28,10 @@ services:
             - default
         restart: always
         command: /app/scripts/sadhu-uwsgi.sh
+        logging:
+            options:
+                max-size: "10m"
+                max-file: "3"
     checker:
         build: .
         image: sadhu-image
@@ -39,6 +47,10 @@ services:
         environment:
             - /app/sadhu-production.cfg
         command: sadhu-checker
+        logging:
+            options:
+                max-size: "10m"
+                max-file: "3"
 
 networks:
     default:
