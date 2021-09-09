@@ -12,15 +12,13 @@ from flask_wtf import FlaskForm
 class AssignmentTimeForm(FlaskForm):
     started_date = fields.DateTimeField('Started Date',
             format='%Y-%m-%d %H:%M',
-            default=datetime.datetime.combine(
-                datetime.date.today(), datetime.time(0, 0)),
+            default=datetime.date.today,
             widget=widgets.TextInput(),
             )
 
     ended_date = fields.DateTimeField('Ended Data',
             format='%Y-%m-%d %H:%M',
-            default=datetime.datetime.combine(
-                datetime.date.today() + datetime.timedelta(days=1), datetime.time(23, 59)),
+            default=default=datetime.date.today,
             widget=widgets.TextInput(), 
             )
 
