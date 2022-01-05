@@ -1,43 +1,46 @@
-from flask import (Blueprint,
-                   render_template,
-                   redirect,
-                   url_for)
+from flask import Blueprint, render_template, redirect, url_for
 
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from sadhu.web import acl, forms
 from sadhu import models
 
 subviews = []
 
-module = Blueprint('administration.assignments',
-                   __name__,
-                   url_prefix='/assignments',
-                   )
+module = Blueprint(
+    "assignments",
+    __name__,
+    url_prefix="/assignments",
+)
 
 
-@module.route('/')
-@acl.allows.requires(acl.is_lecturer)
+@module.route("/")
+# @acl.allows.requires(acl.is_lecturer)
+@login_required
 def index():
-    assignments = models.Assignment.objects(
-            owner=current_user._get_current_object())
-    return render_template('/administration/assignments/index.html',
-                           assignments=assignments)
+    assignments = models.Assignment.objects(owner=current_user._get_current_object())
+    assignments = list(assignments)
+    assignments.sort(key=lambda a: a.course.name)
+    return render_template(
+        "/administration/assignments/index.html", assignments=assignments
+    )
 
 
-@module.route('/create', methods=['GET', 'POST'])
-@acl.allows.requires(acl.is_lecturer)
+@module.route("/create", methods=["GET", "POST"])
+# @acl.allows.requires(acl.is_lecturer)
+@login_required
 def create():
     form = forms.assignments.AssignmentForm()
     courses = models.Course.objects()
     form.course.choices = [(str(course.id), course.name) for course in courses]
     if not form.validate_on_submit():
-        return render_template('/administration/assignments/create-edit.html',
-                               form=form)
+        return render_template(
+            "/administration/assignments/create-edit.html", form=form
+        )
 
     data = form.data.copy()
-    data.pop('course')
-    data.pop('csrf_token')
+    data.pop("course")
+    data.pop("csrf_token")
 
     course = models.Course.objects.get(id=form.course.data)
 
@@ -49,12 +52,14 @@ def create():
     course.assignments.append(assignment)
     course.save()
 
-    return redirect(url_for('administration.assignments.view',
-                            assignment_id=assignment.id))
+    return redirect(
+        url_for("administration.assignments.view", assignment_id=assignment.id)
+    )
 
 
-@module.route('/<assignment_id>/delete')
-@acl.allows.requires(acl.is_lecturer)
+@module.route("/<assignment_id>/delete")
+# @acl.allows.requires(acl.is_lecturer)
+@login_required
 def delete(assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
     course = assignment.course
@@ -63,26 +68,26 @@ def delete(assignment_id):
 
     assignment.delete()
 
-
-    return redirect(url_for('administration.courses.view',
-                            course_id=course.id))
+    return redirect(url_for("administration.courses.view", course_id=course.id))
 
 
-@module.route('/<assignment_id>/add-challenges', methods=['GET', 'POST'])
-@acl.allows.requires(acl.is_lecturer)
+@module.route("/<assignment_id>/add-challenges", methods=["GET", "POST"])
+# @acl.allows.requires(acl.is_lecturer)
+@login_required
 def add_challenge(assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
-    
+
     challenges = models.Challenge.objects()
-    choices = [(str(q.id), q.name) for q in challenges \
-            if q not in assignment.challenges]
+    choices = [
+        (str(q.id), q.name) for q in challenges if q not in assignment.challenges
+    ]
     form = forms.assignments.ChallengeAddingForm()
     form.challenges.choices = choices
 
     if not form.validate_on_submit():
-        return render_template('/administration/assignments/view.html',
-                               assignment=assignment,
-                               form=form)
+        return render_template(
+            "/administration/assignments/view.html", assignment=assignment, form=form
+        )
     challenge_ids = form.challenges.data.copy()
 
     for challenge_id in challenge_ids:
@@ -93,22 +98,25 @@ def add_challenge(assignment_id):
         assignment.challenges.append(challenge)
 
     assignment.save()
-    return redirect(url_for('administration.assignments.view',
-                            assignment_id=assignment.id))
+    return redirect(
+        url_for("administration.assignments.view", assignment_id=assignment.id)
+    )
 
-@module.route('/<assignment_id>')
-@acl.allows.requires(acl.is_lecturer)
+
+@module.route("/<assignment_id>")
+# @acl.allows.requires(acl.is_lecturer)
+@login_required
 def view(assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
     challenges = models.Challenge.objects()
 
-    choices = [(str(q.id), q.name) for q in challenges \
-            if q not in assignment.challenges]
+    choices = [
+        (str(q.id), q.name) for q in challenges if q not in assignment.challenges
+    ]
 
     form = forms.assignments.ChallengeAddingForm()
     form.challenges.choices = choices
 
-    return render_template('/administration/assignments/view.html',
-                           assignment=assignment,
-                           form=form)
-
+    return render_template(
+        "/administration/assignments/view.html", assignment=assignment, form=form
+    )

@@ -1,13 +1,13 @@
 import mongoengine as me
 import datetime
 
+SOLUTION_TYPE = [("user", "User"), ("challenge", "Challenge")]
+
 
 class TestResult(me.EmbeddedDocument):
-    test_case = me.ReferenceField('TestCase', required=True, dbref=True)
-    started_date = me.DateTimeField(default=datetime.datetime.now,
-                                    required=True)
-    ended_date = me.DateTimeField(default=datetime.datetime.now,
-                                  required=True)
+    test_case = me.ReferenceField("TestCase", required=True, dbref=True)
+    started_date = me.DateTimeField(default=datetime.datetime.now, required=True)
+    ended_date = me.DateTimeField(default=datetime.datetime.now, required=True)
 
     expected_result = me.StringField()
     output = me.StringField()
@@ -24,31 +24,23 @@ class Solution(me.Document):
     score = me.FloatField(required=True, default=0)
     passed = me.BooleanField(required=True, default=False)
 
-    status = me.StringField(required=True, default='waiting')
-    enrolled_class = me.ReferenceField('Class',
-                                       required=True,
-                                       dbref=True)
-    assignment = me.ReferenceField('Assignment',
-                                   required=True,
-                                   dbref=True)
-    challenge = me.ReferenceField('Challenge',
-                                  required=True,
-                                  dbref=True)
-    owner = me.ReferenceField('User',
-                              required=True,
-                              dbref=True)
+    type = me.StringField(required=True, default="user", choices=SOLUTION_TYPE)
+    status = me.StringField(required=True, default="waiting")
+    enrolled_class = me.ReferenceField("Class", dbref=True)
+    assignment = me.ReferenceField("Assignment", dbref=True)
+    challenge = me.ReferenceField("Challenge", required=True, dbref=True)
+    owner = me.ReferenceField("User", required=True, dbref=True)
 
-    submitted_date = me.DateTimeField(required=True,
-                                      default=datetime.datetime.now)
+    submitted_date = me.DateTimeField(required=True, default=datetime.datetime.now)
 
     executed_date = me.DateTimeField()
     executed_ended_date = me.DateTimeField()
     language = me.StringField(required=True)
-    test_results = me.ListField(me.EmbeddedDocumentField('TestResult'))
+    test_results = me.ListField(me.EmbeddedDocumentField("TestResult"))
 
     metadata = me.DictField()
 
-    meta = {'collection': 'solutions'}
+    meta = {"collection": "solutions"}
 
     def count_pass_testcases(self):
         count = 0
@@ -70,28 +62,26 @@ class TestCase(me.Document):
 
     public = me.BooleanField(required=True, default=False)
 
-    challenge = me.ReferenceField('Challenge', dbref=True, required=True)
-    owner = me.ReferenceField('User', dbref=True, required=True)
-    created_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.now)
-    updated_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.now,
-                                    auto_now=True)
+    challenge = me.ReferenceField("Challenge", dbref=True, required=True)
+    owner = me.ReferenceField("User", dbref=True, required=True)
+    created_date = me.DateTimeField(required=True, default=datetime.datetime.now)
+    updated_date = me.DateTimeField(
+        required=True, default=datetime.datetime.now, auto_now=True
+    )
 
-    meta = {'collection': 'test_cases'}
+    meta = {"collection": "test_cases"}
 
 
 class ChallengeStatus(me.Document):
 
-    user = me.ReferenceField('User', dbref=True, required=True)
-    challenge = me.ReferenceField('Challenge', dbref=True, required=True)
-    assignment = me.ReferenceField('Assignment', dbref=True, required=True)
-    enrolled_class = me.ReferenceField('Class', dbref=True, required=True)
+    user = me.ReferenceField("User", dbref=True, required=True)
+    challenge = me.ReferenceField("Challenge", dbref=True, required=True)
+    assignment = me.ReferenceField("Assignment", dbref=True, required=True)
+    enrolled_class = me.ReferenceField("Class", dbref=True, required=True)
 
-    first_view = me.DateTimeField(required=True,
-                                  default=datetime.datetime.now)
+    first_view = me.DateTimeField(required=True, default=datetime.datetime.now)
 
-    meta = {'collection': 'challenge_status'}
+    meta = {"collection": "challenge_status"}
 
 
 class Challenge(me.Document):
@@ -105,29 +95,20 @@ class Challenge(me.Document):
     score = me.IntField(required=True, default=0)
     tags = me.ListField(me.StringField(required=True))
 
-    test_cases = me.ListField(
-            me.ReferenceField('TestCase',
-                              dbref=True,
-                              required=True))
+    test_cases = me.ListField(me.ReferenceField("TestCase", dbref=True, required=True))
 
-    created_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.now)
-    updated_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.now,
-                                    auto_now=True)
+    created_date = me.DateTimeField(required=True, default=datetime.datetime.now)
+    updated_date = me.DateTimeField(
+        required=True, default=datetime.datetime.now, auto_now=True
+    )
 
-    owner = me.ReferenceField('User', dbref=True, required=True)
-    contributors = me.ListField(
-            me.ReferenceField('User',
-                              dbref=True,
-                              required=True))
+    owner = me.ReferenceField("User", dbref=True, required=True)
+    contributors = me.ListField(me.ReferenceField("User", dbref=True, required=True))
 
-    meta = {'collection': 'challenges'}
+    meta = {"collection": "challenges"}
 
     def get_solutions(self, class_, user):
-        return Solution.objects(challenge=self,
-                                enrolled_class=class_,
-                                owner=user)
+        return Solution.objects(challenge=self, enrolled_class=class_, owner=user)
 
     def get_best_solution(self, class_, user):
         solutions = self.get_solutions(class_, user)
@@ -152,9 +133,9 @@ class Challenge(me.Document):
         return 0
 
     def get_challenge_access(self, class_, user):
-        return ChallengeStatus.objects(enrolled_class=class_,
-                                       challenge=self,
-                                       user=user).first()
+        return ChallengeStatus.objects(
+            enrolled_class=class_, challenge=self, user=user
+        ).first()
 
     def is_done(self, class_, user):
 

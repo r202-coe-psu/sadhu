@@ -22,6 +22,7 @@
 				<tr>
 					<th>Name</th>
 					<th>Description</th>
+					<th>Course</th>
 					<th>Score</th>
 				</tr>
 			</thead>
@@ -33,7 +34,12 @@
 					</td>
 					<td>
 						{{ assignment.description }}
-					</td>
+          </td>
+          <td>
+            <a href="{{ url_for("administration.courses.view", course_id=assignment.course.id) }}">
+              {{ assignment.course.name }}
+            </a>
+          </td>
 					<td>
 						{{ assignment.score }}
 					</td>

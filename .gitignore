@@ -1,6 +1,7 @@
 *.pyc
 *.cfg
 __pycache__
+venv
 data
 node_modules
 deployment

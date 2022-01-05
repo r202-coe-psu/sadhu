@@ -2,8 +2,7 @@ flask
 requests
 flask-mongoengine
 flask-login
-flask-allows
-authlib
+# authlib
 loginpass
 passlib
 bcrypt

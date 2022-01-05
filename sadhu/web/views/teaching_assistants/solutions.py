@@ -1,8 +1,4 @@
-from flask import (Blueprint,
-                   render_template,
-                   url_for,
-                   redirect
-                   )
+from flask import Blueprint, render_template, url_for, redirect
 from flask_login import current_user, login_required
 
 
@@ -15,20 +11,23 @@ import difflib
 from sadhu.web import acl, forms
 from sadhu import models
 
-module = Blueprint('teaching_assistants.solutions',
-                   __name__,
-                   url_prefix='/solutions',
-                   )
+module = Blueprint(
+    "solutions",
+    __name__,
+    url_prefix="/solutions",
+)
 
-@module.route('/')
-@acl.allows.requires(acl.is_teaching_assistant)
+
+@module.route("/")
+# @acl.allows.requires(acl.is_teaching_assistant)
+@login_required
 def index():
-    return render_template('/administration/solutions/view.html')
+    return render_template("/administration/solutions/view.html")
 
 
-
-@module.route('/<solution_id>')
-@acl.allows.requires(acl.is_teaching_assistant)
+@module.route("/<solution_id>")
+# @acl.allows.requires(acl.is_teaching_assistant)
+@login_required
 def view(solution_id):
     solution = models.Solution.objects.get(id=solution_id)
     code = solution.code.read().decode()
@@ -37,26 +36,24 @@ def view(solution_id):
 
     formatter = HtmlFormatter(linenos=True)
     formated_code = highlight(code, lexer, formatter)
-    style = formatter.get_style_defs('.highlight')
+    style = formatter.get_style_defs(".highlight")
 
     console_lexer = get_lexer_by_name("console")
-    return render_template('/administration/solutions/view.html',
-                           solution=solution,
-                           formated_code=formated_code,
-                           console_lexer=console_lexer,
-                           formatter=formatter,
-                           highlight=highlight,
-                           difflib=difflib,
-                           style=style)
+    return render_template(
+        "/administration/solutions/view.html",
+        solution=solution,
+        formated_code=formated_code,
+        console_lexer=console_lexer,
+        formatter=formatter,
+        highlight=highlight,
+        difflib=difflib,
+        style=style,
+    )
 
 
-
-@module.route('/<solution_id>/code')
-@acl.allows.requires(acl.is_teaching_assistant)
+@module.route("/<solution_id>/code")
+# @acl.allows.requires(acl.is_teaching_assistant)
+@login_required
 def download_code(solution_id):
     solution = models.Solutuib.objects.get(id=solution_id)
-    return render_template('/administration/solutions/code.html',
-                           solution)
-
-
-
+    return render_template("/administration/solutions/code.html", solution)

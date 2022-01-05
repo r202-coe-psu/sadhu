@@ -1,12 +1,13 @@
-from flask import (Blueprint,
-                   render_template,
-                   url_for,
-                   redirect,
-                   request,
-                   Response,
-                   send_file
-                   )
-from flask_login import current_user
+from flask import (
+    Blueprint,
+    render_template,
+    url_for,
+    redirect,
+    request,
+    Response,
+    send_file,
+)
+from flask_login import current_user, login_required
 import mongoengine as me
 
 from sadhu.web import acl, forms
@@ -16,41 +17,42 @@ import datetime
 import csv
 import io
 
-module = Blueprint('administration.classes',
-                   __name__,
-                   url_prefix='/classes',
-                   )
+module = Blueprint(
+    "classes",
+    __name__,
+    url_prefix="/classes",
+)
 
 
-@module.route('/')
-@acl.allows.requires(acl.is_lecturer)
+@module.route("/")
+# @acl.allows.requires(acl.is_lecturer)
+@login_required
 def index():
-    classes = models.Class.objects(
-            owner=current_user._get_current_object()).order_by('-id')
-    return render_template('/administration/classes/index.html',
-                           classes=classes)
+    classes = models.Class.objects(owner=current_user._get_current_object()).order_by(
+        "-id"
+    )
+    return render_template("/administration/classes/index.html", classes=classes)
 
 
-@module.route('/create', methods=['GET', 'POST'])
-@acl.allows.requires(acl.is_admin_or_lecturer)
+@module.route("/create", methods=["GET", "POST"])
+# @acl.allows.requires(acl.is_admin_or_lecturer)
+@login_required
 def create():
     user = current_user._get_current_object()
     form = forms.classes.ClassForm()
     courses = models.Course.objects(
-            me.Q(active=True) &
-            (me.Q(contributors=user) | me.Q(owner=user))
-            )
+        me.Q(active=True) & (me.Q(contributors=user) | me.Q(owner=user))
+    )
 
     course_choices = [(str(c.id), c.name) for c in courses]
     form.course.choices = course_choices
-    method_choices = [('email', 'Email'), ('student_id', 'Student ID')]
+    method_choices = [("email", "Email"), ("student_id", "Student ID")]
     form.limited_enrollment.method.choices = method_choices
 
     if not form.validate_on_submit():
-        return render_template('/administration/classes/create-edit.html',
-                               form=form)
+        return render_template("/administration/classes/create-edit.html", form=form)
     data = form.data.copy()
-    data.pop('csrf_token')
+    data.pop("csrf_token")
     # data.pop('limited_enrollment')
 
     class_ = models.Class(**data)
@@ -58,20 +60,19 @@ def create():
     class_.course = course
     class_.owner = current_user._get_current_object()
     class_.save()
-    return redirect(url_for('administration.classes.index'))
+    return redirect(url_for("administration.classes.index"))
 
 
-
-@module.route('/<class_id>/edit', methods=['GET', 'POST'])
-@acl.allows.requires(acl.is_class_owner)
+@module.route("/<class_id>/edit", methods=["GET", "POST"])
+# @acl.allows.requires(acl.is_class_owner)
+@login_required
 def edit(class_id):
     user = current_user._get_current_object()
     courses = models.Course.objects(
-            me.Q(active=True) &
-            (me.Q(contributors=user) | me.Q(owner=user))
-            )
+        me.Q(active=True) & (me.Q(contributors=user) | me.Q(owner=user))
+    )
 
-    print('courses', courses)
+    print("courses", courses)
 
     class_ = models.Class.objects.get(id=class_id)
     form = forms.classes.ClassForm(obj=class_)
@@ -81,44 +82,46 @@ def edit(class_id):
     # form.limited_enrollment = le_form
     course_choices = [(str(c.id), c.name) for c in courses]
     form.course.choices = course_choices
-    if request.method == 'GET':
+    if request.method == "GET":
         form.course.data = str(class_.course.id)
-    method_choices = [('email', 'Email'), ('student_id', 'Student ID')]
+    method_choices = [("email", "Email"), ("student_id", "Student ID")]
     form.limited_enrollment.method.choices = method_choices
 
     if not form.validate_on_submit():
-        return render_template('/administration/classes/create-edit.html',
-                               form=form)
+        return render_template("/administration/classes/create-edit.html", form=form)
     data = form.data.copy()
-    data.pop('csrf_token')
+    data.pop("csrf_token")
 
     form.populate_obj(class_)
     course = models.Course.objects.get(id=form.course.data)
     class_.course = course
     class_.save()
-    return redirect(url_for('administration.classes.index'))
+    return redirect(url_for("administration.classes.index"))
 
 
-@module.route('/<class_id>/delete')
-@acl.allows.requires(acl.is_class_owner)
+@module.route("/<class_id>/delete")
+# @acl.allows.requires(acl.is_class_owner)
+@login_required
 def delete(class_id):
 
     class_ = models.Class.objects.get(id=class_id)
     class_.delete()
-    return redirect(url_for('administration.classes.index'))
+    return redirect(url_for("administration.classes.index"))
 
 
-@module.route('/<class_id>')
-@acl.allows.requires(acl.is_class_owner)
+@module.route("/<class_id>")
+# @acl.allows.requires(acl.is_class_owner)
+@login_required
 def view(class_id):
     class_ = models.Class.objects.get(id=class_id)
-    return render_template('/administration/classes/view.html',
-                           class_=class_)
+    return render_template("/administration/classes/view.html", class_=class_)
 
 
-@module.route('/<class_id>/set-assignment-time/<assignment_id>',
-              methods=['GET', 'POST'])
-@acl.allows.requires(acl.is_class_owner)
+@module.route(
+    "/<class_id>/set-assignment-time/<assignment_id>", methods=["GET", "POST"]
+)
+# @acl.allows.requires(acl.is_class_owner)
+@login_required
 def set_assignment_time(class_id, assignment_id):
     class_ = models.Class.objects.get(id=class_id)
     assignment = models.Assignment.objects.get(id=assignment_id)
@@ -129,9 +132,10 @@ def set_assignment_time(class_id, assignment_id):
 
     if not form.validate_on_submit():
         return render_template(
-            '/administration/classes/set-assignment-time.html',
+            "/administration/classes/set-assignment-time.html",
             form=form,
-            assignment=assignment)
+            assignment=assignment,
+        )
     if not ass_time:
         ass_time = models.AssignmentTime(assignment=assignment)
 
@@ -142,24 +146,24 @@ def set_assignment_time(class_id, assignment_id):
         class_.assignment_schedule.append(ass_time)
     class_.save()
 
-    return redirect(url_for('administration.classes.view', class_id=class_id))
+    return redirect(url_for("administration.classes.view", class_id=class_id))
 
 
-@module.route('/<class_id>/users')
-@acl.allows.requires(acl.is_class_owner)
+@module.route("/<class_id>/users")
+# @acl.allows.requires(acl.is_class_owner)
+@login_required
 def list_students(class_id):
     class_ = models.Class.objects.get(id=class_id)
     enrollments = class_.get_enrollments()
-    enrollments = sorted(enrollments,
-                         key=lambda e: e.user.first_name)
+    enrollments = sorted(enrollments, key=lambda e: e.user.first_name)
 
     unenrollments = []
     never_login = []
     le = class_.limited_enrollment
     for grantee in le.grantees:
-        if le.method == 'email':
+        if le.method == "email":
             user = models.User.objects(email=grantee).first()
-        elif le.method == 'student_id':
+        elif le.method == "student_id":
             user = models.User.objects(username=grantee).first()
 
         if user is None:
@@ -169,43 +173,50 @@ def list_students(class_id):
         if not class_.is_enrolled(user=user):
             unenrollments.append(user)
 
+    return render_template(
+        "/administration/classes/list-users.html",
+        class_=class_,
+        enrollments=enrollments,
+        unenrollments=unenrollments,
+        never_login=never_login,
+    )
 
-    return render_template('/administration/classes/list-users.html',
-                           class_=class_,
-                           enrollments=enrollments,
-                           unenrollments=unenrollments,
-                           never_login=never_login)
 
-
-@module.route('/<class_id>/users/<user_id>')
-@acl.allows.requires(acl.is_class_owner)
+@module.route("/<class_id>/users/<user_id>")
+# @acl.allows.requires(acl.is_class_owner)
+@login_required
 def show_user_score(class_id, user_id):
     class_ = models.Class.objects.get(id=class_id)
     user = models.User.objects.get(id=user_id)
     assignments = class_.course.assignments
 
-    return render_template('/administration/classes/show-user-score.html',
-                           class_=class_,
-                           user=user,
-                           assignments=assignments)
+    return render_template(
+        "/administration/classes/show-user-score.html",
+        class_=class_,
+        user=user,
+        assignments=assignments,
+    )
 
 
-@module.route('/<class_id>/users/<user_id>/assignments/<assignment_id>')
-@acl.allows.requires(acl.is_class_owner)
+@module.route("/<class_id>/users/<user_id>/assignments/<assignment_id>")
+# @acl.allows.requires(acl.is_class_owner)
+@login_required
 def show_user_assignment(class_id, user_id, assignment_id):
     class_ = models.Class.objects.get(id=class_id)
     user = models.User.objects.get(id=user_id)
     assignment = models.Assignment.objects.get(id=assignment_id)
 
     return render_template(
-            '/administration/classes/show-user-assignment.html',
-            class_=class_,
-            user=user,
-            assignment=assignment)
+        "/administration/classes/show-user-assignment.html",
+        class_=class_,
+        user=user,
+        assignment=assignment,
+    )
 
 
-@module.route('/<class_id>/assignments/<assignment_id>/users')
+@module.route("/<class_id>/assignments/<assignment_id>/users")
 # @acl.allows.requires(acl.is_class_owner)
+@login_required
 def list_assignment_users(class_id, assignment_id):
     class_ = models.Class.objects.get(id=class_id)
     assignment = models.Assignment.objects.get(id=assignment_id)
@@ -214,53 +225,54 @@ def list_assignment_users(class_id, assignment_id):
     users.sort(key=lambda u: u.first_name)
 
     return render_template(
-            '/administration/classes/list-assignment-users.html',
-            class_=class_,
-            users=users,
-            assignment=assignment)
+        "/administration/classes/list-assignment-users.html",
+        class_=class_,
+        users=users,
+        assignment=assignment,
+    )
 
 
-@module.route('/<class_id>/users/export-attendents')
-@acl.allows.requires(acl.is_class_owner)
+@module.route("/<class_id>/users/export-attendents")
+# @acl.allows.requires(acl.is_class_owner)
+@login_required
 def export_attendants(class_id):
     class_ = models.Class.objects.get(id=class_id)
     enrollments = models.Enrollment.objects(enrolled_class=class_)
     users = [e.user for e in enrollments]
     users.sort(key=lambda u: u.username)
 
-
     assignments = []
     for ass_time in class_.assignment_schedule:
         assignments.append(ass_time.assignment)
 
     assignments.sort(key=lambda ass: ass.name)
-    header = ['id', 'name', 'lastname']
-    subheader = ['no', '', '']
+    header = ["id", "name", "lastname"]
+    subheader = ["no", "", ""]
 
     for ass in assignments:
         header.append(ass.name)
         subheader.append(len(ass.challenges))
 
-    output =  io.StringIO()
+    output = io.StringIO()
     writer = csv.writer(output)
 
     writer.writerow(header)
     writer.writerow(subheader)
     for user in users:
-        sid = user.metadata.get('student_id')
+        sid = user.metadata.get("student_id")
         data = []
         if sid:
             data.append(sid)
         else:
             data.append(user.username)
 
-        if user.metadata.get('thai_first_name'):
-            data.append(user.metadata.get('thai_first_name'))
+        if user.metadata.get("thai_first_name"):
+            data.append(user.metadata.get("thai_first_name"))
         else:
             data.append(user.first_name)
 
-        if user.metadata.get('thai_last_name'):
-            data.append(user.metadata.get('thai_last_name'))
+        if user.metadata.get("thai_last_name"):
+            data.append(user.metadata.get("thai_last_name"))
         else:
             data.append(user.last_name)
 
@@ -269,22 +281,23 @@ def export_attendants(class_id):
             data.append(len(challenges))
         writer.writerow(data)
 
-    return Response(output.getvalue(),
-                    mimetype='text/csv',
-                    headers={
-                        'Content-disposition':
-                        f'attachment; filename={class_.id}-attendants.csv'
-    				})
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={
+            "Content-disposition": f"attachment; filename={class_.id}-attendants.csv"
+        },
+    )
 
 
-@module.route('/<class_id>/users/export-scores')
-@acl.allows.requires(acl.is_class_owner)
+@module.route("/<class_id>/users/export-scores")
+# @acl.allows.requires(acl.is_class_owner)
+@login_required
 def export_scores(class_id):
     class_ = models.Class.objects.get(id=class_id)
     enrollments = models.Enrollment.objects(enrolled_class=class_)
     users = [e.user for e in enrollments]
     users.sort(key=lambda u: u.username)
-
 
     assignments = []
     for ass_time in class_.assignment_schedule:
@@ -292,18 +305,18 @@ def export_scores(class_id):
 
     assignments.sort(key=lambda ass: ass.name)
 
-    header = ['id', 'name', 'lastname']
-    subheader = ['no', '', '']
+    header = ["id", "name", "lastname"]
+    subheader = ["no", "", ""]
 
     total_score = 0
     for ass in assignments:
         header.append(ass.name)
         subheader.append(ass.score)
         total_score += ass.score
-    header.append('total')
+    header.append("total")
     subheader.append(total_score)
 
-    output =  io.StringIO()
+    output = io.StringIO()
     writer = csv.writer(output)
 
     writer.writerow(header)
@@ -311,26 +324,22 @@ def export_scores(class_id):
     for user in users:
         total_score = 0
 
-        sid = user.metadata.get('student_id')
+        sid = user.metadata.get("student_id")
         data = []
         if sid:
             data.append(sid)
         else:
             data.append(user.username)
 
-        if user.metadata.get('thai_first_name'):
-            data.append(user.metadata.get('thai_first_name'))
+        if user.metadata.get("thai_first_name"):
+            data.append(user.metadata.get("thai_first_name"))
         else:
             data.append(user.first_name)
 
-        if user.metadata.get('thai_last_name'):
-            data.append(user.metadata.get('thai_last_name'))
+        if user.metadata.get("thai_last_name"):
+            data.append(user.metadata.get("thai_last_name"))
         else:
             data.append(user.last_name)
-
-
-
-
 
         for ass in assignments:
             score = ass.get_score(class_, user)
@@ -339,16 +348,16 @@ def export_scores(class_id):
         data.append(total_score)
         writer.writerow(data)
 
-    return Response(output.getvalue(),
-                    mimetype='text/csv',
-                    headers={
-                        'Content-disposition':
-                        f'attachment; filename={class_.id}-scores.csv'
-    				})
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-disposition": f"attachment; filename={class_.id}-scores.csv"},
+    )
 
 
-@module.route('/<class_id>/add-user/<user_id>')
-@acl.allows.requires(acl.is_class_owner)
+@module.route("/<class_id>/add-user/<user_id>")
+# @acl.allows.requires(acl.is_class_owner)
+@login_required
 def add_user_to_class(class_id, user_id):
     class_ = models.Class.objects.get(id=class_id)
     user = models.User.objects.get(id=user_id)
@@ -357,27 +366,31 @@ def add_user_to_class(class_id, user_id):
     return redirect(request.referrer)
 
 
-
-@module.route('/<class_id>/teaching-assistants/add', methods=['GET', 'POST'])
-@acl.allows.requires(acl.is_class_owner)
+@module.route("/<class_id>/teaching-assistants/add", methods=["GET", "POST"])
+# @acl.allows.requires(acl.is_class_owner)
+@login_required
 def add_teaching_assistant(class_id):
     class_ = models.Class.objects().get(id=class_id)
-    users = models.User.objects().order_by('first_name')
+    users = models.User.objects().order_by("first_name")
 
     form = forms.classes.TeachingAssistantAddingForm()
-    form.users.choices = [(str(user.id),
-                           '{} {} ({}, {})'.format(
-                               user.first_name,
-                               user.last_name,
-                               user.username,
-                               user.email)) for user in users]
+    form.users.choices = [
+        (
+            str(user.id),
+            "{} {} ({}, {})".format(
+                user.first_name, user.last_name, user.username, user.email
+            ),
+        )
+        for user in users
+    ]
 
     if not form.validate_on_submit():
         return render_template(
-                '/administration/classes/add-teaching-assistant.html',
-                form=form,
-                class_=class_,
-                users=users)
+            "/administration/classes/add-teaching-assistant.html",
+            form=form,
+            class_=class_,
+            users=users,
+        )
 
     for user_id in form.users.data:
         user = models.User.objects.get(id=user_id)
@@ -389,22 +402,19 @@ def add_teaching_assistant(class_id):
                 break
 
         if not found_user:
-            ta = models.TeachingAssistant(
-                    user=user,
-                    ended_date=class_.ended_date
-                    )
+            ta = models.TeachingAssistant(user=user, ended_date=class_.ended_date)
             class_.teaching_assistants.append(ta)
     class_.save()
 
-    return redirect(url_for('administration.classes.view', class_id=class_id))
+    return redirect(url_for("administration.classes.view", class_id=class_id))
 
-@module.route('/<class_id>/solutions')
-@acl.allows.requires(acl.is_lecturer)
+
+@module.route("/<class_id>/solutions")
+# @acl.allows.requires(acl.is_lecturer)
+@login_required
 def list_class_solutions(class_id):
     class_ = models.Class.objects.get(id=class_id)
-    solutions = models.Solution.objects(enrolled_class=class_).order_by('-id').limit(50)
-    return render_template('/administration/classes/solutions.html',
-                           solutions=solutions,
-                           class_=class_)
-
-
+    solutions = models.Solution.objects(enrolled_class=class_).order_by("-id").limit(50)
+    return render_template(
+        "/administration/classes/solutions.html", solutions=solutions, class_=class_
+    )

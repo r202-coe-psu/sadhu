@@ -79,6 +79,24 @@ Challenge: {{ challenge.name }}
 </div>
 
 <div class="ui container" style="margin-top: 20px;">
+    <h3>Code for Test Case</h3>
+    <div>
+      <div>
+        <a class="ui icon primary button" href="{{ url_for('administration.challenges.add_code_for_testcase', challenge_id=challenge.id) }}"><i class="add icon"></i>Add</a> 
+        {% if code_for_testcase %}
+            <div class="ui large inverted blue label"><i class="code icon"></i> {{ code_for_testcase.code.filename }} </div>
+        {% endif %}
+      </div>
+
+      {% if code_for_testcase %}
+        <div style="margin-top: 1em;">
+          <div class="ui teal inverted label">
+            Status: {{ code_for_testcase.status }}
+          </div>
+      </div>
+      {% endif %}
+    </div>
+
     <h3>Test Case</h3>
     <div class="ui labeled icon menu">
       <a class="item" href="{{ url_for('administration.challenges.add_testcase', challenge_id=challenge.id) }}">
