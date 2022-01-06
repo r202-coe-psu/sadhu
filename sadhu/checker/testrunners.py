@@ -1,4 +1,3 @@
-
 from sadhu import models
 import threading
 import subprocess
@@ -8,6 +7,7 @@ import datetime
 from . import testers
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -21,18 +21,15 @@ class TestRunner(threading.Thread):
 
         self.settings = settings
         self.testers = dict(
-                C=testers.CTester(settings),
-                Python=testers.PythonTester(settings)
-                )
-
+            C=testers.CTester(settings), Python=testers.PythonTester(settings)
+        )
 
     def process(self, solution):
-       
+
         tester = self.testers.get(solution.language, None)
         if not tester:
-            solution.messages = '{} Tester Not Impremented'.format(
-                    solution.language)
-            solution.status = 'Fail'
+            solution.messages = "{} Tester Not Impremented".format(solution.language)
+            solution.status = "Fail"
             solution.executed_date = datetime.datetime.now()
             solution.executed_ended_date = datetime.datetime.now()
             solution.save()
@@ -40,17 +37,34 @@ class TestRunner(threading.Thread):
 
         test_cases = solution.challenge.test_cases
         tester.process(solution, test_cases)
-        
+
+        if solution.type == "challenge":
+            self.fill_testcase(solution)
+
+    def fill_testcase(self, solution):
+        logger.debug(f"fill output to testcase solution of {solution.id}")
+        challenge = solution.challenge
+
+        test_cases = solution.challenge.test_cases
+        test_results = solution.test_results
+
+        for test_result in test_results:
+            for test_case in test_cases:
+                if test_result.test_case != test_case:
+                    continue
+
+                test_case.output_string = test_result.output
+                test_case.save()
 
     def run(self):
         self.running = True
-        while(self.running):
+        while self.running:
             solution = self.queue.get()
-            logger.debug('process solution {} for challenge {} of user {}'.format(
-                    solution.id,
-                    solution.challenge.id,
-                    solution.owner.id
-                    ))
+            logger.debug(
+                "process solution {} for challenge {} of user {}".format(
+                    solution.id, solution.challenge.id, solution.owner.id
+                )
+            )
             try:
                 self.process(solution)
             except Exception as e:
@@ -58,7 +72,6 @@ class TestRunner(threading.Thread):
 
     def stop(self):
         self.running = False
-        
 
 
 class SolutionController:
@@ -66,9 +79,9 @@ class SolutionController:
         self.queue = queue
 
     def get_waiting_solution(self):
-        solutions = models.Solution.objects(status='waiting')
+        solutions = models.Solution.objects(status="waiting")
         for solution in solutions:
-            solution.status = 'in-queue'
+            solution.status = "in-queue"
             solution.save()
             self.queue.put(solution)
 

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import current_user, login_required
 
-
+import datetime
 import markdown
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_for_filename, get_lexer_by_name
@@ -64,6 +64,35 @@ def edit(challenge_id):
 
     return redirect(
         url_for("administration.challenges.view", challenge_id=challenge.id)
+    )
+
+
+@module.route("/<challenge_id>")
+# @acl.allows.requires(acl.is_lecturer)
+@login_required
+def view(challenge_id):
+    challenge = models.Challenge.objects.get(id=challenge_id)
+    formatter = HtmlFormatter(linenos=True)
+    console_formatter = HtmlFormatter(
+        style="monokai", prestyles="white-space: pre-wrap;"
+    )
+    console_lexer = get_lexer_by_name("console")
+    style = formatter.get_style_defs(".codehilite")
+
+    code_for_testcase = models.Solution.objects(
+        challenge=challenge,
+        type="challenge",
+    ).first()
+    return render_template(
+        "/administration/challenges/view.html",
+        markdown=markdown.markdown,
+        style=style,
+        formatter=formatter,
+        console_formatter=console_formatter,
+        challenge=challenge,
+        console_lexer=console_lexer,
+        highlight=highlight,
+        code_for_testcase=code_for_testcase,
     )
 
 
@@ -256,32 +285,24 @@ def add_code_for_testcase(challenge_id):
     )
 
 
-@module.route("/<challenge_id>")
+@module.route("/<challenge_id>/rerun-code-for-testcase", methods=["GET", "POST"])
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
-def view(challenge_id):
+def rerun_code_for_testcase(challenge_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
-    formatter = HtmlFormatter(linenos=True)
-    console_formatter = HtmlFormatter(
-        style="monokai", prestyles="white-space: pre-wrap;"
-    )
-    console_lexer = get_lexer_by_name("console")
-    style = formatter.get_style_defs(".codehilite")
-
-    code_for_testcase = models.Solution.objects(
+    solution = models.Solution.objects(
         challenge=challenge,
         type="challenge",
     ).first()
-    return render_template(
-        "/administration/challenges/view.html",
-        markdown=markdown.markdown,
-        style=style,
-        formatter=formatter,
-        console_formatter=console_formatter,
-        challenge=challenge,
-        console_lexer=console_lexer,
-        highlight=highlight,
-        code_for_testcase=code_for_testcase,
+
+    if solution:
+        solution.status = "waiting"
+        solution.updated_date = datetime.datetime.now()
+
+        solution.save()
+
+    return redirect(
+        url_for("administration.challenges.view", challenge_id=challenge.id)
     )
 
 
