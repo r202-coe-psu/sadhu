@@ -33,11 +33,13 @@ def index():
 def create_or_edit(assignment_id):
     form = forms.assignments.AssignmentForm()
     courses = models.Course.objects()
+    assignment = None
     if assignment_id:
         assignment = models.Assignment.objects.get(id=assignment_id)
-        if assignment:
-            form = forms.assignments.AssignmentForm(obj=assignment)
-            form.course.data = str(assignment.course.id)
+
+    if assignment:
+        form = forms.assignments.AssignmentForm(obj=assignment)
+        form.course.data = str(assignment.course.id)
 
     form.course.choices = [(str(course.id), course.name) for course in courses]
 
