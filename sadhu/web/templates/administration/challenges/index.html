@@ -37,7 +37,7 @@
         <td>
             {{ challenge.tags | join(', ') }}
         </td>
-        <td>
+        <td class="ui single line">
           <a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}" class="ui button circular icon primary"><i class="eye icon"></i></a>
           <a href="{{ url_for('administration.challenges.edit', challenge_id=challenge.id) }}" class="ui button circular icon primary"><i class="edit icon"></i></a>
         </td>

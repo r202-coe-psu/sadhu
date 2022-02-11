@@ -26,14 +26,23 @@ def index():
     )
 
 
-@module.route("/create", methods=["GET", "POST"])
+@module.route("/create", methods=["GET", "POST"], defaults={"assignment_id": None})
+@module.route("/<assignment_id>/edit", methods=["GET", "POST"])
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
-def create():
+def create_or_edit(assignment_id):
     form = forms.assignments.AssignmentForm()
     courses = models.Course.objects()
+    if assignment_id:
+        assignment = models.Assignment.objects.get(id=assignment_id)
+        if assignment:
+            form = forms.assignments.AssignmentForm(obj=assignment)
+            form.course.data = str(assignment.course.id)
+
     form.course.choices = [(str(course.id), course.name) for course in courses]
+
     if not form.validate_on_submit():
+        print(form.errors)
         return render_template(
             "/administration/assignments/create-edit.html", form=form
         )
@@ -44,12 +53,17 @@ def create():
 
     course = models.Course.objects.get(id=form.course.data)
 
-    assignment = models.Assignment(**data)
-    assignment.owner = current_user._get_current_object()
+    if not assignment:
+        assignment = models.Assignment()
+        assignment.owner = current_user._get_current_object()
+
+    if assignment.course and assignment.course != course:
+        assignment.course.assignments.pop(assignment)
+
+    form.populate_obj(assignment)
     assignment.course = course
     assignment.save()
 
-    course.assignments.append(assignment)
     course.save()
 
     return redirect(

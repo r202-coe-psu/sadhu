@@ -11,7 +11,7 @@
 {% block content %}
   <div class="ui container">
     <div class="ui labeled icon menu">
-      <a class="item" href="{{ url_for('administration.assignments.create') }}"><i class="add icon"></i>Add</a>
+      <a class="item" href="{{ url_for('administration.assignments.create_or_edit') }}"><i class="add icon"></i>Add</a>
     </div>
 </div>
 
@@ -24,6 +24,7 @@
 					<th>Description</th>
 					<th>Course</th>
 					<th>Score</th>
+					<th>Operation</th>
 				</tr>
 			</thead>
 			<body>
@@ -42,7 +43,12 @@
           </td>
 					<td>
 						{{ assignment.score }}
-					</td>
+          </td>
+          <td class="ui single line">
+            <a class="ui circular button icon primary" href="{{ url_for("administration.assignments.create_or_edit", assignment_id=assignment.id) }}">
+              <i class="ui edit icon"></i>
+            </a>
+          </td>
 				</tr>
 {% endfor %}
 			</body>
