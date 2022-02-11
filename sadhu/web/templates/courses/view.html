@@ -68,7 +68,9 @@ Courses: {{ course.name }}
 {% for assignment in course.assignments %}
 				<tr>
           <td>
-            <a href="{{ url_for('assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
+            {# <a href="{{ url_for('assignments.view', assignment_id=assignment.id) }}"> #}
+              {{ assignment.name }}
+              {# </a> #}
 					</td>
 					<td>
 						{{ assignment.description }}

@@ -3,78 +3,70 @@ import datetime
 
 
 class Enrollment(me.Document):
-    user = me.ReferenceField('User', dbref=True, required=True)
-    enrolled_class = me.ReferenceField('Class', dbref=True, required=True)
-    enrolled_date = me.DateTimeField(required=True,
-                                     default=datetime.datetime.now)
+    user = me.ReferenceField("User", dbref=True, required=True)
+    enrolled_class = me.ReferenceField("Class", dbref=True, required=True)
+    enrolled_date = me.DateTimeField(required=True, default=datetime.datetime.now)
 
-    meta = {'collection': 'enrollments'}
+    meta = {"collection": "enrollments"}
 
 
 class LimitedEnrollment(me.EmbeddedDocument):
     method = me.StringField(required=True)
     grantees = me.ListField(me.StringField(required=True))
-    updated_date = me.DateTimeField(required=True,
-                                    auto_now=True,
-                                    default=datetime.datetime.now)
+    updated_date = me.DateTimeField(
+        required=True, auto_now=True, default=datetime.datetime.now
+    )
 
 
 class AssignmentTime(me.EmbeddedDocument):
-    assignment = me.ReferenceField('Assignment', required=True)
-    started_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.now)
-    ended_date = me.DateTimeField(required=True,
-                                  default=datetime.datetime.now)
-    updated_date = me.DateTimeField(required=True,
-                                    auto_now=True,
-                                    default=datetime.datetime.now)
+    assignment = me.ReferenceField("Assignment", required=True)
+    started_date = me.DateTimeField(required=True, default=datetime.datetime.now)
+    ended_date = me.DateTimeField(required=True, default=datetime.datetime.now)
+    updated_date = me.DateTimeField(
+        required=True, auto_now=True, default=datetime.datetime.now
+    )
+
+    def is_pass_started_time(self):
+        now = datetime.datetime.now()
+        if self.started_date < now:
+            return True
+        return False
 
 
 class TeachingAssistant(me.EmbeddedDocument):
-    user = me.ReferenceField('User', dbref=True, required=True)
-    started_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.now)
-    ended_date = me.DateTimeField(required=True,
-                                  default=datetime.datetime.now)
-    updated_date = me.DateTimeField(required=True,
-                                    auto_now=True,
-                                    default=datetime.datetime.now)
+    user = me.ReferenceField("User", dbref=True, required=True)
+    started_date = me.DateTimeField(required=True, default=datetime.datetime.now)
+    ended_date = me.DateTimeField(required=True, default=datetime.datetime.now)
+    updated_date = me.DateTimeField(
+        required=True, auto_now=True, default=datetime.datetime.now
+    )
 
 
 class Class(me.Document):
     name = me.StringField(required=True)
     description = me.StringField(required=True)
     code = me.StringField()
-    course = me.ReferenceField('Course', required=True)
-    assignment_schedule = me.ListField(
-            me.EmbeddedDocumentField(AssignmentTime))
+    course = me.ReferenceField("Course", required=True)
+    assignment_schedule = me.ListField(me.EmbeddedDocumentField(AssignmentTime))
     tags = me.ListField(me.StringField(required=True))
 
-    created_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.now)
-    updated_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.now,
-                                    auto_now=True)
+    created_date = me.DateTimeField(required=True, default=datetime.datetime.now)
+    updated_date = me.DateTimeField(
+        required=True, default=datetime.datetime.now, auto_now=True
+    )
 
     limited = me.BooleanField(required=True, default=False)
     limited_enrollment = me.EmbeddedDocumentField(LimitedEnrollment)
     # enrollments = me.ListField(me.ReferenceField('Enrollment', dbref=True))
-    started_date = me.DateTimeField(required=True,
-                                    default=datetime.datetime.now)
+    started_date = me.DateTimeField(required=True, default=datetime.datetime.now)
 
-    ended_date = me.DateTimeField(required=True,
-                                  default=datetime.datetime.now)
+    ended_date = me.DateTimeField(required=True, default=datetime.datetime.now)
 
-    owner = me.ReferenceField('User', dbref=True, required=True)
-    teaching_assistants = me.ListField(
-            me.EmbeddedDocumentField(TeachingAssistant))
-    contributors = me.ListField(me.ReferenceField('User',
-                                                  dbref=True,
-                                                  required=True))
+    owner = me.ReferenceField("User", dbref=True, required=True)
+    teaching_assistants = me.ListField(me.EmbeddedDocumentField(TeachingAssistant))
+    contributors = me.ListField(me.ReferenceField("User", dbref=True, required=True))
 
-    meta = {'collection': 'classes',
-            'strict': False}
-
+    meta = {"collection": "classes", "strict": False}
 
     def get_enrollments(self):
         return Enrollment.objects(enrolled_class=self).all()
@@ -86,6 +78,13 @@ class Class(me.Document):
 
         return False
 
+    def get_assignment_schedule(self, assignment):
+        for asst_time in self.assignment_schedule:
+            if asst_time.assignment == assignment:
+                return asst_time
+
+        return None
+
     def get_assignment_score(self, user):
 
         total_assignment_score = 0
@@ -95,8 +94,10 @@ class Class(me.Document):
             total_assignment_score += assignment.score
             total_assignment_user_score += assignment.get_score(self, user)
 
-        return dict(total_score=total_assignment_score,
-                    total_user_score=total_assignment_user_score)
+        return dict(
+            total_score=total_assignment_score,
+            total_user_score=total_assignment_user_score,
+        )
 
     def get_assignment_schedule(self, assignment):
         ass_time = None
@@ -109,6 +110,7 @@ class Class(me.Document):
 
     def is_enrolled(self, user_id=None, user=None):
         from .users import User
+
         if user_id:
             user = User.objects.get(id=user_id)
             if not user:

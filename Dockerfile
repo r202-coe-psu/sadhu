@@ -12,7 +12,7 @@ ENV LANGUAGE th_TH:en
 COPY . /app
 WORKDIR /app
 
-RUN python3 -m pip install flask uwsgi
+RUN python3 -m pip install flask uwsgi authlib==0.15.5
 RUN python3 setup.py develop
 RUN npm install --prefix sadhu/web/static
 

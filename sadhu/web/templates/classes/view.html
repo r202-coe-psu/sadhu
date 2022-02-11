@@ -72,9 +72,11 @@
 					<td>{{ ass_time.started_date }}</td>
 					<td>{{ ass_time.ended_date }}</td>
           <td>
+            {% if ass_time.is_pass_started_time() %}
             <a class="ui circular primary icon button" href="{{ url_for('assignments.practice', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">
               <i class="eye icon"></i>
             </a>
+            {% endif %}
           </td>
 				</tr>
 			{% endfor %}

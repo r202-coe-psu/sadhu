@@ -66,6 +66,8 @@ def create_or_edit(assignment_id):
     assignment.course = course
     assignment.save()
 
+    if assignment not in course.assignments:
+        course.assignments.append(assignment)
     course.save()
 
     return redirect(
