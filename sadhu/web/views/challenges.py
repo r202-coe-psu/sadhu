@@ -22,6 +22,9 @@ def index():
     if request.args.get("class_id", None):
         class_ = models.Class.objects(id=request.args.get("class_id")).first()
 
+    if not class_:
+        return "Not Allow"
+
     challenges = []
     for assignment in class_.course.assignments:
         challenges.extend(assignment.challenges)
@@ -67,6 +70,11 @@ def view(challenge_id):
     if request.args.get("class_id", None):
         class_ = models.Class.objects(id=request.args.get("class_id")).first()
     challenge = models.Challenge.objects.get(id=challenge_id)
+
+    if not class_:
+        return "No class found"
+    if not challenge:
+        return "No challenge found"
 
     user = current_user._get_current_object()
     solutions = models.Solution.objects(
