@@ -130,7 +130,7 @@ def submit_solution(challenge_id):
 
     now = datetime.datetime.now()
 
-    form = forms.challenges.Solution()
+    form = forms.challenges.SolutionForm()
     if not form.validate_on_submit():
         return render_template(
             "/challenges/view.html",
