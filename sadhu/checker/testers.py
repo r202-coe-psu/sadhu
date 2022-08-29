@@ -176,12 +176,32 @@ class CTester(Tester):
         return result
 
 
+class CppTester(Tester):
+    def __init__(self, settings):
+        super().__init__(settings)
+        self.compiler_options = [
+            s.strip() for s in self.settings["TESTRUNNER_CPP_COMPILER"].split(" ")
+        ]
+
+
 class PythonTester(Tester):
     def __init__(self, settings):
         super().__init__(settings)
 
         self.runner_options = [
             s.strip() for s in self.settings["TESTRUNNER_PYTHON_RUNNER"].split(" ")
+        ]
+
+    def build_executable_options(self, filename):
+        return self.runner_options + [filename]
+
+
+class GoTester(Tester):
+    def __init__(self, settings):
+        super().__init__(settings)
+
+        self.runner_options = [
+            s.strip() for s in self.settings["TESTRUNNER_GO_RUNNER"].split(" ")
         ]
 
     def build_executable_options(self, filename):

@@ -43,9 +43,9 @@ class TeachingAssistant(me.EmbeddedDocument):
 
 
 class Class(me.Document):
-    name = me.StringField(required=True)
+    name = me.StringField(required=True, min_length=3, max_length=256)
     description = me.StringField(required=True)
-    code = me.StringField()
+    code = me.StringField(max_length=256)
     course = me.ReferenceField("Course", required=True)
     assignment_schedule = me.ListField(me.EmbeddedDocumentField(AssignmentTime))
     tags = me.ListField(me.StringField(required=True))
@@ -55,7 +55,7 @@ class Class(me.Document):
         required=True, default=datetime.datetime.now, auto_now=True
     )
 
-    limited = me.BooleanField(required=True, default=False)
+    limited = me.BooleanField(required=True, default=True)
     limited_enrollment = me.EmbeddedDocumentField(LimitedEnrollment)
     # enrollments = me.ListField(me.ReferenceField('Enrollment', dbref=True))
     started_date = me.DateTimeField(required=True, default=datetime.datetime.now)
