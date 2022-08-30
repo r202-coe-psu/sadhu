@@ -24,6 +24,7 @@ class TestRunner(threading.Thread):
             C=testers.CTester(settings),
             CPP=testers.CppTester(settings),
             Python=testers.PythonTester(settings),
+            GO=testers.GoTester(settings),
         )
 
     def process(self, solution):

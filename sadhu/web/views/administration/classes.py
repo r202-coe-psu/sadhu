@@ -53,11 +53,8 @@ def create():
         return render_template("/administration/classes/create-edit.html", form=form)
     data = form.data.copy()
     data.pop("csrf_token")
-    # data.pop('limited_enrollment')
 
     class_ = models.Class(**data)
-    course = models.Course.objects.get(id=form.course.data)
-    class_.course = course
     class_.owner = current_user._get_current_object()
     class_.save()
     return redirect(url_for("administration.classes.index"))
@@ -93,8 +90,6 @@ def edit(class_id):
     data.pop("csrf_token")
 
     form.populate_obj(class_)
-    course = models.Course.objects.get(id=form.course.data)
-    class_.course = course
     class_.save()
     return redirect(url_for("administration.classes.index"))
 

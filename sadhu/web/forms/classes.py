@@ -27,20 +27,22 @@ class LimitedEnrollmentForm(Form):
 BaseClassForm = model_form(
     models.Class,
     FlaskForm,
+    exclude=["created_date", "updated_date", "owner"],
     field_args=dict(
         name=dict(label="Name"),
         description=dict(label="Description"),
-        code=dict(label="Label"),
-        course=dict(label="Course"),
+        code=dict(label="Code"),
+        course=dict(label="Course", label_modifier=lambda c: c.name),
         limited=dict(label="Limited Class"),
-        limited_enrollment=dict(label="Limited Enrollment", format="%Y-%m-%d"),
+        # limited_enrollment=dict(label="Limited Enrollment"),
         started_date=dict(label="Started Date", format="%Y-%m-%d"),
-        ended_date=dict(label="Ended Date"),
+        ended_date=dict(label="Ended Date", format="%Y-%m-%d"),
     ),
 )
 
 
 class ClassForm(BaseClassForm):
+    limited_enrollment = fields.FormField(LimitedEnrollmentForm)
     tags = TagListField(
         "Tags", validators=[validators.InputRequired(), validators.Length(min=3)]
     )
