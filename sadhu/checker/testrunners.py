@@ -21,7 +21,9 @@ class TestRunner(threading.Thread):
 
         self.settings = settings
         self.testers = dict(
-            C=testers.CTester(settings), Python=testers.PythonTester(settings)
+            C=testers.CTester(settings),
+            CPP=testers.CppTester(settings),
+            Python=testers.PythonTester(settings),
         )
 
     def process(self, solution):

@@ -9,17 +9,20 @@ from flask_wtf import FlaskForm
 
 
 class CourseForm(FlaskForm):
-    name = fields.StringField('Name',
-            validators=[validators.InputRequired(),
-                        validators.Length(min=3)])
-    description = fields.StringField('Description',
-            validators=[validators.InputRequired()],
-            widget=widgets.TextArea())
-    languages = fields.SelectMultipleField('Languages',
-            validators=[validators.InputRequired()],
-            )
-    contributors = fields.SelectMultipleField('Contributors')
+    name = fields.StringField(
+        "Name", validators=[validators.InputRequired(), validators.Length(min=3)]
+    )
+    description = fields.StringField(
+        "Description",
+        validators=[validators.InputRequired()],
+        widget=widgets.TextArea(),
+    )
+    languages = fields.SelectMultipleField(
+        "Languages",
+        validators=[validators.InputRequired()],
+    )
+    contributors = fields.SelectMultipleField("Contributors")
 
-    tags = TagListField('Tags',
-            validators=[validators.InputRequired(),
-                        validators.Length(min=3)])
+    tags = TagListField(
+        "Tags", validators=[validators.InputRequired(), validators.Length(min=3)]
+    )
