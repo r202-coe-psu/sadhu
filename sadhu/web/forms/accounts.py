@@ -168,7 +168,7 @@ class DisplayNameForm(Form):
     last_name = fields.StringField("Last Name", validators=[validators.InputRequired()])
 
 
-class Profile(FlaskForm):
+class ProfileForm(FlaskForm):
     first_name = fields.StringField(
         "First Name", validators=[validators.InputRequired()]
     )

@@ -207,13 +207,7 @@ def profile(user_id):
 @module.route("/accounts")
 @login_required
 def index():
-
-    biography = ""
-    if current_user.biography:
-        biography = markdown.markdown(current_user.biography)
-    return render_template(
-        "/accounts/index.html", user=current_user, biography=biography
-    )
+    return render_template("/accounts/index.html", user=current_user)
 
 
 @module.route("/accounts/edit-profile", methods=["GET", "POST"])
@@ -228,19 +222,23 @@ def edit_profile():
     user = current_user._get_current_object()
     form.populate_obj(user)
 
-    if form.pic.data:
-        if user.picture:
-            user.picture.replace(
-                form.pic.data,
-                filename=form.pic.data.filename,
-                content_type=form.pic.data.content_type,
-            )
-        else:
-            user.picture.put(
-                form.pic.data,
-                filename=form.pic.data.filename,
-                content_type=form.pic.data.content_type,
-            )
+    # if form.pic.data:
+    #     if user.picture:
+    #         user.picture.replace(
+    #             form.pic.data,
+    #             filename=form.pic.data.filename,
+    #             content_type=form.pic.data.content_type,
+    #         )
+    #     else:
+    #         user.picture.put(
+    #             form.pic.data,
+    #             filename=form.pic.data.filename,
+    #             content_type=form.pic.data.content_type,
+    #         )
+    user.metadata["thai_first_name"] = form.thai_first_name.data
+    user.metadata["thai_last_name"] = form.thai_last_name.data
+    user.metadata["student_id"] = form.student_id.data
+    user.metadata["organization"] = form.organization.data
 
     user.updated_date = datetime.datetime.now()
     user.save()
