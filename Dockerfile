@@ -12,14 +12,16 @@ ENV LANGUAGE th_TH:en
 COPY . /app
 WORKDIR /app
 
-RUN python3 -m pip install flask uwsgi authlib==0.15.5
-RUN python3 setup.py develop
+RUN python3 -m pip install flask uwsgi poetry
+RUN poetry config virtualenvs.create false && poetry install --no-interaction
+
+
 RUN npm install --prefix sadhu/web/static
 
 RUN cd /app/sadhu/web/static/brython; for i in $(ls -d */); do python3 -m brython --make_package ${i%%/}; done
 
 ENV SADHU_SETTINGS=/app/sadhu-production.cfg
-ENV FLASK_ENV=prodoction
+ENV FLASK_DEBUG=false
 #ENV AUTHLIB_INSECURE_TRANSPORT=true
 
 
