@@ -49,7 +49,7 @@ services:
     restart: always
     environment:
       - SADHU_SETTINGS=/app/sadhu-production.cfg
-    command: sadhu-checker
+    command: /app/venv/bin/sadhu-checker
     logging:
       options:
         max-size: "10m"
