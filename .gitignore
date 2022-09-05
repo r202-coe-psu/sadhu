@@ -5,6 +5,5 @@ venv
 data
 node_modules
 deployment
-package-lock.json
 *.egg-*
 sadhu/web/static/brython/*.js
