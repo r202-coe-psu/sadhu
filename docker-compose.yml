@@ -27,7 +27,7 @@ services:
     networks:
       - default
     restart: always
-    command: gunicorn -w 4 --bind 0.0.0.0:9000 'sadhu.web:create_app()'
+    command: /app/venv/bin/gunicorn -w 4 --bind 0.0.0.0:9000 'sadhu.web:create_app()'
     environment:
       - FLASK_DEBUG=false
       - SADHU_SETTINGS=/app/sadhu-production.cfg
@@ -48,7 +48,7 @@ services:
       - default
     restart: always
     environment:
-      - /app/sadhu-production.cfg
+      - SADHU_SETTINGS=/app/sadhu-production.cfg
     command: sadhu-checker
     logging:
       options:
