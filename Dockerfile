@@ -12,16 +12,19 @@ ENV LANGUAGE th_TH:en
 COPY . /app
 WORKDIR /app
 
-RUN python3 -m pip install flask uwsgi poetry
-RUN poetry config virtualenvs.create false && poetry install --no-interaction
+RUN python3 -m venv venv
+ENV PYTHON=/app/venv/bin/python3
+RUN $PYTHON -m pip install wheel poetry gunicorn
+# RUN poetry config virtualenvs.create false && poetry install --no-interaction
+RUN $PYTHON -m poetry install --no-interaction
 
 
 RUN npm install --prefix sadhu/web/static
 
-RUN cd /app/sadhu/web/static/brython; for i in $(ls -d */); do python3 -m brython --make_package ${i%%/}; done
+RUN cd /app/sadhu/web/static/brython; for i in $(ls -d */); do $PYTHON -m brython --make_package ${i%%/}; done
 
-ENV SADHU_SETTINGS=/app/sadhu-production.cfg
-ENV FLASK_DEBUG=false
+# ENV SADHU_SETTINGS=/app/sadhu-production.cfg
+# ENV FLASK_DEBUG=false
 #ENV AUTHLIB_INSECURE_TRANSPORT=true
 
 

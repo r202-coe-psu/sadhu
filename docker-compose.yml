@@ -1,58 +1,61 @@
 version: '3'
 services:
-    mongodb:
-        image: mongo
-        container_name: sadhu-mongodb
-        volumes:
-            - ../deployment/sadhu/mongodb/data/db:/data/db
-            - /etc/localtime:/etc/localtime:ro
-        restart: always
-        networks:
-            - default
-        logging:
-            options:
-                max-size: "10m"
-                max-file: "3"
-    web:
-        build: .
-        image: sadhu-image
-        container_name: sadhu-web
-        volumes:
-            - ../deployment:/deployment
-            - /etc/localtime:/etc/localtime:ro
-        ports:
-            - 9000:9000
-        links:
-            - mongodb
-        networks:
-            - default
-        restart: always
-        command: /app/scripts/sadhu-uwsgi.sh
-        logging:
-            options:
-                max-size: "10m"
-                max-file: "3"
-    checker:
-        build: .
-        image: sadhu-image
-        container_name: sadhu-checker
-        volumes:
-            - ../deployment:/deployment
-            - /etc/localtime:/etc/localtime:ro
-        links:
-            - mongodb
-        networks:
-            - default
-        restart: always
-        environment:
-            - /app/sadhu-production.cfg
-        command: sadhu-checker
-        logging:
-            options:
-                max-size: "10m"
-                max-file: "3"
+  mongodb:
+      image: mongo
+      container_name: sadhu-mongodb
+      volumes:
+          - ../deployment/sadhu/mongodb/data/db:/data/db
+          - /etc/localtime:/etc/localtime:ro
+      restart: always
+      networks:
+          - default
+      logging:
+          options:
+              max-size: "10m"
+              max-file: "3"
+  web:
+    build: .
+    image: sadhu-image
+    container_name: sadhu-web
+    volumes:
+      - ../deployment:/deployment
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 9000:9000
+    links:
+      - mongodb
+    networks:
+      - default
+    restart: always
+    command: gunicorn -w 4 --bind 0.0.0.0:9000 'sadhu.web:create_app()'
+    environment:
+      - FLASK_DEBUG=false
+      - SADHU_SETTINGS=/app/sadhu-production.cfg
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+  checker:
+    build: .
+    image: sadhu-image
+    container_name: sadhu-checker
+    volumes:
+      - ../deployment:/deployment
+      - /etc/localtime:/etc/localtime:ro
+    links:
+      - mongodb
+    networks:
+      - default
+    restart: always
+    environment:
+      - /app/sadhu-production.cfg
+    command: sadhu-checker
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
-    default:
-        driver: bridge
+  default:
+    driver: bridge
       
