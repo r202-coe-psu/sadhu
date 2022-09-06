@@ -122,7 +122,7 @@ Challenge: {{ challenge.name }}
         {% for tc in challenge.test_cases %}
         <tr valign="top">
           <td><pre>{{ tc.input_string }}</pre></td>
-          <td>{{ highlight(tc.output_string, console_lexer, console_formatter) | safe }}</td>
+          <td>{{ highlight(tc.output_string, console_lexer, console_formatter) | safe if tc.output_string }}</td>
           <td>{{ tc.public }}</td>
           <td>{{ tc.created_date }}</td>
           <td>
