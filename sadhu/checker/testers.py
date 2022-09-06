@@ -111,14 +111,24 @@ class Tester:
             if output and output.returncode == 0:
                 test_result.output = output.stdout.decode("utf-8", errors="replace")
 
-                output_data = test_result.output.strip().splitlines()
-                testcase_data = test_result.expected_result.strip().splitlines()
+                output_data = (
+                    test_result.output.strip().splitlines()
+                    if test_result.output
+                    else None
+                )
+                testcase_data = (
+                    test_result.expected_result.strip().splitlines()
+                    if test_result.expected_result
+                    else None
+                )
 
                 is_validate = True
 
                 if len(output_data) == 0:
                     is_validate = False
-                if abs(len(output_data) - len(testcase_data)) != 0:
+                elif not testcase_data:
+                    is_validate = False
+                elif abs(len(output_data) - len(testcase_data)) != 0:
                     is_validate = False
                 else:
                     for t_output, p_output in zip(testcase_data, output_data):
