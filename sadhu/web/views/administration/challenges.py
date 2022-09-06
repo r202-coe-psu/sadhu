@@ -22,7 +22,7 @@ module = Blueprint(
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
 def index():
-    challenges = models.Challenge.objects(owner=current_user._get_current_object())
+    challenges = models.Challenge.objects(owner=current_user._get_current_object()).order_by('name')
     # print('q', challenges)
     return render_template(
         "/administration/challenges/index.html", challenges=challenges
