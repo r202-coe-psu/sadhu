@@ -27,7 +27,14 @@ class LimitedEnrollmentForm(Form):
 BaseClassForm = model_form(
     models.Class,
     FlaskForm,
-    exclude=["created_date", "updated_date", "owner"],
+    exclude=[
+        "created_date",
+        "updated_date",
+        "owner",
+        "teaching_assistants",
+        "contributors",
+        "assignment_schedule",
+    ],
     field_args=dict(
         name=dict(label="Name"),
         description=dict(label="Description"),

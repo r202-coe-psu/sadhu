@@ -11,7 +11,9 @@ class Enrollment(me.Document):
 
 
 class LimitedEnrollment(me.EmbeddedDocument):
-    method = me.StringField(required=True)
+    method = me.StringField(
+        required=True, choices=[("email", "Email"), ("student_id", "Student ID")]
+    )
     grantees = me.ListField(me.StringField(required=True))
     updated_date = me.DateTimeField(
         required=True, auto_now=True, default=datetime.datetime.now

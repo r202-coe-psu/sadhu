@@ -82,7 +82,7 @@
 			</thead>
 			<tbody>
 				{% for assignment in class_.course.assignments %}
-					<tr>{% set ass_time=class_.get_assignment_schedule(assignment) %}
+					<tr class="top aligned">{% set ass_time=class_.get_assignment_schedule(assignment) %}
             <td>
               {% if current_user.has_roles(["lecturer"]) %}
               <a href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}" target="_blank">
@@ -98,7 +98,7 @@
 					<td>{{ assignment.score }}</td>
 					<td>{{ ass_time.started_date if ass_time else '-' }}</td>
 					<td>{{ ass_time.ended_date if ass_time else '-' }}</td>
-					<td>
+					<td class="single line one wide right aligned">
             {% if class_.owner == current_user %}
               <a class="ui icon button circular primary" href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i class="clock icon"></i></a>
             {% endif %}

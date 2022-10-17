@@ -7,16 +7,9 @@
       .dropdown()
 ;
     datetime_formatter = {
-      datetime: function (datetime, settings) {
-        if (!datetime) return '';
-        var day = datetime.getDate();
-        var month = datetime.getMonth() + 1;
-        var year = datetime.getFullYear();
-        var hour = datetime.getHours();
-        var minute = datetime.getMinutes();
-        {# return year + '-' + ("0" + month).slice(-2) + '-' + ("0" + day).slice(-2) + " " + ("0" + hour).slice(-2) + ":" + ("0" + minute).slice(-2); #}
-        return year + '-' + ("0" + month).slice(-2) + '-' + ("0" + day).slice(-2);
-      }};
+      datetime:"YYYY-M-DD HH:mm",
+      date:"YYYY-MM-DD",
+    };
 
     $('#started_date_calendar').calendar({
       type: 'date',

@@ -62,14 +62,13 @@ def create():
 
 @module.route("/<class_id>/edit", methods=["GET", "POST"])
 # @acl.allows.requires(acl.is_class_owner)
-@login_required
+# @login_required
+@acl.roles_required("admin", "lecturer")
 def edit(class_id):
     user = current_user._get_current_object()
     courses = models.Course.objects(
         me.Q(active=True) & (me.Q(contributors=user) | me.Q(owner=user))
     )
-
-    print("courses", courses)
 
     class_ = models.Class.objects.get(id=class_id)
     form = forms.classes.ClassForm(obj=class_)
@@ -77,21 +76,22 @@ def edit(class_id):
     #         obj=class_.limited_enrollment)
 
     # form.limited_enrollment = le_form
-    course_choices = [(str(c.id), c.name) for c in courses]
-    form.course.choices = course_choices
-    if request.method == "GET":
-        form.course.data = str(class_.course.id)
+    # course_choices = [(str(c.id), c.name) for c in courses]
+    # form.course.choices = course_choices
     method_choices = [("email", "Email"), ("student_id", "Student ID")]
     form.limited_enrollment.method.choices = method_choices
 
     if not form.validate_on_submit():
+        if request.method == "GET":
+            form.course.data = class_.course
+
         return render_template("/administration/classes/create-edit.html", form=form)
     data = form.data.copy()
     data.pop("csrf_token")
 
     form.populate_obj(class_)
     class_.save()
-    return redirect(url_for("administration.classes.index"))
+    return redirect(url_for("administration.classes.view", class_id=class_.id))
 
 
 @module.route("/<class_id>/delete")
