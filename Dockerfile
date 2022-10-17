@@ -18,7 +18,7 @@ WORKDIR /app
 COPY poetry.lock pyproject.toml /app/
 RUN $PYTHON -m poetry config virtualenvs.create false && $PYTHON -m poetry install --no-interaction --only main
 
-COPY sadhu/web/static/package.json sadhu/web/static/package-lock.json bussaya/web/static/
+COPY sadhu/web/static/package.json sadhu/web/static/package-lock.json sadhu/web/static/
 RUN npm install --prefix sadhu/web/static
 
 COPY . /app
