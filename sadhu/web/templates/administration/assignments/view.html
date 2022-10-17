@@ -53,7 +53,8 @@
 				<tr>
 					<th>Name</th>
 					<th>Description</th>
-					<th>Score</th>
+          <th>Score</th>
+          <th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -67,7 +68,12 @@
 					</td>
 					<td>
 						{{ challenge.score }}
-					</td>
+          </td>
+          <td>
+            <a href="{{ url_for('administration.assignments.delete_challenge', assignment_id=assignment.id, challenge_id=challenge.id) }}" class="ui negative icon circular button">
+              <i class="trash icon"></i>
+            </a>
+          </td>
 				</tr>
 {% endfor %}
 			</tbody>

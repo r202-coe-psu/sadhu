@@ -90,8 +90,7 @@ def delete(assignment_id):
 
 
 @module.route("/<assignment_id>/add-challenges", methods=["GET", "POST"])
-# @acl.allows.requires(acl.is_lecturer)
-@login_required
+@acl.roles_required("admin")
 def add_challenge(assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
 
@@ -116,6 +115,21 @@ def add_challenge(assignment_id):
         assignment.challenges.append(challenge)
 
     assignment.save()
+    return redirect(
+        url_for("administration.assignments.view", assignment_id=assignment.id)
+    )
+
+
+@module.route("/<assignment_id>/challenges/<challenge_id>/delete")
+@acl.roles_required("admin")
+def delete_challenge(assignment_id, challenge_id):
+    assignment = models.Assignment.objects.get(id=assignment_id)
+    challenge = models.Challenge.objects.get(id=challenge_id)
+
+    if challenge in assignment.challenges:
+        assignment.challenges.remove(challenge)
+        assignment.save()
+
     return redirect(
         url_for("administration.assignments.view", assignment_id=assignment.id)
     )
