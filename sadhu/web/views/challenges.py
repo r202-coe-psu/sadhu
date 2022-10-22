@@ -26,7 +26,7 @@ def index():
         return "Not Allow"
 
     challenges = []
-    for assignment in class_.assignment_schedule:
+    for assignment_schedule in class_.assignment_schedule:
         if assignment_schedule.is_pass_started_time():
             challenges.extend(assignment_schedule.assignment.challenges)
 
