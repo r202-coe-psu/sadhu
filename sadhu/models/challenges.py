@@ -111,19 +111,15 @@ class Challenge(me.Document):
         return Solution.objects(challenge=self, enrolled_class=class_, owner=user)
 
     def get_best_solution(self, class_, user):
-        solutions = self.get_solutions(class_, user)
-        if not solutions:
+        solution = (
+            Solution.objects(challenge=self, enrolled_class=class_, owner=user)
+            .order_by("-score")
+            .first()
+        )
+        if not solution:
             return None
 
-        best_solution = None
-        if solutions.count() > 0:
-            best_solution = solutions[0]
-
-        for solution in solutions:
-            if solution.score > best_solution.score:
-                best_solution = solution
-
-        return best_solution
+        return solution
 
     def get_solution_score(self, class_, user):
         solution = self.get_best_solution(class_, user)

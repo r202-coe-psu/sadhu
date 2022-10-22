@@ -37,27 +37,17 @@ class Assignment(me.Document):
     def get_score(self, class_, user):
         from sadhu import models
 
-        solutions = models.Solution.objects(
-            owner=user, enrolled_class=class_, challenge__in=self.challenges
-        )
-
-        best_solutions = dict()
-        for s in solutions:
-
-            if s.challenge.id in best_solutions:
-                if best_solutions[s.challenge.id]["score"] < s.score:
-                    best_solutions[s.challenge.id]["score"] = s.score
-            else:
-                best_solutions[s.challenge.id] = dict(
-                    challenge=s.challenge, score=s.score
-                )
-
-        total_assignment_score = sum([c.score for c in self.challenges])
-        total_solution_score = sum([d["score"] for d in best_solutions.values()])
+        user_score = 0
+        challenge_score = 0
+        for challenge in self.challenges:
+            solution = challenge.get_best_solution(class_, user)
+            challenge_score += challenge.score
+            if solution:
+                user_score += solution.score
 
         score = 0
-        if total_assignment_score != 0:
-            score = total_solution_score / total_assignment_score * self.score
+        if challenge_score != 0:
+            score = user_score / challenge_score * self.score
 
         return score
 

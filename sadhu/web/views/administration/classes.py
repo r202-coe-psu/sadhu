@@ -210,8 +210,7 @@ def show_user_assignment(class_id, user_id, assignment_id):
 
 
 @module.route("/<class_id>/assignments/<assignment_id>/users")
-# @acl.allows.requires(acl.is_class_owner)
-@login_required
+@acl.roles_required("lecturer", "admin")
 def list_assignment_users(class_id, assignment_id):
     class_ = models.Class.objects.get(id=class_id)
     assignment = models.Assignment.objects.get(id=assignment_id)
