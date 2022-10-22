@@ -16,6 +16,7 @@ RUN $PYTHON -m pip install wheel poetry gunicorn
 
 WORKDIR /app
 COPY poetry.lock pyproject.toml /app/
+COPY sadhu/cmd /app/sadhu/cmd
 RUN $PYTHON -m poetry config virtualenvs.create false && $PYTHON -m poetry install --no-interaction --only main
 
 COPY sadhu/web/static/package.json sadhu/web/static/package-lock.json sadhu/web/static/
