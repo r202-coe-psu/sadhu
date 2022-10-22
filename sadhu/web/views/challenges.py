@@ -27,8 +27,8 @@ def index():
 
     challenges = []
     for assignment in class_.assignment_schedule:
-        if assignment.is_pass_started_time():
-            challenges.extend(assignment.challenges)
+        if assignment_schedule.is_pass_started_time():
+            challenges.extend(assignment_schedule.assignment.challenges)
 
     return render_template(
         "/challenges/index.html", challenges=challenges, class_=class_
