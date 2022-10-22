@@ -26,8 +26,10 @@ def index():
         return "Not Allow"
 
     challenges = []
-    for assignment in class_.course.assignments:
-        challenges.extend(assignment.challenges)
+    for assignment in class_.assignment_schedule:
+        if assignment.is_pass_started_time():
+            challenges.extend(assignment.challenges)
+
     return render_template(
         "/challenges/index.html", challenges=challenges, class_=class_
     )
