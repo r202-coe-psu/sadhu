@@ -112,32 +112,19 @@ class ScoreBoard:
             obj.set({"left": self.width + 50})
 
         xrand = random.randrange(0, 200)
-
-        obj.animate(
-            "left",
-            f"-={xrand}",
-            {
-                # 'onChange': self.canvas.renderAll.bind(self.canvas),
-                "duration": animate_time,
-                "easing": fabric.util.ease.easeOutBounce,
-            },
-        )
-
         yrand = random.randrange(min_level_top, max_level_top)
+        self.canvas.bringToFront(obj)
         obj.animate(
-            "top",
-            yrand,
+            {"top": yrand, "left": f"-={xrand}"},
             {
                 "onChange": self.canvas.renderAll.bind(self.canvas),
                 "duration": animate_time,
-                "easing": fabric.util.ease.easeOutBounce,
+                # "easing": fabric.util.ease.easeOutBounce,
             },
         )
 
         # z = random.randrange(0, 10)
         # obj.moveTo(z)
-
-        self.canvas.bringToFront(obj)
 
     def update(self, key, data):
         obj = self.widgets[key]
@@ -166,7 +153,7 @@ class ScoreBoard:
 
     def schedule_animate(self):
         for k, obj in self.widgets.items():
-            is_animate = random.choice([True, False, False])
+            is_animate = random.choice([True, False, False, False])
             if is_animate:
                 self.animate(obj, self.data[k])
 

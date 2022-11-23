@@ -12,6 +12,5 @@
     "fomantic-ui-css": "^2.8.6",
     "jquery": "^3.5.1",
     "mathjax": "2.7.5"
-  },
-  "devDependencies": {}
+  }
 }

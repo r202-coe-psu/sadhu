@@ -23,7 +23,7 @@ def when_file_changed(filename, path):
     subprocess.run(['python',
                     '-m',
                     'brython',
-                    '--make_package',
+                    'make_package',
                     packagename],
                    cwd=pathlib.Path(path).resolve())
 
