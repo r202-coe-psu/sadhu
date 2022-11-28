@@ -99,10 +99,8 @@
 					<td>{{ ass_time.started_date if ass_time else '-' }}</td>
 					<td>{{ ass_time.ended_date if ass_time else '-' }}</td>
 					<td class="single line one wide right aligned">
-            {% if class_.owner == current_user %}
-              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i class="clock icon"></i></a>
-            {% endif %}
             {% if class_.owner == current_user or current_user in class_.contributors or class_.is_teaching_assistant(current_user) %}
+              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i class="clock icon"></i></a>
               <a class="ui icon button circular primary" href="{{ url_for('scoreboards.show_assignment_scores', class_id=class_.id, assignment_id=assignment.id) }}"><i class="award icon"></i></a>
               <a class="ui icon button circular primary" href="{{ url_for('administration.classes.list_assignment_users', class_id=class_.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
             {% endif %}
