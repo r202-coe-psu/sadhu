@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, request
 
 from flask_login import current_user, login_required
 
@@ -37,14 +37,13 @@ def create_or_edit(assignment_id):
     if assignment_id:
         assignment = models.Assignment.objects.get(id=assignment_id)
 
-    if assignment:
+    if assignment and request.method == "GET":
         form = forms.assignments.AssignmentForm(obj=assignment)
         form.course.data = str(assignment.course.id)
 
     form.course.choices = [(str(course.id), course.name) for course in courses]
 
     if not form.validate_on_submit():
-        print(form.errors)
         return render_template(
             "/administration/assignments/create-edit.html", form=form
         )
@@ -59,8 +58,9 @@ def create_or_edit(assignment_id):
         assignment = models.Assignment()
         assignment.owner = current_user._get_current_object()
 
+    # remove
     if assignment.course and assignment.course != course:
-        assignment.course.assignments.pop(assignment)
+        assignment.course.assignments.remove(assignment)
 
     form.populate_obj(assignment)
     assignment.course = course

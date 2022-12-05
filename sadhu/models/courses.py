@@ -1,6 +1,7 @@
 import mongoengine as me
 import datetime
 
+from . import assignments
 
 LANGUAGE_CHOICES = [
     ("Python", "Python"),
@@ -32,3 +33,6 @@ class Course(me.Document):
     active = me.BooleanField(default=True, required=True)
 
     meta = {"collection": "courses"}
+
+    def get_assignments(self):
+        return assignments.Assignment.objects(course=self)
