@@ -82,7 +82,6 @@ def get_user_info(remote, token):
     if remote.name == "google":
         # resp = remote.get("userinfo")
         # return resp.json()
-        print(token)
         return token["userinfo"]
     elif remote.name == "facebook":
         USERINFO_FIELDS = [
