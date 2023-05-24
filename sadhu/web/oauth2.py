@@ -155,11 +155,11 @@ def handle_authorized_oauth2(remote, token):
     if next_uri:
         session.pop("next")
         return redirect(next_uri)
-    return redirect(url_for("site.index"))
+
+    return redirect(url_for("dashboard.index"))
 
 
 def handle_authorize(remote, token, user_info):
-
     if not user_info:
         return redirect(url_for("accounts.login"))
 
@@ -205,5 +205,4 @@ def init_oauth(app):
     oauth2_client.register("engpsu")
     oauth2_client.register(
         "google",
-        server_metadata_url=app.config.get("GOOGLE_METADATA_URL"),
     )

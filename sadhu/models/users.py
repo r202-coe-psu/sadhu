@@ -21,6 +21,8 @@ class User(me.Document, UserMixin):
         required=True, default=datetime.datetime.now, auto_now=True
     )
 
+    picture_url = me.StringField()
+
     resources = me.DictField()
     metadata = me.DictField()
 

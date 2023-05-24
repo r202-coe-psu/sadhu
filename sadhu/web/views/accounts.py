@@ -170,7 +170,6 @@ def authorized_oauth(name):
     client = oauth2.oauth2_client
     remote = None
     try:
-
         if name == "google":
             remote = client.google
         elif name == "facebook":
