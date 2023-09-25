@@ -86,6 +86,11 @@ def authorized_engpsu():
         | me.Q(email=userinfo.get("email", ""))
     ).first()
 
+    if user.username != userinfo["username"]:
+        user.username = userinfo["username"]
+        if userinfo["username"].isdigit() and "student" not in user.roles:
+            user.roles.append("student")
+
     if not user:
         user = models.User(
             username=userinfo.get("username"),
