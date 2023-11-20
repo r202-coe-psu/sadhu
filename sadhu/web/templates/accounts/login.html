@@ -3,7 +3,7 @@
 {% block title %}Log in{% endblock %}
 
 {% block content %}
-<div class="ui middle aligned center aligned grid" style="height: 500px">
+<div class="ui middle aligned center aligned grid" style="min-height: 60vh">
   <div class="column">
     <h2 class="ui image header" style="font-size: 3em;">
       <i class="ui icon praying hands big" ></i> <br/>
@@ -13,29 +13,49 @@
       </div>
     </h2>
     <div>
-      <div class="ui large vertical buttons" >
-        <div class="row" style="padding-top: 10px;">
-          <div class="column header" style="text-align: left;">
-            <h3>For PSU Engineering Faculty Member</h3>
+      <div class="ui large vertical buttons">
+
+  {% if 'psu' in oauth_clients %}
+          <div class="row" style="padding: 10px;">
+            <div class="column header" style="text-align: left;">
+              <h3>{{ "For PSU" }}</h3>
+            </div>
           </div>
-        </div>
-        <div class="row" style="padding-top: 5px;">
-          <a class="ui labeled icon button primary huge" href="{{ url_for('accounts.login_engpsu') }}">
-            <i class="user icon"></i>
-            PSU Passport by Eng
-          </a>
-        </div>
-        <div class="row" style="padding-top: 20px;">
-          <div class="column header" style="text-align: left;">
-            <h3>Other</h3>
+          <div class="row" style="padding-top: 5px;">
+            <a class="ui labeled icon button primary huge" href="{{ url_for('accounts.login_oauth', name='psu') }}">
+              <i class="user icon"></i>
+              {{ "PSU Passport" }}
+            </a>
           </div>
-        </div>
-        <div class="row" style="padding-top: 5px;">
-          <a class="ui labeled icon red button huge" href="{{ url_for('accounts.login_oauth', name='google') }}">
-            <i class="google icon"></i>
-            Google
-          </a>
-        </div>
+  {% endif %}
+  {% if 'engpsu' in oauth_clients %}
+          <div class="row" style="padding: 10px;">
+            <div class="column header" style="text-align: left;">
+              <h3>{{ "For PSU Engineering Faculty Member" }}</h3>
+            </div>
+          </div>
+          <div class="row" style="padding-top: 5px;">
+            <a class="ui labeled icon button primary huge" href="{{ url_for('accounts.login_oauth', name='engpsu') }}">
+              <i class="user icon"></i>
+              {{ "PSU Passport by Eng" }}
+            </a>
+          </div>
+  {% endif %}
+  {% if 'google' in oauth_clients %}
+          <div class="row" style="padding: 10px;">
+            <div class="column header" style="text-align: left;">
+              <h3>{{ "For Participant" }}</h3>
+            </div>
+          </div>
+          <div class="row" style="padding-top: 5px;">
+            <a class="ui  labeled icon red button huge" href="{{ url_for('accounts.login_oauth', name='google') }}">
+              <i class="google icon"></i>
+              {{ "Google" }}
+            </a>
+          </div>
+  {% endif %}
+
+
       </div>
     </div>
   </div>

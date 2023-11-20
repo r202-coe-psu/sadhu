@@ -25,16 +25,15 @@ module = Blueprint("accounts", __name__)
 def get_user_and_remember():
     client = oauth2.oauth2_client
     result = client.principal.get("me")
+    # print('got: ', result.json())
     data = result.json()
 
-    user = models.User.objects(
-        me.Q(username=data.get("username", "")) | me.Q(email=data.get("email", ""))
-    ).first()
+    user = models.User.objects(username=data.get("username", "")).first()
     if not user:
         user = models.User(
             id=data.get("id"),
-            first_name=data.get("first_name").title(),
-            last_name=data.get("last_name").title(),
+            first_name=data.get("first_name"),
+            last_name=data.get("last_name"),
             email=data.get("email"),
             username=data.get("username"),
             status="active",
@@ -58,108 +57,16 @@ def login():
     if "next" in request.args:
         session["next"] = request.args.get("next", None)
 
-    return render_template("/accounts/login.html")
+    oauth_clients = current_app.extensions["authlib.integrations.flask_client"]._clients
 
-
-@module.route("/login-engpsu")
-def login_engpsu():
-    client = oauth2.oauth2_client
-    redirect_uri = url_for("accounts.authorized_engpsu", _external=True)
-    response = client.engpsu.authorize_redirect(redirect_uri)
-    return response
-
-
-@module.route("/authorized-engpsu")
-def authorized_engpsu():
-    client = oauth2.oauth2_client
-    try:
-        token = client.engpsu.authorize_access_token()
-    except Exception as e:
-        print(e)
-        return redirect(url_for("accounts.login"))
-
-    userinfo_response = client.engpsu.get("userinfo")
-    userinfo = userinfo_response.json()
-
-    user = models.User.objects(
-        me.Q(username=userinfo.get("username", ""))
-        | me.Q(email=userinfo.get("email", ""))
-    ).first()
-
-    if not user:
-        user = models.User(
-            username=userinfo.get("username"),
-            email=userinfo.get("email"),
-            first_name=userinfo.get("first_name").title(),
-            last_name=userinfo.get("last_name").title(),
-            status="active",
-        )
-        user.resources[client.engpsu.name] = userinfo
-        # if 'staff_id' in userinfo.keys():
-        #     user.roles.append('staff')
-        # elif 'student_id' in userinfo.keys():
-        #     user.roles.append('student')
-        if userinfo["username"].isdigit():
-            user.roles.append("student")
-        elif (
-            "COE_LECTURERS" in current_app.config
-            and userinfo["username"] in current_app.config["COE_LECTURERS"]
-        ):
-            user.roles.append("lecturer")
-            user.roles.append("CoE-lecturer")
-        elif (
-            "COE_STAFFS" in current_app.config
-            and userinfo["username"] in current_app.config["COE_STAFFS"]
-        ):
-            user.roles.append("staff")
-            user.roles.append("CoE-staff")
-
-        else:
-            user.roles.append("staff")
-
-        # if userinfo['username'].isdigit():
-        #     project = models.Project.objects(
-        #             student_ids=userinfo['username']).first()
-
-        #     if project and user not in project.owners:
-        #         project.owners.append(user)
-        #         project.save()
-    else:
-        user.resources[client.engpsu.name] = userinfo
-        user.last_login_date = datetime.datetime.now()
-
-    if user.username != userinfo["username"]:
-        user.username = userinfo["username"]
-        if userinfo["username"].isdigit() and "student" not in user.roles:
-            user.roles.append("student")
-
-    user.save()
-
-    login_user(user)
-
-    oauth2token = models.OAuth2Token(
-        name=client.engpsu.name,
-        user=user,
-        access_token=token.get("access_token"),
-        token_type=token.get("token_type"),
-        refresh_token=token.get("refresh_token", None),
-        expires=datetime.datetime.utcfromtimestamp(token.get("expires_in")),
-    )
-    oauth2token.save()
-
-    next_uri = session.get("next", None)
-    if next_uri:
-        session.pop("next")
-        return redirect(next_uri)
-
-    return redirect(url_for("dashboard.index"))
+    return render_template("/accounts/login.html", oauth_clients=oauth_clients)
 
 
 @module.route("/login/<name>")
 def login_oauth(name):
     client = oauth2.oauth2_client
-    scheme = request.environ.get("HTTP_X_FORWARDED_PROTO", "http")
 
+    scheme = request.environ.get("HTTP_X_FORWARDED_PROTO", "http")
     redirect_uri = url_for(
         "accounts.authorized_oauth", name=name, _external=True, _scheme=scheme
     )
@@ -171,6 +78,10 @@ def login_oauth(name):
     elif name == "line":
         response = client.line.authorize_redirect(redirect_uri)
 
+    elif name == "psu":
+        response = client.psu.authorize_redirect(redirect_uri)
+    elif name == "engpsu":
+        response = client.engpsu.authorize_redirect(redirect_uri)
     return response
 
 
@@ -185,6 +96,10 @@ def authorized_oauth(name):
             remote = client.facebook
         elif name == "line":
             remote = client.line
+        elif name == "psu":
+            remote = client.psu
+        elif name == "engpsu":
+            remote = client.engpsu
 
         token = remote.authorize_access_token()
 
@@ -192,13 +107,36 @@ def authorized_oauth(name):
         print("autorize access error =>", e)
         return redirect(url_for("accounts.login"))
 
+    session["oauth_provider"] = name
     return oauth2.handle_authorized_oauth2(remote, token)
 
 
 @module.route("/logout")
 @login_required
 def logout():
+    name = session.get("oauth_provider")
     logout_user()
+    session.clear()
+
+    client = oauth2.oauth2_client
+    remote = None
+    logout_url = None
+    if name == "google":
+        remote = client.google
+        logout_url = f"{ remote.server_metadata.get('end_session_endpoint') }?redirect={ request.scheme }://{ request.host }"
+    elif name == "facebook":
+        remote = client.facebook
+    elif name == "line":
+        remote = client.line
+    elif name == "psu":
+        remote = client.psu
+        logout_url = f"{ remote.server_metadata.get('end_session_endpoint') }"
+    elif name == "engpsu":
+        remote = client.engpsu
+
+    if logout_url:
+        return redirect(logout_url)
+
     return redirect(url_for("site.index"))
 
 
