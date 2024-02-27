@@ -41,6 +41,7 @@
   <div class="ui segment">
     <h3>Solution for {{ solution.challenge.name }}</h3>
     <b>Submitter:</b> {{ solution.owner.first_name }} {{ solution.owner.last_name }}<br/>
+    <b>ID:</b> {{ solution.owner.metadata.get('student_id', solution.owner.username) }}<br/>
     <b>Submitted Date:</b> {{ solution.submitted_date }}<br/>
     <b>Class:</b> <a href="{{ url_for('classes.view', class_id=solution.enrolled_class.id) }}">{{ solution.enrolled_class.name }}</a><br/>
     <b>Assignment:</b> <a href="{{ url_for('assignments.view', assignment_id=solution.assignment.id) }}">{{ solution.assignment.name }}</a><br/>

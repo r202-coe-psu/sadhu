@@ -25,6 +25,7 @@
     <table class="ui celled table">
       <thead>
         <tr>
+          <th>ID</th>
           <th>Student</th>
           <th>Challenge Score</th>
           <th>Score</th>
@@ -35,6 +36,7 @@
         {% for user in users %}
           {%- set ass_score = assignment.get_score(class_, user) -%}
         <tr class="{{ ass_style.get_assignment_class(ass_score, assignment.score) }}">
+          <td>{{ user.metadata.get('student_id',  user.username) }} </td>
           <td>{{ user.first_name }} {{ user.last_name }}</td>
           <td>
             {% for challenge in assignment.challenges %}
