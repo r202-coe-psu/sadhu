@@ -233,7 +233,8 @@ def handle_authorized_oauth2(remote, token):
     user_info = get_user_info(remote, token)
 
     user = None
-    if remote.name == ["psu", "engpsu"]:
+
+    if remote.name in ["psu", "engpsu"]:
         user = models.User.objects(username=user_info.get("username")).first()
     elif "email" in user_info and user_info["email"]:
         user = models.User.objects(me.Q(email=user_info.get("email"))).first()
@@ -242,15 +243,15 @@ def handle_authorized_oauth2(remote, token):
 
     if not user or not user.resources:
         if remote.name == "google":
-            user = create_user_google(user_info)
+            user = create_user_google(user_info, user)
         elif remote.name == "facebook":
-            user = create_user_facebook(user_info)
+            user = create_user_facebook(user_info, user)
         elif remote.name == "line":
-            user = create_user_line(user_info)
+            user = create_user_line(user_info, user)
         elif remote.name == "engpsu":
             user = create_user_engpsu(user_info, user)
         elif remote.name == "psu":
-            user = create_user_psu(user_info)
+            user = create_user_psu(user_info, user)
 
     login_user(user)
     user.resources[remote.name] = user_info
