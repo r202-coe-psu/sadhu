@@ -59,9 +59,14 @@
             {{ course.description }}
           </td>
           <td data-label="Operation">
-            {% if course.owner == current_user %}
-              <a href="{{ url_for('administration.courses.create_or_edit', course_id=course.id) }}"><i class="edit icon"></i></a>
-            {% endif %}
+            <a class="ui button circular icon primary"
+            href="{{ url_for('administration.courses.view', course_id=course.id) }}">
+            <i class="eye icon"></i>
+            </a>
+            <a class="ui circular button primary icon"
+            href="{{ url_for('administration.courses.create_or_edit', course_id=course.id) }}">
+            <i class="edit icon"></i>
+            </a>
           </td>
 				</tr>
 {% endfor %}
