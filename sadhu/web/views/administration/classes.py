@@ -28,10 +28,13 @@ module = Blueprint(
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
 def index():
-    classes = models.Class.objects(owner=current_user._get_current_object()).order_by(
+    owner_classes = models.Class.objects(owner=current_user._get_current_object()).order_by(
         "-id"
     )
-    return render_template("/administration/classes/index.html", classes=classes)
+    classes = models.Class.objects(owner__ne=current_user._get_current_object()).order_by(
+        "-id"
+    )
+    return render_template("/administration/classes/index.html", classes=classes,owner_classes=owner_classes)
 
 
 @module.route("/create", methods=["GET", "POST"])
