@@ -21,8 +21,16 @@ def index():
     assignments = models.Assignment.objects(owner=current_user._get_current_object())
     assignments = list(assignments)
     assignments.sort(key=lambda a: a.course.name)
+
+    other_assignments = models.Assignment.objects(
+        owner__ne=current_user._get_current_object()
+    )
+    other_assignments = list(other_assignments)
+    other_assignments.sort(key=lambda a: a.course.name)
     return render_template(
-        "/administration/assignments/index.html", assignments=assignments
+        "/administration/assignments/index.html",
+        assignments=assignments,
+        other_assignments=other_assignments,
     )
 
 
