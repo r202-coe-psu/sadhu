@@ -37,6 +37,7 @@
       {{ renderer.render_field(form.score) }}
       {{ renderer.render_select(form.course) }}
       {{ renderer.render_field(form.tags) }}
+      {{ renderer.render_field(form.level) }}
       <button name="create" type="submit" class="ui button primary">{{ 'Create' if 'edit' not in request.path else 'Create' }}</button>
     </form>
   </div>

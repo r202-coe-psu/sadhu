@@ -8,7 +8,7 @@ import datetime
 from .fields import TagListField
 
 from flask_wtf import FlaskForm
-
+from sadhu import models
 
 class AssignmentTimeForm(FlaskForm):
     started_date = fields.DateTimeField(
@@ -51,3 +51,4 @@ class AssignmentForm(FlaskForm):
     tags = TagListField(
         "Tags", validators=[validators.InputRequired(), validators.Length(min=3)]
     )
+    level = fields.SelectField("Level",choices=models.assignments.Assignment_level)

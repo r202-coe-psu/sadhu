@@ -3,6 +3,11 @@ import datetime
 
 from .classes import Class, Enrollment
 
+Assignment_level = [
+    ("Easy", "ง่าย"),
+    ("Intermediate", "ปานกลาง"),
+    ("Hard", "ยาก"),
+]
 
 class Assignment(me.Document):
     name = me.StringField(required=True)
@@ -10,6 +15,7 @@ class Assignment(me.Document):
     score = me.IntField(required=True, default=0)
     tags = me.ListField(me.StringField(required=True))
     course = me.ReferenceField("Course", dbref=True, required=True)
+    level = me.StringField(choice=Assignment_level)
 
     created_date = me.DateTimeField(required=True, default=datetime.datetime.now)
     updated_date = me.DateTimeField(
