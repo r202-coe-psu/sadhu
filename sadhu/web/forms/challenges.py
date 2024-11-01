@@ -6,6 +6,7 @@ from wtforms import widgets
 from .fields import TagListField
 
 from flask_wtf import FlaskForm, file
+from sadhu import models
 
 
 class TestCaseForm(FlaskForm):
@@ -57,3 +58,4 @@ class ChallengeForm(FlaskForm):
     tags = TagListField(
         "Tags", validators=[validators.InputRequired(), validators.Length(min=3)]
     )
+    level = fields.SelectField("level", choices=models.challenges.CHALLENGE_LEVEL)
