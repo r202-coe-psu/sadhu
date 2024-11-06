@@ -64,10 +64,15 @@
 						{{ assignment.score }}
           </td>
           <td class="ui single line">
+            <a class="ui button circular icon primary" href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}">
+              <i class="eye icon"></i>
+            </a>
             <a class="ui circular button icon primary" href="{{ url_for("administration.assignments.create_or_edit", assignment_id=assignment.id) }}">
               <i class="ui edit icon"></i>
             </a>
-			<a class="ui circular button primary icon" href="{{ url_for('administration.assignments.delete', assignment_id=assignment.id) }}"><i class="trash icon"></i></a>
+			      <a class="ui circular button primary icon" href="{{ url_for('administration.assignments.delete', assignment_id=assignment.id) }}">
+              <i class="trash icon"></i>
+            </a>
           </td>
 				</tr>
 {% endfor %}
