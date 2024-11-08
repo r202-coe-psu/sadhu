@@ -133,8 +133,14 @@ def add_challenge(assignment_id):
 @acl.roles_required("admin")
 def random_challenges(assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
-    challenges = models.Challenge.objects()
     random_count = int(request.form.get("random_count"))
+    selected_level = request.form.get("randomLevel")
+
+    if selected_level == "None":
+        challenges = models.Challenge.objects()
+    else:
+        challenges = models.Challenge.objects(level=selected_level)
+
     for i in range(random_count):
         random_challenge = random.choice(challenges)
         form = forms.assignments.ChallengeAddingForm()

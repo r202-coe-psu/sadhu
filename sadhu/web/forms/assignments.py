@@ -10,6 +10,7 @@ from .fields import TagListField
 from flask_wtf import FlaskForm
 from sadhu import models
 
+
 class AssignmentTimeForm(FlaskForm):
     started_date = fields.DateTimeField(
         "Started Date",
@@ -28,6 +29,9 @@ class AssignmentTimeForm(FlaskForm):
 
 class ChallengeAddingForm(FlaskForm):
     challenges = fields.SelectMultipleField("Challenges")
+    randomLevel = fields.SelectField(
+        "Random Level", choices=models.challenges.CHALLENGE_LEVEL
+    )
 
 
 class AssignmentForm(FlaskForm):
@@ -51,4 +55,4 @@ class AssignmentForm(FlaskForm):
     tags = TagListField(
         "Tags", validators=[validators.InputRequired(), validators.Length(min=3)]
     )
-    level = fields.SelectField("Level",choices=models.assignments.Assignment_level)
+    level = fields.SelectField("Level", choices=models.assignments.Assignment_level)

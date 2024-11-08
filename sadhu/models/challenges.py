@@ -3,6 +3,7 @@ import datetime
 
 SOLUTION_TYPE = [("user", "User"), ("challenge", "Challenge")]
 CHALLENGE_LEVEL = [
+    ("None"),
     ("Easy"),
     ("Intermediate"),
     ("Advance"),

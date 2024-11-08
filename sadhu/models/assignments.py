@@ -9,6 +9,7 @@ Assignment_level = [
     ("Advance"),
 ]
 
+
 class Assignment(me.Document):
     name = me.StringField(required=True)
     description = me.StringField(required=True)
