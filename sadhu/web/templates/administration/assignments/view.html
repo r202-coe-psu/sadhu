@@ -47,6 +47,10 @@
         <button type="submit" class="ui button primary">add</button>
     </form>
 	<form method="POST" class="ui form" >
+		<div class="field">
+			<label for="random_count"> </label>
+			<input type="number" id="random_count" name="random_count" min="1" placeholder="Enter number random">
+		</div>
         {{ form.csrf_token }}
         <button action="{{ url_for('administration.assignments.random_challenges', assignment_id=assignment.id) }}" type="submit" class="ui button primary">random</button>
     </form>

@@ -127,23 +127,30 @@ def add_challenge(assignment_id):
     return redirect(
         url_for("administration.assignments.view", assignment_id=assignment.id)
     )
-@module.route("/<assignment_id>" ,methods=["GET", "POST"])
-@login_required
+
+
+@module.route("/<assignment_id>/", methods=["GET", "POST"])
+@acl.roles_required("admin")
 def random_challenges(assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
     challenges = models.Challenge.objects()
-    random_challenge = random.choice(challenges)
-    form = forms.assignments.ChallengeAddingForm()
-    if not form.validate_on_submit():
-        return render_template(
-            "/administration/assignments/view.html", assignment=assignment, form=form
-        )
-    
-    assignment.challenges.append(random_challenge)
-    assignment.save()
+    random_count = int(request.form.get("random_count"))
+    for i in range(random_count):
+        random_challenge = random.choice(challenges)
+        form = forms.assignments.ChallengeAddingForm()
+        if not form.validate_on_submit():
+            return render_template(
+                "/administration/assignments/view.html",
+                assignment=assignment,
+                form=form,
+            )
+
+        assignment.challenges.append(random_challenge)
+        assignment.save()
     return redirect(
         url_for("administration.assignments.view", assignment_id=assignment.id)
     )
+
 
 @module.route("/<assignment_id>/challenges/<challenge_id>/delete")
 @acl.roles_required("admin")
