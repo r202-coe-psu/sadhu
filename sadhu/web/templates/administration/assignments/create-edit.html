@@ -38,6 +38,8 @@
       {{ renderer.render_select(form.course) }}
       {{ renderer.render_field(form.tags) }}
       {{ renderer.render_field(form.level) }}
+      {{ renderer.render_field(form.random_or_not) }}
+      {{ renderer.render_field(form.random_count) }}
       <button name="create" type="submit" class="ui button primary">{{ 'Create' if 'edit' not in request.path else 'Create' }}</button>
     </form>
   </div>

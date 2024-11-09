@@ -8,6 +8,7 @@ Assignment_level = [
     ("Intermediate"),
     ("Advance"),
 ]
+Random_or_not = [("Random Choice"), ("Not Random Choice")]
 
 
 class Assignment(me.Document):
@@ -17,6 +18,8 @@ class Assignment(me.Document):
     tags = me.ListField(me.StringField(required=True))
     course = me.ReferenceField("Course", dbref=True, required=True)
     level = me.StringField(choice=Assignment_level)
+    random_or_not = me.StringField(choices=Random_or_not)
+    random_count = me.IntField()
 
     created_date = me.DateTimeField(required=True, default=datetime.datetime.now)
     updated_date = me.DateTimeField(

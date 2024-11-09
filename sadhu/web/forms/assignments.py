@@ -32,14 +32,14 @@ class ChallengeAddingForm(FlaskForm):
     # randomLevel = fields.SelectField(
     #     "Random Level", choices=models.challenges.CHALLENGE_LEVEL
     # )
-    random_count = fields.IntegerField(
-        "number of challanges",
-        validators=[validators.InputRequired(), validators.NumberRange(min=0)],
-        default=0,
-    )
-    random_or_not = fields.SelectField(
-        "Random or Not", choices=[("Random Choice"), ("Not Random Choice")]
-    )
+    # random_count = fields.IntegerField(
+    #     "number of challanges",
+    #     validators=[validators.InputRequired(), validators.NumberRange(min=0)],
+    #     default=0,
+    # )
+    # random_or_not = fields.SelectField(
+    #     "Random or Not", choices=[("Random Choice"), ("Not Random Choice")]
+    # )
 
 
 class AssignmentForm(FlaskForm):
@@ -64,3 +64,11 @@ class AssignmentForm(FlaskForm):
         "Tags", validators=[validators.InputRequired(), validators.Length(min=3)]
     )
     level = fields.SelectField("Level", choices=models.assignments.Assignment_level)
+    random_or_not = fields.SelectField(
+        "Random or Not", choices=models.assignments.Random_or_not
+    )
+    random_count = fields.IntegerField(
+        "number of challanges",
+        validators=[validators.InputRequired(), validators.NumberRange(min=0)],
+        default=0,
+    )

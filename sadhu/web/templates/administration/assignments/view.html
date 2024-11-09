@@ -40,21 +40,17 @@
 		<div>
 			<p>{{ assignment.tags | join(', ') }}</p>
 		</div>
+		<div>
+			Choice: {{assignment.random_or_not}}
+		</div>
+		<div>
+			Number of Random: {{assignment.random_count}}
+		</div>
 
     <form method="POST" class="ui form" action="{{ url_for('administration.assignments.add_challenge', assignment_id=assignment.id) }}">
         {{ form.csrf_token }}
         {{ renderer.render_multiple_select(form.challenges) }}
         <button type="submit" class="ui button primary">add</button>
-    </form>
-	<form method="POST" class="ui form" >
-		{{ form.csrf_token }}
-		<div class="field">
-			<label for="random_count"> </label>
-			{{ renderer.render_select(form.random_count) }}
-			{{ renderer.render_select(form.random_or_not) }}
-		</div>
-
-        <!-- <button action="{{ url_for('administration.assignments.random_challenges', assignment_id=assignment.id) }}" type="submit" class="ui button primary">random</button> -->
     </form>
   </div>
 </div>
