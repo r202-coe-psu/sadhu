@@ -29,8 +29,16 @@ class AssignmentTimeForm(FlaskForm):
 
 class ChallengeAddingForm(FlaskForm):
     challenges = fields.SelectMultipleField("Challenges")
-    randomLevel = fields.SelectField(
-        "Random Level", choices=models.challenges.CHALLENGE_LEVEL
+    # randomLevel = fields.SelectField(
+    #     "Random Level", choices=models.challenges.CHALLENGE_LEVEL
+    # )
+    random_count = fields.IntegerField(
+        "number of challanges",
+        validators=[validators.InputRequired(), validators.NumberRange(min=0)],
+        default=0,
+    )
+    random_or_not = fields.SelectField(
+        "Random or Not", choices=[("Random Choice"), ("Not Random Choice")]
     )
 
 

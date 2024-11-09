@@ -50,11 +50,11 @@
 		{{ form.csrf_token }}
 		<div class="field">
 			<label for="random_count"> </label>
-			{{ renderer.render_select(form.randomLevel) }}
-			<input type="number" id="random_count" name="random_count" min="1" placeholder="Enter number random">
+			{{ renderer.render_select(form.random_count) }}
+			{{ renderer.render_select(form.random_or_not) }}
 		</div>
 
-        <button action="{{ url_for('administration.assignments.random_challenges', assignment_id=assignment.id) }}" type="submit" class="ui button primary">random</button>
+        <!-- <button action="{{ url_for('administration.assignments.random_challenges', assignment_id=assignment.id) }}" type="submit" class="ui button primary">random</button> -->
     </form>
   </div>
 </div>
