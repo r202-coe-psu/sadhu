@@ -114,12 +114,12 @@ class Tester:
                 output_data = (
                     test_result.output.strip().splitlines()
                     if test_result.output
-                    else None
+                    else []
                 )
                 testcase_data = (
                     test_result.expected_result.strip().splitlines()
                     if test_result.expected_result
-                    else None
+                    else []
                 )
 
                 is_validate = True
