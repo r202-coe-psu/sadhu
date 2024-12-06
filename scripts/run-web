@@ -1,3 +1,3 @@
 #!/bin/sh
 
-FLASK_DEBUG=true SADHU_SETTINGS=$(pwd)/sadhu.cfg DEBUG=1  AUTHLIB_INSECURE_TRANSPORT=true sadhu-web -d $@
+SADHU_SETTINGS=$(pwd)/sadhu.cfg DEBUG=1 poetry run sadhu-web -d $@
