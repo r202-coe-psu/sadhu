@@ -1,4 +1,4 @@
 #!/bin/bash
 
-SADHU_SETTINGS=$(pwd)/sadhu-development.cfg sadhu-checker
+SADHU_SETTINGS=$(pwd)/sadhu-development.cfg poetry run sadhu-checker
 

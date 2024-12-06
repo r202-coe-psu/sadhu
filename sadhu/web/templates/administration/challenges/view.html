@@ -89,7 +89,7 @@ Challenge: {{ challenge.name }}
       <div>
         <a class="ui icon primary button" href="{{ url_for('administration.challenges.add_code_for_testcase', challenge_id=challenge.id) }}"><i class="add icon"></i>Add</a> 
         {% if code_for_testcase %}
-            <div class="ui large inverted blue icon label"><i class="code icon"></i> {{ code_for_testcase.code.filename }} </div>
+          <a class="ui blue icon button" target="_blank" href="{{ url_for('administration.challenges.download_code_for_testcase', challenge_id=challenge.id, filename=code_for_testcase.code.filename) }}"><i class="code icon"></i> {{ code_for_testcase.code.filename }} </a>
         <a class="ui icon yellow button" href="{{ url_for('administration.challenges.rerun_code_for_testcase', challenge_id=challenge.id) }}"><i class="redo alternate icon"></i>Rerun</a> 
         {% endif %}
       </div>

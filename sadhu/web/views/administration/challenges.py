@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, send_file
 from flask_login import current_user, login_required
 
 import datetime
@@ -292,6 +292,35 @@ def add_code_for_testcase(challenge_id):
     return redirect(
         url_for("administration.challenges.view", challenge_id=challenge.id)
     )
+
+
+@module.route(
+    "/<challenge_id>/download-code-for-testcase/<filename>", methods=["GET", "POST"]
+)
+# @acl.allows.requires(acl.is_lecturer)
+@login_required
+def download_code_for_testcase(challenge_id, filename):
+    challenge = models.Challenge.objects.get(id=challenge_id)
+    solution = models.Solution.objects(
+        challenge=challenge,
+        type="challenge",
+    ).first()
+
+    if (
+        not challenge
+        or not solution
+        or not solution.code
+        or solution.code.filename != filename
+    ):
+        return abort(403)
+
+    response = send_file(
+        solution.code,
+        download_name=solution.code.filename,
+        mimetype=solution.code.content_type,
+    )
+
+    return response
 
 
 @module.route("/<challenge_id>/rerun-code-for-testcase", methods=["GET", "POST"])
