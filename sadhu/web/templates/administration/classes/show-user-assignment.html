@@ -14,7 +14,7 @@ Assignment: {{ assignment.name }}
   <div class="ui segment">
     <h2>{{ user.first_name }} {{ user.last_name }}</h2>
     <b>Name:</b>{{ user.first_name }} {{ user.last_name }} ({{ user.metadata.get('thai_first_name', '') }} {{ user.metadata.get('thai_last_name', '') }}) <br/>
-    <b>Student ID</b> {{ user.metadata['user_id'] }} <b>Organization</b> {{ user.metadata['organization'] }}<br/>
+    <b>Student ID</b> {{ user.metadata.get('user_id',  user.username) }} <b>Organization</b> {{ user.metadata['organization'] }}<br/>
     <b>Email: </b> {{ user.email }}
   </div>
 </div>

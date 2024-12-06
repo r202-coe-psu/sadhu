@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 
 from sadhu.web import acl, forms
 from sadhu import models
+import random
 
 subviews = []
 
@@ -21,8 +22,16 @@ def index():
     assignments = models.Assignment.objects(owner=current_user._get_current_object())
     assignments = list(assignments)
     assignments.sort(key=lambda a: a.course.name)
+
+    other_assignments = models.Assignment.objects(
+        owner__ne=current_user._get_current_object()
+    )
+    other_assignments = list(other_assignments)
+    other_assignments.sort(key=lambda a: a.course.name)
     return render_template(
-        "/administration/assignments/index.html", assignments=assignments
+        "/administration/assignments/index.html",
+        assignments=assignments,
+        other_assignments=other_assignments,
     )
 
 
@@ -115,6 +124,35 @@ def add_challenge(assignment_id):
         assignment.challenges.append(challenge)
 
     assignment.save()
+    return redirect(
+        url_for("administration.assignments.view", assignment_id=assignment.id)
+    )
+
+
+@module.route("/<assignment_id>/", methods=["GET", "POST"])
+@acl.roles_required("admin")
+def random_challenges(assignment_id):
+    assignment = models.Assignment.objects.get(id=assignment_id)
+    random_count = int(request.form.get("random_count"))
+    selected_level = request.form.get("randomLevel")
+
+    if selected_level == "None":
+        challenges = models.Challenge.objects()
+    else:
+        challenges = models.Challenge.objects(level=selected_level)
+
+    for i in range(random_count):
+        random_challenge = random.choice(challenges)
+        form = forms.assignments.ChallengeAddingForm()
+        if not form.validate_on_submit():
+            return render_template(
+                "/administration/assignments/view.html",
+                assignment=assignment,
+                form=form,
+            )
+
+        assignment.challenges.append(random_challenge)
+        assignment.save()
     return redirect(
         url_for("administration.assignments.view", assignment_id=assignment.id)
     )

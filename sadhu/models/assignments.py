@@ -3,6 +3,13 @@ import datetime
 
 from .classes import Class, Enrollment
 
+Assignment_level = [
+    ("Easy"),
+    ("Intermediate"),
+    ("Advance"),
+]
+Random_or_not = [("Random Choice"), ("Not Random Choice")]
+
 
 class Assignment(me.Document):
     name = me.StringField(required=True)
@@ -10,6 +17,9 @@ class Assignment(me.Document):
     score = me.IntField(required=True, default=0)
     tags = me.ListField(me.StringField(required=True))
     course = me.ReferenceField("Course", dbref=True, required=True)
+    level = me.StringField(choice=Assignment_level)
+    random_or_not = me.StringField(choices=Random_or_not)
+    random_count = me.IntField()
 
     created_date = me.DateTimeField(required=True, default=datetime.datetime.now)
     updated_date = me.DateTimeField(

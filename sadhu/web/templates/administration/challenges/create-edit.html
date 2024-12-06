@@ -32,6 +32,7 @@
       {{ renderer.render_field(form.output_format) }}
       {{ renderer.render_field(form.score) }}
       {{ renderer.render_field(form.tags) }}
+      {{ renderer.render_field(form.level) }}
       <button name="create" type="submit" class="ui primary button">
         {% if 'edit' in request.url %}
           Edit

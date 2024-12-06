@@ -14,8 +14,42 @@ Classes
       <a href="{{ url_for('administration.courses.index') }}" class="item"><i class="book icon"></i>Courses</a>
     </div>
 
+
+    {% if owner_classes %}
+    <div style="margin-top: 1ex;">
+      <h2>Owner</h2>
+      <table class="ui celled table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Operation</th>
+          </tr>
+        </thead>
+        <tbody>
+      {% for class_ in owner_classes %}
+          <tr>
+            <td>
+              <a href="{{ url_for('administration.classes.view', class_id=class_.id) }}">{{ class_.name }}</a>
+            </td>
+            <td>
+              {{ class_.description }}
+            </td>
+            <td class="single line">
+              <a class="ui circular button primary icon" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="edit icon"></i></a>
+              <a class="ui circular button primary icon" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="users icon"></i></a>
+              <a class="ui circular button primary icon" href="{{ url_for('administration.classes.delete', class_id=class_.id) }}"><i class="trash icon"></i></a>
+            </td>
+          </tr>
+      {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+
 {% if classes %}
   <div style="margin-top: 1ex;">
+    <h2>Other Classes</h2>
     <table class="ui celled table">
       <thead>
         <tr>

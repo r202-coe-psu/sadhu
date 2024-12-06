@@ -6,9 +6,9 @@ authors = ["Thanathip Limna <boatkrap@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-Flask = "2.2.5"
+Flask = "^3.0.2"
 Authlib = "^1.0.1"
-Flask-Login = "^0.6.2"
+Flask-Login = "^0.6.3"
 Markdown = "^3.4.1"
 Pygments = "^2.13.0"
 python-markdown-math = "^0.8"

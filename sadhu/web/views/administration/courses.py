@@ -5,6 +5,7 @@ from flask import (
     redirect,
     request,
 )
+import mongoengine as me
 from flask_login import current_user, login_required
 
 from sadhu.web import acl, forms
@@ -22,8 +23,8 @@ module = Blueprint(
 @login_required
 def index():
     user = current_user._get_current_object()
-    owner_courses = models.Course.objects(owner=user)
-    contributed_courses = models.Course.objects(contributors=user)
+    owner_courses = models.Course.objects(owner=user).order_by("-id")
+    contributed_courses = models.Course.objects(owner__ne=user).order_by("-id")
 
     return render_template(
         "/administration/courses/index.html",

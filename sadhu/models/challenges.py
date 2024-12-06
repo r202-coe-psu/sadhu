@@ -2,6 +2,12 @@ import mongoengine as me
 import datetime
 
 SOLUTION_TYPE = [("user", "User"), ("challenge", "Challenge")]
+CHALLENGE_LEVEL = [
+    ("None"),
+    ("Easy"),
+    ("Intermediate"),
+    ("Advance"),
+]
 
 
 class TestResult(me.EmbeddedDocument):
@@ -91,6 +97,7 @@ class Challenge(me.Document):
     input_format = me.StringField()
     output_format = me.StringField()
     constraints = me.StringField(required=True)
+    level = me.StringField(choice=CHALLENGE_LEVEL)
 
     score = me.IntField(required=True, default=0)
     tags = me.ListField(me.StringField(required=True))
