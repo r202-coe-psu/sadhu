@@ -17,7 +17,7 @@ module = Blueprint(
 
 
 @module.route("/")
-@login_required
+@acl.roles_required("teaching_assistant")
 def index():
     classes = models.Class.objects(
         teaching_assistants__user=current_user._get_current_object()
@@ -27,16 +27,14 @@ def index():
 
 
 @module.route("/<class_id>")
-# @acl.allows.requires(acl.is_teaching_assistant)
-@login_required
+@acl.roles_required("teaching_assistant")
 def view(class_id):
     class_ = models.Class.objects.get(id=class_id)
     return render_template("/administration/classes/view.html", class_=class_)
 
 
 @module.route("/<class_id>/list_students")
-# @acl.allows.requires(acl.is_teaching_assistant)
-@login_required
+@acl.roles_required("teaching_assistant")
 def list_students(class_id):
 
     class_ = models.Class.objects.get(
@@ -54,7 +52,7 @@ def list_students(class_id):
 
 
 @module.route("/<class_id>/students/<user_id>")
-# @acl.allows.requires(acl.is_teaching_assistant)
+@acl.roles_required("teaching_assistant")
 @login_required
 def show_user_score(class_id, user_id):
     class_ = models.Class.objects.get(id=class_id)
@@ -70,8 +68,7 @@ def show_user_score(class_id, user_id):
 
 
 @module.route("/<class_id>/students/<user_id>/assignments/<assignment_id>")
-# @acl.allows.requires(acl.is_teaching_assistant)
-@login_required
+@acl.roles_required("teaching_assistant")
 def show_user_assignment(class_id, user_id, assignment_id):
     class_ = models.Class.objects.get(id=class_id)
     user = models.User.objects.get(id=user_id)

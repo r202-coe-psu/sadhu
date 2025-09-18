@@ -25,8 +25,7 @@ module = Blueprint(
 
 
 @module.route("/")
-# @acl.allows.requires(acl.is_lecturer)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def index():
     owner_classes = models.Class.objects(owner=current_user._get_current_object()).order_by(
         "-id"
@@ -38,8 +37,7 @@ def index():
 
 
 @module.route("/create", methods=["GET", "POST"])
-# @acl.allows.requires(acl.is_admin_or_lecturer)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def create():
     user = current_user._get_current_object()
     form = forms.classes.ClassForm()
@@ -64,8 +62,6 @@ def create():
 
 
 @module.route("/<class_id>/edit", methods=["GET", "POST"])
-# @acl.allows.requires(acl.is_class_owner)
-# @login_required
 @acl.roles_required("admin", "lecturer")
 def edit(class_id):
     user = current_user._get_current_object()
@@ -98,8 +94,7 @@ def edit(class_id):
 
 
 @module.route("/<class_id>/delete")
-# @acl.allows.requires(acl.is_class_owner)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def delete(class_id):
 
     class_ = models.Class.objects.get(id=class_id)
@@ -108,8 +103,7 @@ def delete(class_id):
 
 
 @module.route("/<class_id>")
-# @acl.allows.requires(acl.is_class_owner)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def view(class_id):
     class_ = models.Class.objects.get(id=class_id)
     return render_template("/administration/classes/view.html", class_=class_)
@@ -118,8 +112,7 @@ def view(class_id):
 @module.route(
     "/<class_id>/set-assignment-time/<assignment_id>", methods=["GET", "POST"]
 )
-# @acl.allows.requires(acl.is_class_owner)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def set_assignment_time(class_id, assignment_id):
     class_ = models.Class.objects.get(id=class_id)
     assignment = models.Assignment.objects.get(id=assignment_id)
@@ -148,8 +141,7 @@ def set_assignment_time(class_id, assignment_id):
 
 
 @module.route("/<class_id>/users")
-# @acl.allows.requires(acl.is_class_owner)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def list_students(class_id):
     class_ = models.Class.objects.get(id=class_id)
     enrollments = class_.get_enrollments()
@@ -181,8 +173,7 @@ def list_students(class_id):
 
 
 @module.route("/<class_id>/users/<user_id>")
-# @acl.allows.requires(acl.is_class_owner)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def show_user_score(class_id, user_id):
     class_ = models.Class.objects.get(id=class_id)
     user = models.User.objects.get(id=user_id)
@@ -197,8 +188,7 @@ def show_user_score(class_id, user_id):
 
 
 @module.route("/<class_id>/users/<user_id>/assignments/<assignment_id>")
-# @acl.allows.requires(acl.is_class_owner)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def show_user_assignment(class_id, user_id, assignment_id):
     class_ = models.Class.objects.get(id=class_id)
     user = models.User.objects.get(id=user_id)
@@ -230,8 +220,7 @@ def list_assignment_users(class_id, assignment_id):
 
 
 @module.route("/<class_id>/users/export-attendents")
-# @acl.allows.requires(acl.is_class_owner)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def export_attendants(class_id):
     class_ = models.Class.objects.get(id=class_id)
     enrollments = models.Enrollment.objects(enrolled_class=class_)
@@ -288,8 +277,7 @@ def export_attendants(class_id):
 
 
 @module.route("/<class_id>/users/export-scores")
-# @acl.allows.requires(acl.is_class_owner)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def export_scores(class_id):
     class_ = models.Class.objects.get(id=class_id)
     enrollments = models.Enrollment.objects(enrolled_class=class_)
@@ -353,8 +341,7 @@ def export_scores(class_id):
 
 
 @module.route("/<class_id>/add-user/<user_id>")
-# @acl.allows.requires(acl.is_class_owner)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def add_user_to_class(class_id, user_id):
     class_ = models.Class.objects.get(id=class_id)
     user = models.User.objects.get(id=user_id)
@@ -364,8 +351,7 @@ def add_user_to_class(class_id, user_id):
 
 
 @module.route("/<class_id>/teaching-assistants/add", methods=["GET", "POST"])
-# @acl.allows.requires(acl.is_class_owner)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def add_teaching_assistant(class_id):
     class_ = models.Class.objects().get(id=class_id)
     users = models.User.objects().order_by("first_name")
@@ -407,8 +393,7 @@ def add_teaching_assistant(class_id):
 
 
 @module.route("/<class_id>/solutions")
-# @acl.allows.requires(acl.is_lecturer)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def list_class_solutions(class_id):
     class_ = models.Class.objects.get(id=class_id)
     solutions = models.Solution.objects(enrolled_class=class_).order_by("-id").limit(50)

@@ -19,15 +19,13 @@ module = Blueprint(
 
 
 @module.route("/")
-# @acl.allows.requires(acl.is_teaching_assistant)
-@login_required
+@acl.roles_required("teaching_assistant")
 def index():
     return render_template("/administration/solutions/view.html")
 
 
 @module.route("/<solution_id>")
-# @acl.allows.requires(acl.is_teaching_assistant)
-@login_required
+@acl.roles_required("teaching_assistant")
 def view(solution_id):
     solution = models.Solution.objects.get(id=solution_id)
     code = solution.code.read().decode()
@@ -52,8 +50,7 @@ def view(solution_id):
 
 
 @module.route("/<solution_id>/code")
-# @acl.allows.requires(acl.is_teaching_assistant)
-@login_required
+@acl.roles_required("teaching_assistant")
 def download_code(solution_id):
     solution = models.Solutuib.objects.get(id=solution_id)
     return render_template("/administration/solutions/code.html", solution)

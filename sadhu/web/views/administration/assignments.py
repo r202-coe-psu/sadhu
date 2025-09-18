@@ -16,7 +16,7 @@ module = Blueprint(
 
 
 @module.route("/")
-# @acl.allows.requires(acl.is_lecturer)
+@acl.roles_required("admin")
 @login_required
 def index():
     assignments = models.Assignment.objects(owner=current_user._get_current_object())
@@ -39,6 +39,7 @@ def index():
 @module.route("/<assignment_id>/edit", methods=["GET", "POST"])
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def create_or_edit(assignment_id):
     form = forms.assignments.AssignmentForm()
     courses = models.Course.objects()
@@ -87,6 +88,7 @@ def create_or_edit(assignment_id):
 @module.route("/<assignment_id>/delete")
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def delete(assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
     course = assignment.course
@@ -176,6 +178,7 @@ def delete_challenge(assignment_id, challenge_id):
 @module.route("/<assignment_id>")
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def view(assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
     challenges = models.Challenge.objects()

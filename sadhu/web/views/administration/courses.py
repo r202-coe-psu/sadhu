@@ -19,8 +19,7 @@ module = Blueprint(
 
 
 @module.route("/")
-# @acl.allows.requires(acl.is_lecturer)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def index():
     user = current_user._get_current_object()
     owner_courses = models.Course.objects(owner=user).order_by("-id")
@@ -35,8 +34,7 @@ def index():
 
 @module.route("/create", defaults={"course_id": None}, methods=["GET", "POST"])
 @module.route("/<course_id>/edit", methods=["GET", "POST"])
-# @acl.allows.requires(acl.is_lecturer)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def create_or_edit(course_id):
     form = forms.courses.CourseForm()
     course = None
@@ -73,8 +71,7 @@ def create_or_edit(course_id):
 
 
 @module.route("/<course_id>")
-# @acl.allows.requires(acl.is_lecturer)
-@login_required
+@acl.roles_required("admin", "lecturer")
 def view(course_id):
     course = models.Course.objects.get(id=course_id)
     return render_template("/administration/courses/view.html", course=course)

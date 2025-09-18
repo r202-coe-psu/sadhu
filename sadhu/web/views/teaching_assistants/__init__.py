@@ -3,6 +3,7 @@ from flask_login import current_user, login_required
 
 
 from sadhu import models
+from sadhu.web import acl
 
 
 module = Blueprint(
@@ -13,7 +14,7 @@ module = Blueprint(
 
 
 @module.route("/")
-@login_required
+@acl.roles_required("teaching_assistant")
 def index():
     classes = models.Class.objects(
         teaching_assistants__user=current_user._get_current_object()

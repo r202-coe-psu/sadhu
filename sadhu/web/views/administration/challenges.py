@@ -21,6 +21,7 @@ module = Blueprint(
 @module.route("/")
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def index():
     challenges = models.Challenge.objects(
         owner=current_user._get_current_object()
@@ -41,6 +42,7 @@ def index():
 @module.route("/create", methods=["GET", "POST"])
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def create():
     form = forms.challenges.ChallengeForm(request.form)
     print(form.data)
@@ -60,6 +62,7 @@ def create():
 @module.route("/<challenge_id>/edit", methods=["GET", "POST"])
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def edit(challenge_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
 
@@ -79,6 +82,7 @@ def edit(challenge_id):
 @module.route("/<challenge_id>")
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def view(challenge_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
     formatter = HtmlFormatter(linenos=True)
@@ -108,6 +112,7 @@ def view(challenge_id):
 @module.route("/<challenge_id>/add-testcase", methods=["GET", "POST"])
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def add_testcase(challenge_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
     form = forms.challenges.TestCaseForm()
@@ -167,6 +172,7 @@ def add_testcase(challenge_id):
 @module.route("/<challenge_id>/testcases/<testcase_id>/edit", methods=["GET", "POST"])
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def edit_testcase(challenge_id, testcase_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
     test_case = models.TestCase.objects.get(id=testcase_id)
@@ -227,6 +233,7 @@ def edit_testcase(challenge_id, testcase_id):
 @module.route("/<challenge_id>/testcases/<testcase_id>/delete")
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def delete_testcase(challenge_id, testcase_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
     test_case = models.TestCase.objects.get(id=testcase_id)
@@ -248,6 +255,7 @@ def delete_testcase(challenge_id, testcase_id):
 @module.route("/<challenge_id>/add-code-for-testcase", methods=["GET", "POST"])
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def add_code_for_testcase(challenge_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
     form = forms.challenges.CodeForTestCaseForm()
@@ -299,6 +307,7 @@ def add_code_for_testcase(challenge_id):
 )
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def download_code_for_testcase(challenge_id, filename):
     challenge = models.Challenge.objects.get(id=challenge_id)
     solution = models.Solution.objects(
@@ -326,6 +335,7 @@ def download_code_for_testcase(challenge_id, filename):
 @module.route("/<challenge_id>/rerun-code-for-testcase", methods=["GET", "POST"])
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def rerun_code_for_testcase(challenge_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
     solution = models.Solution.objects(
@@ -347,6 +357,7 @@ def rerun_code_for_testcase(challenge_id):
 @module.route("/<challenge_id>/solutions")
 # @acl.allows.requires(acl.is_lecturer)
 @login_required
+@acl.roles_required("admin")
 def list_solutions(challenge_id):
     challenge = models.Challenge.objects.get(id=challenge_id)
     solutions = models.Solution.objects(challenge=challenge).order_by("-id").limit(50)
