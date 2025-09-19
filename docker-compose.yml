@@ -1,18 +1,17 @@
-version: '3'
 services:
   mongodb:
-      image: mongo
-      container_name: sadhu-mongodb
-      volumes:
-          - ../deployment/sadhu/mongodb/data/db:/data/db
-          - /etc/localtime:/etc/localtime:ro
-      restart: always
-      networks:
-          - default
-      logging:
-          options:
-              max-size: "10m"
-              max-file: "3"
+    image: mongo
+    container_name: sadhu-mongodb
+    volumes:
+      - ../deployment/sadhu/mongodb/data/db:/data/db
+      - /etc/localtime:/etc/localtime:ro
+    restart: always
+    networks:
+      - default
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
   web:
     build: .
     image: sadhu-image
@@ -58,4 +57,3 @@ services:
 networks:
   default:
     driver: bridge
-      
