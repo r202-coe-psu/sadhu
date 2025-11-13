@@ -22,7 +22,7 @@ module = Blueprint(
 @acl.roles_required("admin", "lecturer")
 def index():
     solutions = models.Solution.objects().order_by("-id").limit(50)
-    return render_template("/administration/solutions/index.html", solutions=solutions)
+    return render_template("/administration/solutions/index.html.j2", solutions=solutions)
 
 
 @module.route("/classes/<class_id>")
@@ -30,7 +30,7 @@ def index():
 def class_solution(class_id):
     class_ = models.Class.objects.get(id=class_id)
     solutions = models.Solution.objects(enrolled_class=class_).order_by("-id").limit(50)
-    return render_template("/administration/solutions/index.html", solutions=solutions)
+    return render_template("/administration/solutions/index.html.j2", solutions=solutions)
 
 
 @module.route("/<solution_id>")
@@ -47,7 +47,7 @@ def view(solution_id):
 
     console_lexer = get_lexer_by_name("console")
     return render_template(
-        "/administration/solutions/view.html",
+        "/administration/solutions/view.html.j2",
         solution=solution,
         formated_code=formated_code,
         console_lexer=console_lexer,
@@ -62,4 +62,4 @@ def view(solution_id):
 @acl.roles_required("admin", "lecturer")
 def download_code(solution_id):
     solution = models.Solutuib.objects.get(id=solution_id)
-    return render_template("/administration/solutions/code.html", solution)
+    return render_template("/administration/solutions/code.html.j2", solution)

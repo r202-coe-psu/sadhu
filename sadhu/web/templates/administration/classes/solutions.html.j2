@@ -1,0 +1,126 @@
+{% extends '/administration/classes/index.html.j2' %}
+{% import '/base/error-handler.html.j2' as eh %}
+{% import '/base/solution-style.html.j2' as solution_style %}
+
+{% block dashboard_title %}Classes: {{ class_.name }}{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  <div class="section">{{ class_.name }}</div>
+  <i class="right angle icon divider"></i>
+  <a href="{{ url_for('administration.solutions.index') }}" class="active section">Solutions</a>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui container">
+	<div class="ui segment">
+		<div>
+			<b>Description:</b> {{ class_.description }}
+		</div>
+		<div>
+			<b>Code:</b> {{ class_.code }}
+		</div>
+		<div>
+			<b>Course:</b> <a href="{{ url_for('administration.courses.view', course_id=class_.course.id) }}">{{ class_.course.name }}</a>
+		</div>
+		<div>
+			<b>Limited Class:</b> {{ class_.limited }}
+		</div>
+		{% if class_.limited_enrollment %}
+		<div>
+			<b>Limited Method:</b> {{ class_.limited_enrollment.method }}
+		</div>
+		<div>
+			<b>Limited Grantees:</b> {{ class_.limited_enrollment.grantees | join(', ') }}
+		</div>
+	{% endif %}
+		<div>
+			<b>Started Date:</b> {{ class_.started_date }}
+		</div>
+		<div>
+			<b>Ended Date:</b> {{ class_.ended_date }}
+		</div>
+
+		<div>
+			<b>Tag:</b> {{ class_.tags | join(', ') }}
+    </div>
+    <div>
+      <b>Teaching Assistant</b> 
+      {% for ta in class_.teaching_assistants %}
+        {{ ta.user.first_name }} {{ ta.user.last_name }}, 
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+<div class="ui container" style="margin-top: 1em;">
+    <div class="ui labeled icon menu">
+      {% if class_.owner == current_user %}
+      <a class="item" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="edit icon"></i>Edit</a>
+      <a class="item" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="student icon"></i>Students</a>
+      <a class="item" href="{{ url_for('administration.classes.add_teaching_assistant', class_id=class_.id) }}"><i class="clipboard check icon"></i>TA</a>
+    {% elif class_.is_teaching_assistant(current_user) %}
+      <a class="item" href="{{ url_for('teaching_assistants.classes.list_students', class_id=class_.id) }}"><i class="student icon"></i>Students</a>
+    {% endif %}
+      <a class="item" href="{{ url_for('administration.classes.list_class_solutions', class_id=class_.id) }}"><i class="code file icon"></i>Solutions</a>
+    </div>
+</div>
+
+<div class="ui container" style="margin-top: 1em;">
+  <h2>Last 50 solutions</h2>
+  <table class="ui celled table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Challenge Name</th>
+        <th>Class Name</th>
+        <th>Submitted Date</th>
+        <th>Check Status</th>
+        <th>Pass Test</th>
+        <th>Score</th>
+        <th>Operation</th>
+      </tr>
+    </thead>
+    <tbody>
+{% for solution in solutions %}
+  <tr class="{{ solution_style.get_solution_class(solution) }}">
+    <td>
+      <a href="{{ url_for('administration.classes.show_user_score', class_id=solution.enrolled_class.id, user_id=solution.owner.id) }}">{{ solution.owner.first_name }}</a>
+      </td>
+        <td>
+          <a href="{{ url_for('administration.challenges.list_solutions', challenge_id=solution.challenge.id, class_id=solution.enrolled_class.id) }}">{{ solution.challenge.name }}</a>
+        </td>
+        <td>
+          <a href="{{ url_for('administration.classes.view', class_id=solution.enrolled_class.id) }}">{{ solution.enrolled_class.name }}</a>
+        </td>
+        <td>
+          {{ solution.submitted_date.ctime() }}
+        </td>
+        <td>
+          {{ solution.status }}
+        </td>
+        <td>
+          {{ solution.passed }}
+        </td>
+        <td>
+          {{ '{:.2f}'.format(solution.score) }}
+        </td>
+        <td>
+            {% if solution.status == 'complete' %}
+              <a href="{{ url_for('administration.solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="ui circular primary icon button"><i class="eye icon"></i></a>
+            {% else %}
+              <i class="eye icon"></i>
+            {% endif %}
+        </td>
+      </tr>
+{% endfor %}
+    </tbody>
+  </table>
+
+
+
+</div>
+{% endblock %}

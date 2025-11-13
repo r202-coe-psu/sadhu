@@ -13,7 +13,7 @@ def show_assignment_scores(class_id, assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
 
     return render_template(
-        "scoreboards/show_assignment_scores.html", class_=class_, assignment=assignment
+        "scoreboards/show_assignment_scores.html.j2", class_=class_, assignment=assignment
     )
 
 

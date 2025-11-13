@@ -1,0 +1,34 @@
+{% extends '/base/default-dashboard.html.j2' %}
+
+{% block content %}
+<div class="ui container">
+    <h4>Teaching Assistant Mode</h4>
+</div>
+
+<div class="ui container" style="padding-top:20px;">
+  <h5>Class</h5>
+  <table class="ui celled table">
+    <thead>
+      <tr>
+          <th>Name</th>
+          <th>Operations</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for class_ in classes %}
+      <tr>
+        <td>
+          <a href="{{ url_for('teaching_assistants.classes.view', class_id=class_.id) }}">{{ class_.name }}</a>
+        </td>
+        <td>
+          <a href="{{ url_for('teaching_assistants.classes.view', class_id=class_.id) }}" class="ui button icon primary circular"><i class="ui eye icon"></i></a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+{% endblock %}

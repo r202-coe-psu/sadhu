@@ -1,0 +1,167 @@
+{% extends '/base/default-dashboard.html.j2' %}
+
+{% block additional_head %}
+{{ super() }}
+
+<style type="text/css">
+  {{ style }}
+</style>
+{% endblock %}
+
+{% block additional_js %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      {% for t in solution.test_results %}
+        {% if t.public or solution.enrolled_class.owner == current_user or solution.enrolled_class.is_teaching_assistant(current_user) %}
+          $("{{ '#show-modal-{:03}'.format(loop.index) }}").click(function(){
+            $("{{ '#modal-{:03}'.format(loop.index) }}").modal('show');
+       });
+        {% endif %}
+      {% endfor %}
+    });
+  </script>
+{% endblock %}
+
+{% block dashboard_title %}
+  Submitted Solutions: {{ solution.challenge.name }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {% if current_user.has_roles(['admin']) %}
+    <a href="{{ url_for('administration.solutions.index') }}" class="section">Solutions</a>
+  {% else %}
+    <a href="{{ url_for('solutions.index') }}" class="section">Solutions</a>
+    <i class="right angle icon divider"></i>
+    <a href="{{ url_for('challenges.view', challenge_id=solution.challenge.id, class_id=solution.enrolled_class.id) }}" class="section">{{ solution.enrolled_class.name }}</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div>
+  <div class="ui segment">
+    <h3>Solution for {{ solution.challenge.name }}</h3>
+    <b>Submitter:</b> {{ solution.owner.first_name }} {{ solution.owner.last_name }}<br/>
+    <b>ID:</b> {{ solution.owner.metadata.get('student_id', solution.owner.username) }}<br/>
+    <b>Submitted Date:</b> {{ solution.submitted_date }}<br/>
+    <b>Class:</b> <a href="{{ url_for('classes.view', class_id=solution.enrolled_class.id) }}">{{ solution.enrolled_class.name }}</a><br/>
+    <b>Assignment:</b> <a href="{{ url_for('assignments.view', assignment_id=solution.assignment.id) }}">{{ solution.assignment.name }}</a><br/>
+    <b>Challenge:</b> <a href="{{ url_for('challenges.view', challenge_id=solution.challenge.id, class_id=solution.enrolled_class.id) }}">{{ solution.challenge.name }}</a><br/>
+    <b>Pass Testcase:</b> {{ solution.passed }}<br/>
+    <b>Status:</b> {{ solution.status }}<br/>
+    <b>Score:</b> {{ '{:.2f}'.format(solution.score) }}<br/>
+    {% if 'compilation' in solution.metadata %}
+    <div>
+      <b>Prepair Status</b>
+      
+      {% if 'compiled_date' in solution.metadata['compilation'] %}
+        <div><b>Compile:</b> {{ solution.metadata['compilation']['compiled_date'] }}</div>
+      {% endif %}
+      {% if 'error' in solution.metadata['compilation'] %}
+      <div class="ui negative message">
+        <div class="header">
+          Compilation Error
+        </div>
+        <pre>
+{{ solution.metadata['compilation']['error'] }}
+        </pre>
+			</div>
+      {% endif %}
+
+      {% if 'output' in solution.metadata['compilation'] %}
+      <div class="ui info message">
+        <div class="header">
+          Compilation Error
+        </div>
+        <pre>
+{{ solution.metadata['compilation']['error'] }}
+        </pre>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div style="margin-top: 20px;">
+  <div class="ui segment">
+  {% for t in solution.test_results %}
+    <div class="ui message {{ 'negative' if not t.validated else 'positive' }}">
+      <div>
+        <h3>Test Case {{ loop.index }}</h3>
+        <div>
+          <ul>
+            <li>
+              Valid: {{ t.validated }}
+            </li>
+            <li>
+              Public: {{ t.public }}
+            </li>
+            <li>
+              Timeout: {{ t.timeout }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    {% if t.public or solution.enrolled_class.owner == current_user or solution.enrolled_class.is_teaching_assistant(current_user) %}
+    {# modal description #}
+    <div class="ui fullscreen modal" id="modal-{{'{:03}'.format(loop.index)}}">
+      <div class="header">
+        Deep Result Analysis
+      </div>
+      <div class="content">
+        <div class="description">
+          <div class="ui header">Test Case {{ loop.index }}</div>
+          <div class="ui aligned segment">
+                {%- set output_str = t.output %}
+                  {% if output_str == None %}
+                  {% set output_str = '' %}
+                  {% endif -%}
+                  {{ difflib.html.j2Diff(
+                  wrapcolumn=70, linejunk=difflib.IS_LINE_JUNK).make_file(output_str.splitlines(keepends=True), t.expected_result.splitlines(keepends=True)) | safe }}
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui cancel button">
+          Close
+        </div>
+      </div>
+    </div>
+
+    <button class="ui primary button" id="{{ 'show-modal-{:03}'.format(loop.index) }}">Deep Result Analysis</button>
+    {# show result #}
+    <div class="ui segment">
+      <div>
+        <h3 class="ui blue header">Your Output</h3>
+        <div>
+          <code>
+            {{ highlight(output_str, console_lexer, formatter) | safe }}
+          </code>
+        </div>
+      </div>
+      <div>
+        <h3 class="ui blue header">Expected Output</h3>
+        <div>
+          <code>
+            {{ highlight(t.expected_result, console_lexer, formatter) | safe }}
+          </code>
+        </div>
+      </div>
+    </div>
+    <div class="ui divider"></div>
+    {% endif %}
+  {% endfor %}
+  </div>
+</div>
+
+<div style="margin-top: 20px;">
+  <div class="ui segment">
+    <code>
+      {{ formated_code | safe }}
+    </code>
+  </div>
+</div>
+
+{% endblock %}

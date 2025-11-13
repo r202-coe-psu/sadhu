@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys
 import time
 import logging
@@ -8,7 +8,7 @@ import os
 import pathlib
 import subprocess
 
-BRYTHON_PATH = 'sadhu/web/static/brython'
+BRYTHON_PATH = 'sadhu/web/static/brython_modules'
 
 def cls():
     os.system('cls' if os.name == 'nt' else 'clear')

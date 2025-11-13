@@ -1,0 +1,47 @@
+{% extends '/administration/challenges/index.html.j2' %}
+{% import '/base/html-renderer.html.j2' as renderer %}
+
+{% block dashdoard_title %}
+  {% if 'edit' in request.path %}
+    Edit Challenge: {{ form.name.data }}
+  {% else %}
+    Create Challenge
+  {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  {% if 'edit' in request.path %}
+    <div class="active section">Edit: {{ form.name.data }}</div>
+  {% else %}
+    <div class="active section">Create Challenge</div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="ui container">
+  <div class="ui segment">
+    <form method="POST" class="ui form">
+      {{ form.csrf_token }}
+      {{ renderer.render_field(form.name) }}
+      {{ renderer.render_field(form.description) }}
+      {{ renderer.render_field(form.problem_statement) }}
+      {{ renderer.render_field(form.input_format) }}
+      {{ renderer.render_field(form.constraints) }}
+      {{ renderer.render_field(form.output_format) }}
+      {{ renderer.render_field(form.score) }}
+      {{ renderer.render_field(form.tags) }}
+      {{ renderer.render_field(form.level) }}
+      <button name="create" type="submit" class="ui primary button">
+        {% if 'edit' in request.url %}
+          Edit
+        {% else %}
+          Create
+        {% endif %}
+      </button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

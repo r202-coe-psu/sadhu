@@ -29,7 +29,7 @@ def index():
     other_assignments = list(other_assignments)
     other_assignments.sort(key=lambda a: a.course.name)
     return render_template(
-        "/administration/assignments/index.html",
+        "/administration/assignments/index.html.j2",
         assignments=assignments,
         other_assignments=other_assignments,
     )
@@ -55,7 +55,7 @@ def create_or_edit(assignment_id):
 
     if not form.validate_on_submit():
         return render_template(
-            "/administration/assignments/create-edit.html", form=form
+            "/administration/assignments/create-edit.html.j2", form=form
         )
 
     data = form.data.copy()
@@ -114,7 +114,7 @@ def add_challenge(assignment_id):
 
     if not form.validate_on_submit():
         return render_template(
-            "/administration/assignments/view.html", assignment=assignment, form=form
+            "/administration/assignments/view.html.j2", assignment=assignment, form=form
         )
     challenge_ids = form.challenges.data.copy()
 
@@ -148,7 +148,7 @@ def random_challenges(assignment_id):
         form = forms.assignments.ChallengeAddingForm()
         if not form.validate_on_submit():
             return render_template(
-                "/administration/assignments/view.html",
+                "/administration/assignments/view.html.j2",
                 assignment=assignment,
                 form=form,
             )
@@ -191,5 +191,5 @@ def view(assignment_id):
     form.challenges.choices = choices
 
     return render_template(
-        "/administration/assignments/view.html", assignment=assignment, form=form
+        "/administration/assignments/view.html.j2", assignment=assignment, form=form
     )

@@ -26,7 +26,7 @@ def index():
     contributed_courses = models.Course.objects(owner__ne=user).order_by("-id")
 
     return render_template(
-        "/administration/courses/index.html",
+        "/administration/courses/index.html.j2",
         owner_courses=owner_courses,
         contributed_courses=contributed_courses,
     )
@@ -56,7 +56,7 @@ def create_or_edit(course_id):
         #     form.languages.choices.insert(0, ('', 'Select Language'))
         #     form.languages.data = ['']
         # print('++++', form.languages.choices)
-        return render_template("/administration/courses/create-edit.html", form=form)
+        return render_template("/administration/courses/create-edit.html.j2", form=form)
     data = form.data.copy()
     data.pop("csrf_token")
     if not course:
@@ -74,4 +74,4 @@ def create_or_edit(course_id):
 @acl.roles_required("admin", "lecturer")
 def view(course_id):
     course = models.Course.objects.get(id=course_id)
-    return render_template("/administration/courses/view.html", course=course)
+    return render_template("/administration/courses/view.html.j2", course=course)

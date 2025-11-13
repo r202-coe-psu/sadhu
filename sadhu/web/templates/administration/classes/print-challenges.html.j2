@@ -1,0 +1,152 @@
+{% extends '/administration/classes/index.html.j2' %}
+{% import '/base/html-renderer.html.j2' as renderer %}
+{% import '/base/solution-style.html.j2' as solution_style %}
+
+{% block additional_head %}
+{{ super() }}
+
+<style type="text/css">
+  {{ style }}
+</style>
+
+  
+
+  <script>
+    function printDiv(divId) {
+      var printContents = document.getElementById(divId).innerHTML;
+      var originalContents = document.body.innerHTML;
+
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+    }
+  </script>
+{% endblock %}
+
+{% block additional_js %}
+{{ super() }}
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  config: ["MMLo.html.j2.js"],
+  jax: ["input/TeX", "output.html.j2-CSS", "output/NativeMML"],
+  extensions: ["MathMenu.js", "MathZoom.js"]
+});
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename='node_modules/mathjax/MathJax.js') }}"></script>
+
+<script type="text/javascript">
+  $(".attach-file-code").click(function () {
+    $(this).parent().find("#code").click();
+  });
+
+  $('#code')
+    .on('change', function (e) {
+      var name = e.target.files[0].name;
+      $('.attach-file-code', $(e.target).parent()).val(name);
+    });
+</script>
+
+
+<script type="text/javascript"
+  src="{{ url_for('static', filename='brython_modules/brython.js') | add_date_url}}"></script>
+<script type="text/javascript"
+  src="{{ url_for('static', filename='brython_modules/brython_stdlib.js') | add_date_url}}"></script>
+<script type="text/javascript">
+  brython(1);
+</script>
+
+{% endblock %}
+
+
+{% block dashboard_title %}
+Class: {{ class_.name }} - Print Challenges
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  <div class="active section">Print Challenges for Class {{ class_.name }}</div>
+{% endblock %}
+
+{% block content %}
+<button onclick="printDiv('printable-area')" class="ui button primary"><i class="print icon"></i> Print All</button>
+
+<div id="printable-area" style="margin-top: 1em;">
+  {% for assignment in assignments %}
+    <div class="ui info message">
+      <h2 class="header">
+        Assignment: <a
+          href="{{ url_for('assignments.practice', assignment_id=assignment.id,  **request.args.to_dict()) }}">{{ assignment.name }}</a>
+      </h2>
+    </div>
+    {% for challenge in assignment.challenges %}
+      <div class="ui segment big" style="line-height: normal; page-break-after: always;">
+        <h3>{{ challenge.name }}</h3>
+      
+        <h4>Problem Statement</h4>
+        <div>
+
+          {{ markdown(challenge.problem_statement, extensions=['fenced_code','codehilite', 'mdx_math', 'tables']) | safe }}
+
+        </div>
+
+        <h4>Input Format</h4>
+        <div>
+          {{ challenge.input_format if challenge.input_format and challenge.input_format | count > 0 else '-' }}
+        </div>
+
+        <h4>Constrains</h4>
+        <div>
+          {{ challenge.constrains if challenge.constrains and challenge.constrains | count > 0 else '-'}}
+        </div>
+
+        <h4>Output Format</h4>
+        <div>
+          {{ markdown(challenge.output_format, extensions=['fenced_code', 'codehilite', 'mdx_math', 'tables']) | safe }}
+        </div>
+
+        <h4>Score</h4>
+        <div>
+          <span class="ui red text"><b>{{ challenge.score }}</b></span>
+        </div>
+
+        <h4>Tags</h4>
+        <div>
+          {{ challenge.tags | join(', ') }}
+        </div>
+
+        {%- if challenge.test_cases | count > 0 %}
+        <h4>Public Test Case</h4>
+        <table class="ui celled blue table">
+          <thead>
+            <tr>
+              <th>Input</th>
+              <th>System Output</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {%- for t in challenge.test_cases if t.public %}
+            <tr>
+              <td>
+                <pre>{{ t.input_string }}</pre>
+              </td>
+              <td>
+                <pre>{{ t.output_string }}</pre>
+              </td>
+            </tr>
+            {% endfor -%}
+          </tbody>
+        </table>
+        {% endif -%}
+      </div>
+    {% endfor %}
+  {% endfor %}
+</div>
+
+
+
+<div class="ui container" style="margin-top: 1em;">
+</div>
+{% endblock %}

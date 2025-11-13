@@ -1,0 +1,57 @@
+{% extends '/administration/classes/index.html.j2' %}
+{% import '/base/assignment-style.html.j2' as ass_style %}
+
+{% block dashboard_title %}Assignment Score: {{ class_.name }}{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  <div class="active section">{{ class_.name }}</div>
+{% endblock %}
+
+{% block content %}
+  <div class="ui container">
+    <div class="ui segment">
+      <h2>{{ user.first_name }} {{ user.last_name }} </h2>
+      <b>Thai Name: </b>{{ user.metadata['thai_first_name'] }} {{ user.metadata['thai_last_name'] }}<br/>
+      <b>Student ID: </b> {{ user.metadata.get('user_id',  user.username) }} <b>Organization</b> {{ user.metadata['organization'] }}<br/>
+      <b>Email: </b> {{ user.email }}
+    </div>
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Challenge Score</th>
+          <th>Score</th>
+          <th>Operation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for assignment in assignments  %}
+          {%- set ass_score = assignment.get_score(class_, user) -%}
+        <tr class="{{ ass_style.get_assignment_class(ass_score, assignment.score) }}">
+          <td>
+            {{ assignment.name }}
+          </td>
+          <td>
+            {% for challenge in assignment.challenges %}
+              {{ '{:.02f}'.format(challenge.get_solution_score(class_, user)) }},
+            {% endfor %}
+          </td>
+          <td>
+            {{ '{:.02f}'.format(ass_score) }}
+          </td>
+          <td>
+            {% if class_.owner == current_user %}
+              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.show_user_assignment', class_id=class_.id, user_id=user.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
+            {% elif class_.is_teaching_assistant(current_user) %}
+              <a class="ui icon button circular primary" href="{{ url_for('teaching_assistants.classes.show_user_assignment', class_id=class_.id, user_id=user.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}

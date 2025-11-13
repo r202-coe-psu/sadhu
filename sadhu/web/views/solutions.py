@@ -26,7 +26,7 @@ def index():
         owner=current_user._get_current_object()
     ).order_by("-id")
     return render_template(
-        "/solutions/index.html",
+        "/solutions/index.html.j2",
         solutions=solutions,
     )
 
@@ -51,7 +51,7 @@ def view(solution_id):
 
     console_lexer = get_lexer_by_name("console")
     return render_template(
-        "/administration/solutions/view.html",
+        "/administration/solutions/view.html.j2",
         solution=solution,
         challenge=challenge,
         formated_code=formated_code,

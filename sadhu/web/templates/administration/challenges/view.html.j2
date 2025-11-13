@@ -1,0 +1,144 @@
+{% extends '/administration/challenges/index.html.j2' %}
+{% import '/base/error-handler.html.j2' as eh %}
+
+{% block additional_head %}
+{{ super() }}
+
+<style type="text/css">
+{{ style }}
+</style>
+
+{% endblock %}
+
+{% block additional_js %}
+  {{ super() }}
+ 
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  config: ["MMLo.html.j2.js"],
+  jax: ["input/TeX", "output.html.j2-CSS", "output/NativeMML"],
+  extensions: ["MathMenu.js", "MathZoom.js"]
+});
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename='node_modules/mathjax/MathJax.js') }}"></script>
+
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  <div class="active section">{{ challenge.name }}</div>
+{% endblock %}
+
+{% block dashboard_title %}
+Challenge: {{ challenge.name }}
+{% endblock %}
+
+{% block content %}
+<div class="ui container">
+  <div class="ui segment">
+    <h2 class="ui header">{{ challenge.name }}</h2>
+    <a class='ui button primary circular icon' href="{{ url_for('administration.challenges.edit', challenge_id=challenge.id) }}"><i class="edit icon"></i></a>
+
+		<h3>Description</h3>
+		<div>
+      {{ challenge.description }}
+		</div>
+
+		<h3>Problem Statement</h3>
+    <div>
+	    {{ markdown(challenge.problem_statement, extensions=['fenced_code', 'codehilite', 'mdx_math', 'tables']) | safe }}
+		</div>
+
+		<h3>Input Format</h3>
+		<div>
+			{{ challenge.input_format if challenge.input_format and challenge.input_format | count > 0 else '-' }}
+		</div>
+
+
+		<h3>Constrains</h3>
+		<div>
+			{{ challenge.constrains if challenge.constrains and challenge.constrains | count > 0 else '-'}}
+		</div>
+
+		<h3>Output Format</h3>
+    <div>
+      {{ markdown(challenge.output_format, extensions=['fenced_code', 'codehilite', 'mdx_math', 'tables']) | safe }}
+		</div>
+
+		<h3>Score</h3>
+		<div>
+			{{ challenge.score }}
+		</div>
+
+		<h3>Tags</h3>
+		<div>
+			{{ challenge.tags | join(', ') }}
+    </div>
+
+    <h3>Level</h3>
+		<div>
+			{{ challenge.level }}
+    </div>
+  </div>
+</div>
+
+<div class="ui container" style="margin-top: 20px;">
+    <h3>Code for Test Case</h3>
+    <div>
+      <div>
+        <a class="ui icon primary button" href="{{ url_for('administration.challenges.add_code_for_testcase', challenge_id=challenge.id) }}"><i class="add icon"></i>Add</a> 
+        {% if code_for_testcase %}
+          <a class="ui blue icon button" target="_blank" href="{{ url_for('administration.challenges.download_code_for_testcase', challenge_id=challenge.id, filename=code_for_testcase.code.filename) }}"><i class="code icon"></i> {{ code_for_testcase.code.filename }} </a>
+        <a class="ui icon yellow button" href="{{ url_for('administration.challenges.rerun_code_for_testcase', challenge_id=challenge.id) }}"><i class="redo alternate icon"></i>Rerun</a> 
+        {% endif %}
+      </div>
+
+      {% if code_for_testcase %}
+        <div style="margin-top: 1em;">
+          <div class="ui teal inverted label">
+            Status: {{ code_for_testcase.status }}
+          </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <h3>Test Case</h3>
+    <div class="ui labeled icon menu">
+      <a class="item" href="{{ url_for('administration.challenges.add_testcase', challenge_id=challenge.id) }}">
+        <i class="add icon"></i>
+      Add
+      </a>
+    </div>
+
+  {% if challenge.test_cases | count > 0 %}
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th>Input</th>
+          <th>Output</th>
+          <th>Public</th>
+          <th>Submit Date</th>
+          <th>Operation</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for tc in challenge.test_cases %}
+        <tr valign="top">
+          <td><pre>{{ tc.input_string }}</pre></td>
+          <td>{{ highlight(tc.output_string, console_lexer, console_formatter) | safe if tc.output_string }}</td>
+          <td>{{ tc.public }}</td>
+          <td>{{ tc.created_date }}</td>
+          <td>
+            <a href="{{ url_for('administration.challenges.edit_testcase', challenge_id=challenge.id, testcase_id=tc.id) }}" class="ui button icon primary circular"><i class="edit icon"></i></a>
+            <a href="{{ url_for('administration.challenges.delete_testcase', challenge_id=challenge.id, testcase_id=tc.id) }}" class="ui button icon primary circular"><i class="trash icon"></i></a>
+          </td>
+        </tr>
+       {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</div>
+
+{% endblock %}

@@ -20,4 +20,4 @@ def index():
         teaching_assistants__user=current_user._get_current_object()
     )
 
-    return render_template("/teaching-assistants/index.html", classes=classes)
+    return render_template("/teaching-assistants/index.html.j2", classes=classes)

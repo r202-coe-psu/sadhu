@@ -13,6 +13,11 @@ import mongoengine as me
 from sadhu.web import acl, forms
 from sadhu import models
 
+import markdown
+from pygments.formatters import HtmlFormatter
+from pygments.lexers import get_lexer_for_filename, get_lexer_by_name
+from pygments import highlight
+
 import datetime
 import csv
 import io
@@ -27,13 +32,17 @@ module = Blueprint(
 @module.route("/")
 @acl.roles_required("admin", "lecturer")
 def index():
-    owner_classes = models.Class.objects(owner=current_user._get_current_object()).order_by(
-        "-id"
+    owner_classes = models.Class.objects(
+        owner=current_user._get_current_object()
+    ).order_by("-id")
+    classes = models.Class.objects(
+        owner__ne=current_user._get_current_object()
+    ).order_by("-id")
+    return render_template(
+        "/administration/classes/index.html.j2",
+        classes=classes,
+        owner_classes=owner_classes,
     )
-    classes = models.Class.objects(owner__ne=current_user._get_current_object()).order_by(
-        "-id"
-    )
-    return render_template("/administration/classes/index.html", classes=classes,owner_classes=owner_classes)
 
 
 @module.route("/create", methods=["GET", "POST"])
@@ -51,7 +60,7 @@ def create():
     form.limited_enrollment.method.choices = method_choices
 
     if not form.validate_on_submit():
-        return render_template("/administration/classes/create-edit.html", form=form)
+        return render_template("/administration/classes/create-edit.html.j2", form=form)
     data = form.data.copy()
     data.pop("csrf_token")
 
@@ -84,7 +93,7 @@ def edit(class_id):
         if request.method == "GET":
             form.course.data = class_.course
 
-        return render_template("/administration/classes/create-edit.html", form=form)
+        return render_template("/administration/classes/create-edit.html.j2", form=form)
     data = form.data.copy()
     data.pop("csrf_token")
 
@@ -106,7 +115,7 @@ def delete(class_id):
 @acl.roles_required("admin", "lecturer")
 def view(class_id):
     class_ = models.Class.objects.get(id=class_id)
-    return render_template("/administration/classes/view.html", class_=class_)
+    return render_template("/administration/classes/view.html.j2", class_=class_)
 
 
 @module.route(
@@ -123,7 +132,7 @@ def set_assignment_time(class_id, assignment_id):
 
     if not form.validate_on_submit():
         return render_template(
-            "/administration/classes/set-assignment-time.html",
+            "/administration/classes/set-assignment-time.html.j2",
             form=form,
             assignment=assignment,
         )
@@ -164,7 +173,7 @@ def list_students(class_id):
             unenrollments.append(user)
 
     return render_template(
-        "/administration/classes/list-users.html",
+        "/administration/classes/list-users.html.j2",
         class_=class_,
         enrollments=enrollments,
         unenrollments=unenrollments,
@@ -180,7 +189,7 @@ def show_user_score(class_id, user_id):
     assignments = class_.course.assignments
 
     return render_template(
-        "/administration/classes/show-user-score.html",
+        "/administration/classes/show-user-score.html.j2",
         class_=class_,
         user=user,
         assignments=assignments,
@@ -195,7 +204,7 @@ def show_user_assignment(class_id, user_id, assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
 
     return render_template(
-        "/administration/classes/show-user-assignment.html",
+        "/administration/classes/show-user-assignment.html.j2",
         class_=class_,
         user=user,
         assignment=assignment,
@@ -212,7 +221,7 @@ def list_assignment_users(class_id, assignment_id):
     users.sort(key=lambda u: u.first_name)
 
     return render_template(
-        "/administration/classes/list-assignment-users.html",
+        "/administration/classes/list-assignment-users.html.j2",
         class_=class_,
         users=users,
         assignment=assignment,
@@ -369,7 +378,7 @@ def add_teaching_assistant(class_id):
 
     if not form.validate_on_submit():
         return render_template(
-            "/administration/classes/add-teaching-assistant.html",
+            "/administration/classes/add-teaching-assistant.html.j2",
             form=form,
             class_=class_,
             users=users,
@@ -398,5 +407,32 @@ def list_class_solutions(class_id):
     class_ = models.Class.objects.get(id=class_id)
     solutions = models.Solution.objects(enrolled_class=class_).order_by("-id").limit(50)
     return render_template(
-        "/administration/classes/solutions.html", solutions=solutions, class_=class_
+        "/administration/classes/solutions.html.j2", solutions=solutions, class_=class_
+    )
+
+
+@module.route("/<class_id>/print-challenges")
+@acl.roles_required("admin", "lecturer")
+def print_challenges(class_id):
+    class_ = models.Class.objects.get(id=class_id)
+    assignments = models.Assignment.objects(course=class_.course)
+
+    formatter = HtmlFormatter(linenos=True)
+    console_formatter = HtmlFormatter(
+        style="monokai", prestyles="white-space: pre-wrap;"
+    )
+    console_lexer = get_lexer_by_name("console")
+    style = formatter.get_style_defs(".codehilite")
+
+    return render_template(
+        "/administration/classes/print-challenges.html.j2",
+        class_id=class_.id,
+        class_=class_,
+        assignments=assignments,
+        markdown=markdown.markdown,
+        style=style,
+        formatter=formatter,
+        console_formatter=console_formatter,
+        console_lexer=console_lexer,
+        highlight=highlight,
     )

@@ -1,0 +1,67 @@
+{% extends '/base/default-dashboard.html.j2' %}
+
+{% block breadcrumbs %}
+<a href="{{ url_for('administration.challenges.index') }}" class="section">Challenges</a>
+{% endblock %}
+
+{% block dashboard_title %}
+  Challenges
+{% endblock %}
+
+{% block content %}
+<div class="ui" style="padding-top: 1ex">
+  <div class="ui labeled icon menu">
+      <a href="{{ url_for('administration.challenges.create') }}" class="item"><i class="add icon"></i>Add</a>
+  </div>
+</div>
+
+<div class="row" style="padding-top: 1ex">
+  <div class="column" style="padding-top: 1ex">
+    {% if challenges %}
+      <h2>Own Challenges</h2>
+      {{ render_table(challenges) }}
+    {% endif %}
+    {% if other_challenges %}
+      <h2>Other Challenges</h2>
+      {{ render_table(other_challenges) }}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% macro render_table(challenges) %}
+  <table class="ui celled table">
+    <thead>
+      <tr>
+          <th>Name</th>
+          <th>Level</th>
+          <th>Score</th>
+          <th>Tags</th>
+          <th>Operation</th>
+      </tr>
+    </thead>
+
+    <body>
+    {% for challenge in challenges %}
+          <tr>
+            <td>
+              <a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}">{{ challenge.name }}</a>
+            </td>
+            <td>
+              {{challenge.level}}
+            </td>
+            <td>
+                {{challenge.score}}
+            </td>
+            <td>
+                {{ challenge.tags | join(', ') }}
+            </td>
+            <td class="ui single line">
+              <a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}" class="ui button circular icon primary"><i class="eye icon"></i></a>
+              <a href="{{ url_for('administration.challenges.edit', challenge_id=challenge.id) }}" class="ui button circular icon primary"><i class="edit icon"></i></a>
+            </td>
+          </tr>
+    {% endfor %}
+    </body>
+  </table>
+  {% endmacro %}

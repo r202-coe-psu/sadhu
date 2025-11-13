@@ -1,0 +1,35 @@
+{% extends '/base/default-dashboard.html.j2' %}
+
+{% block breadcrumbs %}
+<a href="{{ url_for('classes.index') }}" class="section">Classes</a>
+{% endblock %}
+
+{% block dashboard_title %}Enrolled Classes{% endblock %}
+
+{% block content %}
+  <div class="ui container">
+    {% if enrollments %}
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <body>
+  {% for enrollment in enrollments %}
+        <tr>
+          <td>
+            <a href="{{ url_for('classes.view', class_id=enrollment.enrolled_class.id) }}">{{ enrollment.enrolled_class.name }}</a>
+          </td>
+          <td>
+            {{ enrollment.enrolled_class.description }}
+          </td>
+        </tr>
+  {% endfor %}
+      </body>
+    </table>
+    {% endif %}
+</div>
+
+{% endblock %}

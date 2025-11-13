@@ -31,7 +31,7 @@ def index():
             challenges.extend(assignment_schedule.assignment.challenges)
 
     return render_template(
-        "/challenges/index.html", challenges=challenges, class_=class_
+        "/challenges/index.html.j2", challenges=challenges, class_=class_
     )
 
 
@@ -41,7 +41,7 @@ def index():
 #     print(form.data)
 #     if not form.validate_on_submit():
 #         print(form.data)
-#         return render_template('/administration/challenges/create.html',
+#         return render_template('/administration/challenges/create.html.j2',
 #                                form=form)
 #     data = form.data.copy()
 #     data.pop('csrf_token')
@@ -109,7 +109,7 @@ def view(challenge_id):
     form = forms.challenges.SolutionForm()
 
     return render_template(
-        "/challenges/view.html",
+        "/challenges/view.html.j2",
         challenge=challenge,
         solutions=solutions,
         assignment=assignment,
@@ -135,7 +135,7 @@ def submit_solution(challenge_id):
     form = forms.challenges.SolutionForm()
     if not form.validate_on_submit():
         return render_template(
-            "/challenges/view.html",
+            "/challenges/view.html.j2",
             challenge=challenge,
             assignment=assignment,
             show_submission=now < assignment_time.ended_date,

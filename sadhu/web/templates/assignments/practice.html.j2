@@ -1,0 +1,73 @@
+{% extends '/administration/assignments/index.html.j2' %}
+{% import '/base/error-handler.html.j2' as eh %}
+
+{%- macro get_challenge_status_style(class_, challenge) %}
+{%- set style = 'warning' -%}
+{%- set user_score = challenge.score - challenge.get_solution_score(class_, current_user) -%}
+{%- if user_score == 0 %}
+  {%- set style = 'positive' -%}
+{% elif user_score > 0 %}
+  {%- set style = 'negative' -%}
+{% endif -%}
+{{ style }}
+{%- endmacro %}
+
+{% block dashboard_title %}Assignments{% endblock %}
+
+{% block content %}
+<div class="ui container">
+  <div class="ui segment">
+		<div>
+			<h3 class="ui header">Course: <a href="{{ url_for('courses.view', course_id=assignment.course.id) }}">{{ assignment.course.name }}</a></h3>
+      <p>Class <a href="{{ url_for('classes.view', class_id=class_.id) }}">{{ class_.name }}</a></p>
+		</div>
+		<div>
+			{{ assignment.description }}
+		</div>
+		<div>
+			Score: {{ assignment.score }}
+		</div>
+		<div>
+			<p>{{ assignment.tags | join(', ') }}</p>
+		</div>
+  </div>
+	
+  {% if assignment.challenges | count > 0 %}
+  <table class="ui celled table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Score</th>
+        <th>Your Score</th>
+        <th>Submitted</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for challenge in assignment.challenges %}
+        <tr class="{{ get_challenge_status_style(class_, challenge) }}">
+        <td>
+          <a href="{{ url_for('challenges.view', challenge_id=challenge.id, **request.args) }}">{{ challenge.name }}</a>
+        </td>
+        <td>
+          {{ challenge.description }}
+        </td>
+        <td>
+          {{ challenge.score }}
+        </td>
+        <td>
+          {{ '{:.2f}'.format(challenge.get_solution_score(class_, current_user)) }}
+        </td>
+        <td>
+          {{'Done' if challenge.is_done(class_, current_user) else 'Waiting' }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+</div>
+
+
+{% endblock %}

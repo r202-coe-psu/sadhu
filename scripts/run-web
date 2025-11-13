@@ -1,3 +1,16 @@
 #!/bin/sh
+poetry run brython-cli update --update-dir sadhu/web/static/brython_modules/
+
+BRYTHON_ID=$(pgrep -f $(pwd)/scripts/auto-build-brython);
+
+if [ ! -z "$BRYTHON_ID" ]
+then
+	echo "brython_cli allready run kill!!"
+	kill -KILL $BRYTHON_ID
+fi
+
+poetry run python $(pwd)/scripts/auto-build-brython &
+
+
 
 SADHU_SETTINGS=$(pwd)/sadhu-development.cfg DEBUG=1 poetry run sadhu-web -d $@

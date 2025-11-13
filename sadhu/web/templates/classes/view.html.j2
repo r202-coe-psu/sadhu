@@ -1,0 +1,88 @@
+{% extends '/classes/index.html.j2' %}
+
+{% block dashboard_title %}
+  Class: {{ class_.name }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+  <i class="right angle icon divider"></i>
+  <div class="active section">{{ class_.name }}</div>
+{% endblock %}
+
+{% block content %}
+<div class="ui container">
+  <div class="ui segment">
+		<h3>{{ class_.name }}</h3>
+		<div>
+			{% if enrollment %}
+				You enroll this class
+			{% else %}
+			<a class="btn-floating btn-small waves-effect waves-light red" href="{{ url_for('classes.enroll', class_id=class_.id) }}"><i class="material-icons">add</i></a>
+
+			{% endif %}
+		</div>
+
+		<div>
+			<b>Description:</b> {{ class_.description }}
+		</div>
+		<div>
+			<b>Code:</b> {{ class_.code }}
+		</div>
+		<div>
+			<b>Course:</b> <a href="{{ url_for('courses.view', course_id=class_.course.id) }}">{{ class_.course.name }}</a>
+		</div>
+		<div>
+			<b>Limited Class:</b> {{ class_.limited }}
+		</div>
+		<div>
+			<b>Started Date:</b> {{ class_.started_date }}
+		</div>
+		<div>
+			<b>Ended Date:</b> {{ class_.ended_date }}
+		</div>
+
+		<div>
+			<b>Tag:</b> {{ class_.tags | join(', ') }}
+		</div>
+  </div>
+
+  <div style="margin-top: 1em;">
+		<h3>Assignments</h3>
+		<table class="ui celled blue table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Challenges</th>
+					<th>Start</th>
+					<th>End</th>
+					<th>Operation</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{% for ass_time in class_.assignment_schedule %}
+				<tr>
+					<td>
+						<a href="{{ url_for('assignments.practice', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">
+							{{ ass_time.assignment.name }}
+						</a>
+					</td>
+					<td>{{ ass_time.assignment.challenges | count }}</td>
+					<td>{{ ass_time.started_date }}</td>
+					<td>{{ ass_time.ended_date }}</td>
+          <td>
+            {% if ass_time.is_pass_started_time() %}
+            <a class="ui circular primary icon button" href="{{ url_for('assignments.practice', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">
+              <i class="eye icon"></i>
+            </a>
+            {% endif %}
+          </td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+            	
+  </div>
+</div>
+{% endblock %}

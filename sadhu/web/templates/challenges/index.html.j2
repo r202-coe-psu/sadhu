@@ -1,0 +1,42 @@
+{% extends '/base/default-dashboard.html.j2' %}
+
+{% block dashboard_title %}Challenges{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{{ url_for('challenges.index', **request.args.to_dict()) }}" class="section">Challenges</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="ui container">
+      <table class="ui celled table">
+        <thead>
+          <tr>
+              <th>Name</th>
+              <th>Score</th>
+              <th>Tags</th>
+              <th>Your Scores</th>
+          </tr>
+        </thead>
+        <body>
+  {% for challenge in challenges %}
+          <tr>
+            <td>
+              <a href="{{ url_for('challenges.view', challenge_id=challenge.id, **request.args.to_dict()) }}">{{ challenge.name }}</a>
+            </td>
+            <td>
+                {{challenge.score}}
+            </td>
+            <td>
+                {{ challenge.tags | join(', ') }}
+            </td>
+            <td class="right aligned">
+              {{ '{:.02f}'.format(challenge.get_solution_score(class_, current_user)) }}
+            </td>
+          </tr>
+  {% endfor %}
+        </body>
+      </table>
+</div>
+
+{% endblock %}

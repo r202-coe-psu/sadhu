@@ -33,7 +33,7 @@ def index():
 
     # print('q', challenges)
     return render_template(
-        "/administration/challenges/index.html",
+        "/administration/challenges/index.html.j2",
         challenges=challenges,
         other_challenges=other_challenges,
     )
@@ -47,7 +47,7 @@ def create():
     form = forms.challenges.ChallengeForm(request.form)
     print(form.data)
     if not form.validate_on_submit():
-        return render_template("/administration/challenges/create-edit.html", form=form)
+        return render_template("/administration/challenges/create-edit.html.j2", form=form)
     data = form.data.copy()
     data.pop("csrf_token")
     challenge = models.Challenge(**data)
@@ -68,7 +68,7 @@ def edit(challenge_id):
 
     form = forms.challenges.ChallengeForm(obj=challenge)
     if not form.validate_on_submit():
-        return render_template("/administration/challenges/create-edit.html", form=form)
+        return render_template("/administration/challenges/create-edit.html.j2", form=form)
     data = form.data.copy()
     data.pop("csrf_token")
     form.populate_obj(challenge)
@@ -97,7 +97,7 @@ def view(challenge_id):
         type="challenge",
     ).first()
     return render_template(
-        "/administration/challenges/view.html",
+        "/administration/challenges/view.html.j2",
         markdown=markdown.markdown,
         style=style,
         formatter=formatter,
@@ -119,7 +119,7 @@ def add_testcase(challenge_id):
 
     if not form.validate_on_submit():
         return render_template(
-            "/administration/challenges/add-testcase.html",
+            "/administration/challenges/add-testcase.html.j2",
             form=form,
             challenge=challenge,
         )
@@ -180,7 +180,7 @@ def edit_testcase(challenge_id, testcase_id):
 
     if not form.validate_on_submit():
         return render_template(
-            "/administration/challenges/add-testcase.html",
+            "/administration/challenges/add-testcase.html.j2",
             form=form,
             challenge=challenge,
         )
@@ -263,7 +263,7 @@ def add_code_for_testcase(challenge_id):
 
     if not form.validate_on_submit():
         return render_template(
-            "/administration/challenges/add-code-for-testcase.html",
+            "/administration/challenges/add-code-for-testcase.html.j2",
             form=form,
             challenge=challenge,
         )
@@ -363,7 +363,7 @@ def list_solutions(challenge_id):
     solutions = models.Solution.objects(challenge=challenge).order_by("-id").limit(50)
 
     return render_template(
-        "/administration/challenges/list-solutions.html",
+        "/administration/challenges/list-solutions.html.j2",
         challenge=challenge,
         solutions=solutions,
     )

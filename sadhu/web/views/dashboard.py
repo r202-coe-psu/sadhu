@@ -34,7 +34,7 @@ def index_admin():
 
     ass_schedule.sort(key=order_by_ended_date)
 
-    return render_template('/dashboard/index-admin.html',
+    return render_template('/dashboard/index-admin.html.j2',
                            available_classes=available_classes,
                            assignment_schedule=ass_schedule,
                            now=datetime.datetime.now(),
@@ -70,7 +70,7 @@ def index_user():
 
     ass_schedule.sort(key=order_by_ended_date)
 
-    return render_template('/dashboard/index.html',
+    return render_template('/dashboard/index.html.j2',
                            available_classes=available_classes,
                            assignment_schedule=ass_schedule,
                            now=datetime.datetime.now(),

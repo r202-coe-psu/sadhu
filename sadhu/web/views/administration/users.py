@@ -15,4 +15,4 @@ module = Blueprint(
 @acl.roles_required("admin", "lecturer")
 def index():
     users = models.User.objects().order_by("-id")
-    return render_template("/administration/users/index.html", users=users)
+    return render_template("/administration/users/index.html.j2", users=users)

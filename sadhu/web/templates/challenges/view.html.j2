@@ -1,0 +1,253 @@
+{% extends '/challenges/index.html.j2' %}
+{% import '/base/html-renderer.html.j2' as renderer %}
+{% import '/base/solution-style.html.j2' as solution_style %}
+
+{% block additional_head %}
+{{ super() }}
+
+<style type="text/css">
+  {{ style }}
+</style>
+{% endblock %}
+
+{% block additional_js %}
+  {{ super() }}
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  config: ["MMLo.html.j2.js"],
+  jax: ["input/TeX", "output.html.j2-CSS", "output/NativeMML"],
+  extensions: ["MathMenu.js", "MathZoom.js"]
+});
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename='node_modules/mathjax/MathJax.js') }}"></script>
+
+<script type="text/javascript">
+  $(".attach-file-code").click(function() {
+    $(this).parent().find("#code").click();
+  });
+
+  $('#code')
+    .on('change', function(e) {
+      var name = e.target.files[0].name;
+      $('.attach-file-code', $(e.target).parent()).val(name);
+    });
+</script>
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='node_modules/brython/brython.js') | add_date_url}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='node_modules/brython/brython_stdlib.js') | add_date_url}}"></script>
+  <script type="text/javascript">
+    brython(1);
+  </script>
+
+{% endblock %}
+
+
+{% block dashboard_title %}
+Challenge: {{ challenge.name }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}  
+  <i class="right chevron icon divider"></i>
+  <a href="{{ url_for('challenges.view', challenge_id=challenge.id, **request.args.to_dict()) }}" class="active section">{{ challenge.name }}</a>
+{% endblock %}
+
+{% block content %}
+<div class="ui container">
+  <div class="ui info message">
+    <h2 class="header">
+      Assignment: <a href="{{ url_for('assignments.practice', assignment_id=assignment.id,  **request.args.to_dict()) }}">{{ assignment.name }}</a>
+    </h2>
+  </div>
+</div>
+
+<div class="ui container" style="margin-top: 1em;">
+  <div class="ui segment big" style="line-height: normal;">
+		<h3>{{ challenge.name }}</h3>
+		{#
+		<h4>Description</h4>
+		<div>
+			{{ challenge.description }}
+		</div>
+		#}
+		<h4>Problem Statement</h4>
+		<div>
+			{{ markdown(challenge.problem_statement, extensions=['fenced_code', 'codehilite', 'mdx_math', 'tables']) | safe }}
+		</div>
+
+		<h4>Input Format</h4>
+		<div>
+			{{ challenge.input_format if challenge.input_format and challenge.input_format | count > 0 else '-' }}
+		</div>
+
+		<h4>Constrains</h4>
+		<div>
+			{{ challenge.constrains if challenge.constrains and challenge.constrains | count > 0 else '-'}}
+		</div>
+
+		<h4>Output Format</h4>
+		<div>
+			{{ markdown(challenge.output_format, extensions=['fenced_code', 'codehilite', 'mdx_math', 'tables']) | safe }}
+		</div>
+
+		<h4>Score</h4>
+		<div>
+      <span class="ui red text"><b>{{ challenge.score }}</b></span>
+		</div>
+
+		<h4>Tags</h4>
+		<div>
+      {{ challenge.tags | join(', ') }}
+    </div>
+
+    {%- if challenge.test_cases | count > 0 %}
+		<h4>Public Test Case</h4>
+    <table class="ui celled blue table">
+      <thead>
+        <tr>
+            <th>Input</th>
+            <th>System Output</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {%- for t in challenge.test_cases if t.public %}
+        <tr>
+          <td><pre>{{ t.input_string }}</pre></td>
+          <td>
+            <pre>{{ t.output_string }}</pre>
+          </td>
+        </tr>
+        {% endfor -%}
+      </tbody>
+    </table>
+    {% endif -%}
+  </div>
+</div>
+
+{% if request.args.get('class_id', None) %}
+{% if show_submission %}
+<div class="ui container" style="margin-top: 1em;">
+	<div class="ui segment">
+		<form class="ui form" action="{{ url_for('challenges.submit_solution', challenge_id=challenge.id, class_id=request.args.get('class_id')) }}" enctype="multipart/form-data" method="POST">
+			{{ form.csrf_token }}
+			{{ renderer.render_fileinput(form.code) }}
+			<button name="submit" type="submit" class="ui primary button">Submit</button>
+		</form>
+  </div>
+</div>
+{% endif %}
+
+<div class="ui container" style="margin-top: 1em;">
+  {% if solutions %}
+<script type="text/python">
+  from browser import document,.html.j2, ajax, timer
+  import json
+
+  sol_status = {}
+  _timer = None
+
+  url = "{{ url_for('solutions.status_api', solution_id='solution_id') }}"
+
+  def set_get_status_timeout():
+    global _timer
+    if _timer:
+      timer.clear_timeout(_timer)
+
+    _timer = timer.set_timeout(get_status_from_server, 5000)
+
+  def on_complete(req):
+    global sol_status
+
+    obj = json.loads(req.text)
+    print('got status', obj)
+
+    old_status = sol_status[obj['id']]
+    if old_status == obj['status']:
+      set_get_status_timeout()
+      return
+  
+    tr = document['solution-'+obj['id']]
+    for td in tr.children:
+      if td.headers == 'status':
+        td.text = obj['status']
+      elif td.headers == 'passed':
+        td.text = obj['passed']
+      elif td.headers == 'score':
+        td.text = obj['score']
+
+    if obj['status'] == 'complete':
+      if obj['passed'] == True:
+        tr.className = 'positive'
+      else:
+        tr.className = 'negative'
+
+      a = document[f'solution-{obj["id"]}-view']
+      a.className = a.className.replace('disabled', '').strip()
+
+      sol_status.pop(obj['id'])
+    else:
+      set_get_status_timeout()
+
+
+
+  def check_solution_status():
+    sol_status = {}
+    trs = document['solution-status'].children
+    for tr in trs:
+      for td in tr.children:
+        if td.headers == 'status' and td.text.strip() != 'complete':
+          solution_id = tr.id.split('-')[-1]
+          sol_status[solution_id] = td.text.strip()
+          break
+    return sol_status
+
+  def get_status_from_server():
+    global sol_status
+    for sol_id in sol_status:
+      request_url = url.replace('solution_id', sol_id)
+      ajax.get(request_url, oncomplete=on_complete)
+
+  sol_status = check_solution_status()
+  if len(sol_status) > 0:
+    get_status_from_server()
+
+</script>
+		  <table class="ui celled table">
+        <thead>
+          <tr>
+            <th>Filename</th>
+            <th>Submited Date</th>
+            <th>Status</th>
+            <th>Pass</th>
+            <th>Score</th>
+            <th>Operations</th>
+          </tr>
+        </thead>
+
+        <tbody id="solution-status">
+          {% for solution in solutions %}
+          <tr id="solution-{{ solution.id }}" class="{{ solution_style.get_solution_class(solution) }}">
+            <td headers="filename">{{ solution.code.filename }}</td>
+            <td headers="submitted_date">{{ solution.submitted_date }}</td>
+            <td headers="status">{{ solution.status }}</td>
+            <td headers="passed">{{ solution.passed }}</td>
+            <td headers="score">{{ '{:.2f}'.format(solution.score) }}</td>
+            <td headers="operation">
+              {% if solution.status == 'complete' %}
+                <a id="solution-{{ solution.id }}-view" class="ui circular primary icon button" target="blank" href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="eye icon"></i></a>
+              {% else %}
+                <a id="solution-{{ solution.id }}-view" class="ui circular primary icon button disabled" target="blank" href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="eye icon"></i></a>
+              {% endif %}
+            </td>
+					</tr>
+          {% endfor %}
+        </tbody>
+		  </table>
+	  {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

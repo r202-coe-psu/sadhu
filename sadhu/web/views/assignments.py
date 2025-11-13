@@ -34,7 +34,7 @@ def index():
         current_user._get_current_object()
     )
     return render_template(
-        "/assignments/index.html",
+        "/assignments/index.html.j2",
         assignment_schedule=assignment_schedule,
         past_assignment_schedule=past_assignment_schedule,
     )
@@ -46,7 +46,7 @@ def view(assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
 
     return render_template(
-        "/assignments/view.html",
+        "/assignments/view.html.j2",
         assignment=assignment,
     )
 
@@ -69,5 +69,5 @@ def practice(assignment_id):
         )
 
     return render_template(
-        "/assignments/practice.html", assignment=assignment, class_=class_
+        "/assignments/practice.html.j2", assignment=assignment, class_=class_
     )

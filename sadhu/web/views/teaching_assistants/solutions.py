@@ -21,7 +21,7 @@ module = Blueprint(
 @module.route("/")
 @acl.roles_required("teaching_assistant")
 def index():
-    return render_template("/administration/solutions/view.html")
+    return render_template("/administration/solutions/view.html.j2")
 
 
 @module.route("/<solution_id>")
@@ -38,7 +38,7 @@ def view(solution_id):
 
     console_lexer = get_lexer_by_name("console")
     return render_template(
-        "/administration/solutions/view.html",
+        "/administration/solutions/view.html.j2",
         solution=solution,
         formated_code=formated_code,
         console_lexer=console_lexer,
@@ -53,4 +53,4 @@ def view(solution_id):
 @acl.roles_required("teaching_assistant")
 def download_code(solution_id):
     solution = models.Solutuib.objects.get(id=solution_id)
-    return render_template("/administration/solutions/code.html", solution)
+    return render_template("/administration/solutions/code.html.j2", solution)

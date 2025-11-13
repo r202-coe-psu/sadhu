@@ -8,9 +8,8 @@
   "author": "",
   "license": "UNLICENSED",
   "dependencies": {
-    "brython": "^3.8.9",
     "fomantic-ui-css": "^2.8.6",
     "jquery": "^3.5.1",
-    "mathjax": "2.7.5"
+    "mathjax": "^4.0.0"
   }
 }

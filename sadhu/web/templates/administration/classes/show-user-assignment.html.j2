@@ -1,0 +1,79 @@
+{% extends '/administration/classes/index.html.j2' %}
+{% import '/base/solution-style.html.j2' as solution_style %}
+
+{% block dashboard_title %}
+Assignment: {{ assignment.name }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="ui container">
+  <div class="ui segment">
+    <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+    <b>Name:</b>{{ user.first_name }} {{ user.last_name }} ({{ user.metadata.get('thai_first_name', '') }} {{ user.metadata.get('thai_last_name', '') }}) <br/>
+    <b>Student ID</b> {{ user.metadata.get('user_id',  user.username) }} <b>Organization</b> {{ user.metadata['organization'] }}<br/>
+    <b>Email: </b> {{ user.email }}
+  </div>
+</div>
+
+<div class="ui container" style="margin-top: 1em;">
+{% for challenge in assignment.challenges %}
+  <div class="ui segment">
+    <h2>{{ challenge.name }}: {{ challenge.score }}</h2>
+    {%- set challenge_status = challenge.get_challenge_access(class_, user) -%}
+    {%- set ass_schedule = class_.get_assignment_schedule(assignment) -%}
+    <b>First View: </b> {{ challenge_status.first_view if challenge_status }} <br/>
+    <b>After Start: </b> {{ challenge_status.first_view - ass_schedule.started_date if challenge_status }} <br/>
+    <b>Before End: </b> {{ ass_schedule.ended_date - challenge_status.first_view if challenge_status}}
+
+
+  <table class="ui celled table">
+    <thead>
+      <tr>
+        <th>Submitted Date</th>
+        <th>File Name</th>
+        <th>Status</th>
+        <th>Pass</th>
+        <th>Test Case</th>
+        <th>Score</th>
+        <th>Operation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for solution in challenge.get_solutions(class_, user).order_by('-id')  %}
+        <tr class="{{ solution_style.get_solution_class(solution) }}">
+        <td>
+          {{ solution.submitted_date }}
+        </td>
+        <td>
+          {{ solution.code.filename }}
+        </td>
+        <td>
+          {{ solution.status }}
+        </td>
+        <td>
+          {{ solution.passed }}
+        </td>
+        <td>{{ solution.test_results | count }}</td>
+        <td class="right aligned">
+          {{ '{:.02f}'.format(solution.score) }}
+        </td>
+        <td>
+          {% if class_.owner == current_user %}
+            <a href="{{ url_for('administration.solutions.view', solution_id=solution.id) }}" class="ui icon button circular primary"><i class="eye icon"></i></a>
+          {% elif class_.is_teaching_assistant(current_user) %}
+            <a href="{{ url_for('teaching_assistants.solutions.view', solution_id=solution.id) }}" class="ui icon button circular primary"><i class="eye icon"></i></a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+{% endfor %}
+</div>
+
+{% endblock %}

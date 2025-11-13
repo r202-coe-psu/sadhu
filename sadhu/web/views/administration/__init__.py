@@ -10,4 +10,4 @@ module = Blueprint("administration", __name__, url_prefix="/administration")
 @login_required
 @acl.roles_required("admin")
 def index():
-    return render_template("/dashboard/index.html")
+    return render_template("/dashboard/index.html.j2")

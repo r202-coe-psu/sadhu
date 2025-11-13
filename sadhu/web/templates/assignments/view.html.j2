@@ -1,0 +1,71 @@
+{% extends '/assignments/index.html.j2' %}
+
+{% block dashboard_title %}Assignment: {{ assignment.name }}{% endblock %}
+
+{% block breadcrumbs %}
+{{ super() }}
+<i class="right angle icon divider"></i>
+<div class="active section">{{ assignment.name }}</div>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui container">
+	<div class="ui segment">
+		<div>
+			<p>Course <a href="{{ url_for('courses.view', course_id=assignment.course.id) }}">{{ assignment.course.name }}</a></p>
+      {#
+      <p>Class <a href="{{ url_for('classes.view', class_id=class_.id) }}">{{ class_.name }}</a></p>
+      #}
+		</div>
+		<div>
+			{{ assignment.description }}
+		</div>
+		<div>
+			Score: {{ assignment.score }}
+		</div>
+		<div>
+			<p>{{ assignment.tags | join(', ') }}</p>
+		</div>
+  </div>
+</div>
+
+<div class="ui container" style="margin-top: 20px">
+	
+	{% if assignment.challenges | count > 0 %}
+    <table class="ui celled table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Score</th>
+          {# <th>Submitted</th> #}
+				</tr>
+			</thead>
+			<body>
+{% for challenge in assignment.challenges %}
+				<tr>
+					<td>
+            <a href="{{ url_for('challenges.view', challenge_id=challenge.id, **request.args) }}">{{ challenge.name }}</a>
+					</td>
+					<td>
+						{{ challenge.description }}
+					</td>
+					<td>
+						{{ challenge.score }}
+					</td>
+          {#
+          <td>
+            {{'Submitted' if challenge.get_solutions(class_.id) else 'Waiting' }}
+					</td>
+          #}
+				</tr>
+{% endfor %}
+			</body>
+		</table>
+		{% endif %}
+
+</div>
+
+
+{% endblock %}

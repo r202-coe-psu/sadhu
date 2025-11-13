@@ -23,14 +23,14 @@ def index():
         teaching_assistants__user=current_user._get_current_object()
     )
 
-    return render_template("/teaching-assistants/index.html", classes=classes)
+    return render_template("/teaching-assistants/index.html.j2", classes=classes)
 
 
 @module.route("/<class_id>")
 @acl.roles_required("teaching_assistant")
 def view(class_id):
     class_ = models.Class.objects.get(id=class_id)
-    return render_template("/administration/classes/view.html", class_=class_)
+    return render_template("/administration/classes/view.html.j2", class_=class_)
 
 
 @module.route("/<class_id>/list_students")
@@ -45,7 +45,7 @@ def list_students(class_id):
     enrollments = sorted(enrollments, key=lambda e: e.user.first_name)
 
     return render_template(
-        "/administration/classes/list-users.html",
+        "/administration/classes/list-users.html.j2",
         enrollments=enrollments,
         class_=class_,
     )
@@ -60,7 +60,7 @@ def show_user_score(class_id, user_id):
     assignments = class_.course.assignments
 
     return render_template(
-        "/administration/classes/show-user-score.html",
+        "/administration/classes/show-user-score.html.j2",
         class_=class_,
         user=user,
         assignments=assignments,
@@ -75,7 +75,7 @@ def show_user_assignment(class_id, user_id, assignment_id):
     assignment = models.Assignment.objects.get(id=assignment_id)
 
     return render_template(
-        "/administration/classes/show-user-assignment.html",
+        "/administration/classes/show-user-assignment.html.j2",
         class_=class_,
         user=user,
         assignment=assignment,

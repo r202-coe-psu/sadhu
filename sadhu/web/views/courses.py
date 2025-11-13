@@ -26,7 +26,7 @@ def index():
 
     courses = [class_.course for class_ in classes]
 
-    return render_template("/courses/index.html", courses=courses)
+    return render_template("/courses/index.html.j2", courses=courses)
 
 
 @module.route("/<course_id>")
@@ -50,7 +50,7 @@ def view(course_id):
         if enrollment:
             enrolled_classes.append(enrollment.enrolled_class)
     return render_template(
-        "/courses/view.html",
+        "/courses/view.html.j2",
         course=course,
         enrolled_classes=enrolled_classes,
         classes=classes,
