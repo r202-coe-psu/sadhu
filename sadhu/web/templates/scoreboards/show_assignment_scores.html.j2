@@ -3,9 +3,21 @@
 {% block additional_js %}
   <script src="//cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.4/fabric.js"></script>
 
-  <script type="text/javascript" src="{{ url_for('static', filename='node_modules/brython/brython.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='node_modules/brython/brython_stdlib.js') }}"></script>
-  <script src="{{ url_for('static', filename='brython/scoreboards.brython.js') }}"></script>
+  {#
+
+  <script type="text/javascript" src="{{ url_for('static', filename='brython_modules/brython.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='brython_modules/brython_stdlib.js') }}"></script>
+
+  #}
+
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/brython@3.13.2/brython.min.js">
+    </script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/brython@3.13.2/brython_stdlib.js">
+    </script>
+
+  <script src="{{ url_for('static', filename='brython_modules/scoreboards.brython.js') }}"></script>
 
   <script type="text/javascript">
     brython(1);

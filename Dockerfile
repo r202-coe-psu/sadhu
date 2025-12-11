@@ -26,5 +26,5 @@ RUN npm install --prefix sadhu/web/static
 
 COPY . /app
 
-RUN cd /app/sadhu/web/static/brython; for i in $(ls -d */); do /venv/bin/python -m brython --make_package ${i%%/}; done
+RUN cd sadhu/web/static/brython_modules; for i in $(ls -d */); do /venv/bin/python -m brython make_package ${i%%/}; done
 
