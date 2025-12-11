@@ -19,13 +19,13 @@ COPY poetry.lock pyproject.toml /app/
 COPY sadhu/cmd /app/sadhu/cmd
 RUN . /venv/bin/activate \
     && poetry config virtualenvs.create false \
-    && python -m poetry install --no-interaction --only main \
-    && python -m poetry run brython-cli install --no-demo --install-dir sadhu/web/static/brython_modules/
+    && python -m poetry install --no-interaction --only main 
 
 COPY sadhu/web/static/package.json sadhu/web/static/package-lock.json sadhu/web/static/
 RUN npm install --prefix sadhu/web/static
 
 COPY . /app
+RUN /venv/bin/brython-cli install --no-demo --install-dir sadhu/web/static/brython_modules
 
 RUN cd sadhu/web/static/brython_modules; for i in $(ls -d */); do /venv/bin/python -m brython make_package ${i%%/}; done
 
