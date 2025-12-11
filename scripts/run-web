@@ -1,5 +1,7 @@
 #!/bin/sh
-poetry run brython-cli update --update-dir sadhu/web/static/brython_modules/
+
+rm -rf 'sadhu/web/static/brython_modules/*.js'
+poetry run brython-cli install --no-demo --install-dir sadhu/web/static/brython_modules/
 
 BRYTHON_ID=$(pgrep -f $(pwd)/scripts/auto-build-brython);
 
