@@ -118,7 +118,7 @@
                   {% if output_str == None %}
                   {% set output_str = '' %}
                   {% endif -%}
-                  {{ difflib.html.j2Diff(
+                  {{ difflib.HtmlDiff(
                   wrapcolumn=70, linejunk=difflib.IS_LINE_JUNK).make_file(output_str.splitlines(keepends=True), t.expected_result.splitlines(keepends=True)) | safe }}
           </div>
         </div>

@@ -13,13 +13,15 @@
 {% block additional_js %}
   {{ super() }}
 
+{#
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
-  config: ["MMLo.html.j2.js"],
-  jax: ["input/TeX", "output.html.j2-CSS", "output/NativeMML"],
+  config: ["MMLo.html.js"],
+  jax: ["input/TeX", "output.html.CSS", "output/NativeMML"],
   extensions: ["MathMenu.js", "MathZoom.js"]
 });
 </script>
+#}
 <script type="text/javascript" src="{{ url_for('static', filename='node_modules/mathjax/tex-mml-chtml.js') }}"></script>
 
 <script type="text/javascript">
@@ -152,7 +154,7 @@ Challenge: {{ challenge.name }}
 <div class="ui container" style="margin-top: 1em;">
   {% if solutions %}
 <script type="text/python">
-  from browser import document,.html.j2, ajax, timer
+  from browser import document, html, ajax, timer
   import json
 
   sol_status = {}
