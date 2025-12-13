@@ -107,6 +107,8 @@ class SolutionController:
             solution.passed = False
             solution.messages = ""
             solution.score = 0
+            solution.output = ""
+            solution.test_results = []
             solution.save()
             self.queue.put(solution)
 
