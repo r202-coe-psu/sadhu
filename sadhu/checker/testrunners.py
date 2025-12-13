@@ -1,5 +1,6 @@
 from sadhu import models
 import threading
+import concurrent.futures
 import subprocess
 import os
 import datetime
@@ -26,8 +27,9 @@ class TestRunner(threading.Thread):
             Python=testers.PythonTester(settings),
             GO=testers.GoTester(settings),
         )
+        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
 
-    def process(self, solution):
+    def process_solution(self, solution):
 
         tester = self.testers.get(solution.language, None)
         if not tester:
@@ -59,7 +61,18 @@ class TestRunner(threading.Thread):
                 test_case.output_string = test_result.output
                 test_case.save()
 
+    def process_solution(self, solution):
+        try:
+            self.process(solution)
+        except Exception as e:
+            logger.exception(f"{solution.id} {e}")
+            return False
+
+        logger.exception(f"{solution.id} run completed")
+        return True
+
     def run(self):
+        self.executors = []
         self.running = True
         while self.running:
             solution = self.queue.get()
@@ -68,10 +81,12 @@ class TestRunner(threading.Thread):
                     solution.id, solution.challenge.id, solution.owner.id
                 )
             )
-            try:
-                self.process(solution)
-            except Exception as e:
-                logger.exception(e)
+            # self.process_solution(solution)
+            self.executors.append(self.executor.submit(self.process_solution, solution))
+
+            for executor in self.executors:
+                if executor.done():
+                    self.executors.remove(executor)
 
     def stop(self):
         self.running = False
@@ -82,7 +97,7 @@ class SolutionController:
         self.queue = queue
 
     def get_waiting_solution(self):
-        solutions = models.Solution.objects(status="waiting")
+        solutions = models.Solution.objects(status="waiting").limit(500)
         for solution in solutions:
             solution.status = "in-queue"
             solution.save()
