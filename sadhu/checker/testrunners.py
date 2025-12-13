@@ -88,6 +88,7 @@ class TestRunner(threading.Thread):
             # self.process_solution(solution)
             self.executors.append(self.executor.submit(self.process, solution))
 
+            logger.debug(f"task submitted, current executors {len(self.executors)}")
             for executor in self.executors:
                 if executor.done():
                     self.executors.remove(executor)
