@@ -61,7 +61,7 @@ class TestRunner(threading.Thread):
                 test_case.output_string = test_result.output
                 test_case.save()
 
-    def process_solution(self, solution):
+    def process(self, solution):
         try:
             self.process(solution)
         except Exception as e:
@@ -82,7 +82,7 @@ class TestRunner(threading.Thread):
                 )
             )
             # self.process_solution(solution)
-            self.executors.append(self.executor.submit(self.process_solution, solution))
+            self.executors.append(self.executor.submit(self.process, solution))
 
             for executor in self.executors:
                 if executor.done():
