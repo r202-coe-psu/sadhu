@@ -38,6 +38,8 @@ class Server:
                 logger.debug("got {} solutions to process".format(solution_count))
                 time.sleep(1)
 
+            self.test_runners.clear_executors()
+
 
 def create_server(settings):
     return Server(settings)
