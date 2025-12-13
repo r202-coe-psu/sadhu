@@ -86,9 +86,9 @@ class TestRunner(threading.Thread):
                     solution.id, solution.challenge.id, solution.owner.id
                 )
             )
-            if len(self.executors) >= 100:
+            if len(self.executors) >= 1000:
                 logger.debug("too many executors, waiting to clear")
-                while len(self.executors) >= 50:
+                while len(self.executors) >= 500:
                     time.sleep(10)
             # self.process_solution(solution)
             self.executors.append(self.executor.submit(self.process, solution))
