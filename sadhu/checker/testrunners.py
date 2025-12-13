@@ -95,10 +95,10 @@ class TestRunner(threading.Thread):
 
     def clear_executors(self):
 
-        logger.debug(f"task submitted, current executors {len(self.executors)}")
         for executor in self.executors:
             if executor.done():
                 self.executors.remove(executor)
+        logger.debug(f"task submitted, current executors {len(self.executors)}")
 
     def stop(self):
         self.running = False
