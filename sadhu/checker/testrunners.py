@@ -33,8 +33,8 @@ class TestRunner(threading.Thread):
 
         tester = self.testers.get(solution.language, None)
         if not tester:
-            solution.messages = "{} Tester Not Impremented".format(solution.language)
-            solution.status = "Fail"
+            solution.messages = "{} Tester Not Implemented".format(solution.language)
+            solution.status = "fail"
             solution.executed_date = datetime.datetime.now()
             solution.executed_ended_date = datetime.datetime.now()
             solution.save()
@@ -67,7 +67,7 @@ class TestRunner(threading.Thread):
         except Exception as e:
             logger.exception(f"process exception -> {solution.id} {e}")
             solution.messages = f"Exception occurred: {e}"
-            solution.status = "Fail"
+            solution.status = "fail"
             solution.executed_ended_date = datetime.datetime.now()
             solution.save()
             return False
