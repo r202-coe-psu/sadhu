@@ -105,7 +105,8 @@ class SolutionController:
         for solution in solutions:
             solution.status = "in-queue"
             solution.passed = False
-            solution.messages=""
+            solution.messages = ""
+            solution.score = 0
             solution.save()
             self.queue.put(solution)
 
