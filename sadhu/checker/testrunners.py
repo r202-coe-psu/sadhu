@@ -66,7 +66,7 @@ class TestRunner(threading.Thread):
             self.process_solution(solution)
         except Exception as e:
             logger.exception(f"process exception -> {solution.id} {e}")
-            solution.messages = f"Exception occurred: {e}"
+            solution.messages = f"{solution.messages} \nException occurred: {e}"
             solution.status = "fail"
             solution.executed_ended_date = datetime.datetime.now()
             solution.save()
