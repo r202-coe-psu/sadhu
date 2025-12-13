@@ -104,6 +104,7 @@ class SolutionController:
         solutions = models.Solution.objects(status="waiting").limit(500)
         for solution in solutions:
             solution.status = "in-queue"
+            solution.messages=""
             solution.save()
             self.queue.put(solution)
 
