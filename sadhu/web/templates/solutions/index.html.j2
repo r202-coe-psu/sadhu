@@ -48,7 +48,7 @@ Submitted Soulutions
             {% if solution.status == 'complete' %}
               <a href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="ui circular primary icon button"><i class="eye icon"></i></a>
             {% else %}
-              <i class="eye icon"></i>
+              <a href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="ui circular red icon button"><i class="eye icon"></i></a>
             {% endif %}
         </td>
       </tr>
