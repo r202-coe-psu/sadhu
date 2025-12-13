@@ -45,7 +45,7 @@ class Tester:
         file_path = Path(filename)
         directory_path = file_path.parents[0]
 
-        shutil.rmtree(file_path, ignore_errors=True)
+        shutil.rmtree(directory_path, ignore_errors=True)
 
     def build_executable_options(self, filename):
         return [filename]
