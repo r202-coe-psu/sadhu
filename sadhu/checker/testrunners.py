@@ -63,12 +63,12 @@ class TestRunner(threading.Thread):
 
     def process(self, solution):
         try:
-            self.process(solution)
+            self.process_solution(solution)
         except Exception as e:
-            logger.exception(f"{solution.id} {e}")
+            logger.exception(f"process exception -> {solution.id} {e}")
             return False
 
-        logger.exception(f"{solution.id} run completed")
+        logger.exception(f"process {solution.id} run completed")
         return True
 
     def run(self):
