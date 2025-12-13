@@ -6,6 +6,7 @@ import os
 import datetime
 
 from . import testers
+import time
 
 import logging
 
@@ -85,6 +86,10 @@ class TestRunner(threading.Thread):
                     solution.id, solution.challenge.id, solution.owner.id
                 )
             )
+            if len(self.executors) >= 100:
+                logger.debug("too many executors, waiting to clear")
+                while len(self.executors) >= 50:
+                    time.sleep(10)
             # self.process_solution(solution)
             self.executors.append(self.executor.submit(self.process, solution))
 
