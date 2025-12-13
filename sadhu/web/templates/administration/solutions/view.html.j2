@@ -51,9 +51,8 @@
     <b>Score:</b> {{ '{:.2f}'.format(solution.score) }}<br/>
     {% if 'compilation' in solution.metadata %}
     <div>
-      <b>Prepair Status</b>
-      
       {% if 'compiled_date' in solution.metadata['compilation'] %}
+        <b>Prepair Status</b>
         <div><b>Compile:</b> {{ solution.metadata['compilation']['compiled_date'] }}</div>
       {% endif %}
       {% if 'error' in solution.metadata['compilation'] %}
