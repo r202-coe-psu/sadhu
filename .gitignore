@@ -8,3 +8,4 @@ deployment
 *.egg-*
 sadhu/web/static/brython_modules/*.js
 sadhu/web/static/brython_modules/*.txt
+sadhu/web/static/css/tailwind.css

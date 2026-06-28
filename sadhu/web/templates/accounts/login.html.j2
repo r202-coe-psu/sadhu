@@ -23,15 +23,6 @@
         </a>
       </div>
   {% endif %}
-  {% if 'engpsu' in oauth_clients %}
-      <div>
-        <h3 class="text-lg font-semibold mb-2">{{ "For PSU Engineering Faculty Member" }}</h3>
-        <a class="btn btn-primary btn-lg" href="{{ url_for('accounts.login_oauth', name='engpsu') }}">
-          <i class="fa-solid fa-user"></i>
-          {{ "PSU Passport by Eng" }}
-        </a>
-      </div>
-  {% endif %}
   {% if 'google' in oauth_clients %}
       <div>
         <h3 class="text-lg font-semibold mb-2">{{ "For Participant" }}</h3>

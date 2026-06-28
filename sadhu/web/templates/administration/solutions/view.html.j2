@@ -7,14 +7,27 @@
   {{ style }}
 </style>
 <style type="text/css">
-  table.diff { font-family: monospace; border: 1px solid #ccc; width: 100%; }
+  table.diff {
+    font-family: monospace;
+    border: 1px solid var(--fallback-bc, oklch(var(--bc) / 0.2));
+    width: 100%;
+    color: var(--fallback-bc, oklch(var(--bc)));
+  }
   table.diff td, table.diff th { padding: 0 4px; }
-  .diff_header { background-color: #e0e0e0; }
+  /* line-number / gutter columns */
+  .diff_header {
+    background-color: var(--fallback-b2, oklch(var(--b2)));
+    color: var(--fallback-bc, oklch(var(--bc) / 0.5));
+  }
   td.diff_header { text-align: right; }
-  .diff_next { background-color: #c0c0c0; }
-  .diff_add { background-color: #aaffaa; }
-  .diff_chg { background-color: #ffff77; }
-  .diff_sub { background-color: #ffaaaa; }
+  .diff_next {
+    background-color: var(--fallback-b3, oklch(var(--b3)));
+    color: var(--fallback-bc, oklch(var(--bc) / 0.5));
+  }
+  /* added / changed / removed — tinted bg with theme-aware readable text */
+  .diff_add { background-color: oklch(var(--su) / 0.25); color: var(--fallback-bc, oklch(var(--bc))); }
+  .diff_chg { background-color: oklch(var(--wa) / 0.25); color: var(--fallback-bc, oklch(var(--bc))); }
+  .diff_sub { background-color: oklch(var(--er) / 0.25); color: var(--fallback-bc, oklch(var(--bc))); }
 </style>
 {% endblock %}
 
@@ -38,7 +51,7 @@
     <h3 class="text-xl font-bold">Solution for {{ solution.challenge.name }}</h3>
     <b>Submitter:</b> {{ solution.owner.first_name }} {{ solution.owner.last_name }}<br/>
     <b>ID:</b> {{ solution.owner.metadata.get('student_id', solution.owner.username) }}<br/>
-    <b>Submitted Date:</b> {{ solution.submitted_date }}<br/>
+    <b>Submitted Date:</b> {{ solution.submitted_date | ymd }}<br/>
     <b>Class:</b> <a href="{{ url_for('classes.view', class_id=solution.enrolled_class.id) }}">{{ solution.enrolled_class.name }}</a><br/>
     <b>Assignment:</b> <a href="{{ url_for('assignments.view', assignment_id=solution.assignment.id) }}">{{ solution.assignment.name }}</a><br/>
     <b>Challenge:</b> <a href="{{ url_for('challenges.view', challenge_id=solution.challenge.id, class_id=solution.enrolled_class.id) }}">{{ solution.challenge.name }}</a><br/>
@@ -49,7 +62,7 @@
     <div>
       {% if 'compiled_date' in solution.metadata['compilation'] %}
         <b>Prepair Status</b>
-        <div><b>Compile:</b> {{ solution.metadata['compilation']['compiled_date'] }}</div>
+        <div><b>Compile:</b> {{ solution.metadata['compilation']['compiled_date'] | ymd }}</div>
       {% endif %}
       {% if 'error' in solution.metadata['compilation'] %}
       <div class="alert alert-error">
@@ -138,26 +151,24 @@
       <form method="dialog" class="modal-backdrop"><button>close</button></form>
     </dialog>
 
-    <button class="btn btn-primary" onclick="document.getElementById('modal-{{'{:03}'.format(loop.index)}}').showModal()">Deep Result Analysis</button>
+    <button class="btn btn-primary btn-sm" onclick="document.getElementById('modal-{{'{:03}'.format(loop.index)}}').showModal()">Deep Result Analysis</button>
     {# show result #}
-    <div class="card bg-base-100 shadow">
+    <div class="card bg-base-100 shadow mt-2">
       <div class="card-body">
-      <div>
-        <h3 class="text-info font-bold text-lg">Your Output</h3>
-        <div>
-          <code>
-            {{ highlight(output_str, console_lexer, formatter) | safe }}
-          </code>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <h3 class="text-info font-bold text-lg mb-1">Your Output</h3>
+            <div class="bg-base-200 rounded-box p-3 overflow-x-auto">
+              <code>{{ highlight(output_str, console_lexer, formatter) | safe }}</code>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-success font-bold text-lg mb-1">Expected Output</h3>
+            <div class="bg-base-200 rounded-box p-3 overflow-x-auto">
+              <code>{{ highlight(t.expected_result, console_lexer, formatter) | safe }}</code>
+            </div>
+          </div>
         </div>
-      </div>
-      <div>
-        <h3 class="text-info font-bold text-lg">Expected Output</h3>
-        <div>
-          <code>
-            {{ highlight(t.expected_result, console_lexer, formatter) | safe }}
-          </code>
-        </div>
-      </div>
       </div>
     </div>
     <div class="divider"></div>

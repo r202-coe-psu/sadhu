@@ -1,0 +1,13 @@
+#!/bin/sh
+# Build (or watch) the Tailwind/daisyUI stylesheet for the sadhu front-end.
+#   ./scripts/run-tailwind         one-shot minified build (default)
+#   ./scripts/run-tailwind watch   rebuild on template changes
+set -e
+
+ROOT=$(cd "$(dirname "$0")/.." && pwd)
+STATIC="$ROOT/sadhu/web/static"
+
+case "$1" in
+	watch|--watch|-w) npm run watch:css --prefix "$STATIC" ;;
+	*)                npm run build:css --prefix "$STATIC" ;;
+esac

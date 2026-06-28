@@ -30,8 +30,8 @@
 {% macro render_table(assignments) %}
 <div class="mt-5">
 	{% if assignments %}
-	 <div class="overflow-x-auto">
-	 <table class="table">
+	<div class="overflow-x-auto">
+	  <table class="table">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -44,7 +44,7 @@
 			</thead>
 			<tbody>
 {% for assignment in assignments %}
-				<tr>
+      <tr class="hover">
 					<td>
 						<a href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}">{{ assignment.name }}</a>
 					</td>

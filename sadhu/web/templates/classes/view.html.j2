@@ -36,10 +36,10 @@
 			<b>Limited Class:</b> {{ class_.limited }}
 		</div>
 		<div>
-			<b>Started Date:</b> {{ class_.started_date }}
+			<b>Started Date:</b> {{ class_.started_date | ymd }}
 		</div>
 		<div>
-			<b>Ended Date:</b> {{ class_.ended_date }}
+			<b>Ended Date:</b> {{ class_.ended_date | ymd }}
 		</div>
 
 		<div>
@@ -71,8 +71,8 @@
 						</a>
 					</td>
 					<td>{{ ass_time.assignment.challenges | count }}</td>
-					<td>{{ ass_time.started_date }}</td>
-					<td>{{ ass_time.ended_date }}</td>
+					<td>{{ ass_time.started_date | ymd }}</td>
+					<td>{{ ass_time.ended_date | ymd }}</td>
           <td>
             {% if ass_time.is_pass_started_time() %}
             <a class="btn btn-circle btn-primary" href="{{ url_for('assignments.practice', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">

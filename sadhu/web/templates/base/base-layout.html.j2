@@ -4,10 +4,24 @@
     <meta http-equiv="Content-Type" content="text.html.j2; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>{% block title  %}{{ config.get('APP_TITLE') }}{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/daisyui/daisyui.css') | add_date_url}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') | add_date_url}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/@fortawesome/fontawesome-free/css/all.min.css') | add_date_url}}">
-    <script src="{{ url_for('static', filename='node_modules/@tailwindcss/browser/dist/index.global.js') | add_date_url}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/flatpickr/dist/flatpickr.min.css') | add_date_url}}">
     <script src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') | add_date_url}}"></script>
+    <script src="{{ url_for('static', filename='node_modules/flatpickr/dist/flatpickr.min.js') | add_date_url}}"></script>
+    <script>
+      // Render date fields as fixed-format pickers (instead of the browser's
+      // locale-dependent native <input type="date">).
+      document.addEventListener('DOMContentLoaded', function () {
+        flatpickr('.js-datepicker', { dateFormat: 'Y-m-d', allowInput: true });
+        flatpickr('.js-datetimepicker', {
+          enableTime: true,
+          time_24hr: true,
+          dateFormat: 'Y-m-d H:i',
+          allowInput: true,
+        });
+      });
+    </script>
 
     {% block default_head %}{% endblock %}
     {% block additional_head %}{% endblock %}

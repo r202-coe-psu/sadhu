@@ -52,10 +52,10 @@
 {{ render_field(field) }}
 {%- endmacro %}
 
-{% macro render_calendar(field, calendar_id='calendar', input_type='date') -%}
+{% macro render_calendar(field, calendar_id='calendar', input_type='text', enable_time=False) -%}
 <div class="form-control w-full mb-3" id="{{ calendar_id }}">
   {{ field.label(class_='label font-medium') }}
-  {{ field(class_='input w-full', type=input_type, autocomplete='off') }}
+  {{ field(class_='input w-full %s' | format('js-datetimepicker' if enable_time else 'js-datepicker'), type=input_type, autocomplete='off') }}
 </div>
 {{ eh.get_error_messages(field.errors) }}
 {%- endmacro %}

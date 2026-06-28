@@ -2,12 +2,7 @@
 {% import '/base/html-renderer.html.j2' as renderer %}
 
 {% block additional_js %}
-  <script type="text/javascript">
-    datetime_formatter = {
-      datetime:"YYYY-MM-DD HH:mm",
-      date:"YYYY-MM-DD",
-    };
-  </script>
+
 {% endblock %}
 
 {% block dashboard_title %}
@@ -27,8 +22,8 @@
     <form method="POST">
       {{ form.csrf_token }}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {{ renderer.render_calendar(form.started_date, calendar_id='started_date_calendar') }}
-        {{ renderer.render_calendar(form.ended_date, calendar_id='ended_date_calendar') }}
+        {{ renderer.render_calendar(form.started_date, calendar_id='started_date_calendar', enable_time=True) }}
+        {{ renderer.render_calendar(form.ended_date, calendar_id='ended_date_calendar', enable_time=True) }}
       </div>
       <button name="create" type="submit" class="btn btn-primary">Set</button>
     </form>

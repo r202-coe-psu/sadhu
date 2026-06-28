@@ -16,8 +16,8 @@
       <h2 class="text-2xl font-bold mb-2">Enrolled Students</h2>
       <p>
       <b>Learners: </b> {{ enrollments | count }} <br/>
-      <b>Start Date: </b> {{ class_.started_date.ctime() }} <br/>
-      <b>End Data: </b> {{ class_.ended_date.ctime() }} <br/>
+      <b>Start Date: </b> {{ class_.started_date | ymd }} <br/>
+      <b>End Data: </b> {{ class_.ended_date | ymd }} <br/>
       <b>Never Login Student: </b> {{ never_login | join(', ') }} <br/>
       </p>
       <p>

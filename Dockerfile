@@ -25,6 +25,7 @@ COPY sadhu/web/static/package.json sadhu/web/static/package-lock.json sadhu/web/
 RUN npm install --prefix sadhu/web/static
 
 COPY . /app
+RUN npm run build:css --prefix sadhu/web/static
 RUN /venv/bin/brython-cli install --no-demo --install-dir sadhu/web/static/brython_modules
 
 RUN cd sadhu/web/static/brython_modules; for i in $(ls -d */); do /venv/bin/python -m brython make_package ${i%%/}; done

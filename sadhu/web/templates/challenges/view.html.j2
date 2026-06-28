@@ -246,7 +246,7 @@ Challenge: {{ challenge.name }}
           {% for solution in solutions %}
           <tr id="solution-{{ solution.id }}" class="{{ solution_style.get_solution_class(solution) }}">
             <td headers="filename">{{ solution.code.filename }}</td>
-            <td headers="submitted_date">{{ solution.submitted_date }}</td>
+            <td headers="submitted_date">{{ solution.submitted_date | ymd }}</td>
             <td headers="status">{{ solution.status }}</td>
             <td headers="passed">{{ solution.passed }}</td>
             <td headers="score">{{ '{:.2f}'.format(solution.score) }}</td>

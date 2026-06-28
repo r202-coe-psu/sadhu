@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@plugin "daisyui";
+
+/* Tailwind v4 auto-detects sources from the CLI's working directory, which is
+   this `static/` folder. The class names live in the Jinja templates one level
+   up, so point Tailwind at them explicitly. */
+@source "../../templates/**/*.html.j2";
+
+/* Highlight the hovered row on every table, matching daisyUI's own `row-hover`
+   modifier but applied globally so we don't have to tag each <tr>. Lives at the
+   top level (unlayered) so it wins over daisyUI's @layer rules. */
+@media (hover: hover) {
+  .table tbody tr:hover {
+    background-color: color-mix(in oklch, var(--color-base-content) 12%, transparent);
+  }
+}

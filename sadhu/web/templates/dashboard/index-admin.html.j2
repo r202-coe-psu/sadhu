@@ -29,8 +29,8 @@
             <p>{{ assignment.description }}</p>
             <p>
               <b>Class:</b> {{ class_.name }}</br/>
-              <b>Start:</b> {{ ass_t.started_date }}<br/>
-              <b>End:</b> {{ ass_t.ended_date }}<br/>
+              <b>Start:</b> {{ ass_t.started_date | ymd }}<br/>
+              <b>End:</b> {{ ass_t.ended_date | ymd }}<br/>
             </p>
           </div>
         </div>
@@ -58,8 +58,8 @@
               <a class="font-semibold" href="{{ url_for('administration.classes.view', class_id=class_.id) }}">{{ class_.name }}</a>
               <div class="text-sm opacity-70">
                 <p>{{ class_.description }}</p>
-                <p>Start {{ class_.started_date.date() }} <br>
-                   End {{ class_.ended_date.date() }} <br>
+                <p>Start {{ class_.started_date | ymd }} <br>
+                   End {{ class_.ended_date | ymd }} <br>
                 </p>
               </div>
             </div>

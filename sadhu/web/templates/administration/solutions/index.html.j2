@@ -37,7 +37,7 @@ Submitted Soulutions
           <a href="{{ url_for('administration.classes.view', class_id=solution.enrolled_class.id) }}">{{ solution.enrolled_class.name }}</a>
         </td>
         <td>
-          {{ solution.submitted_date.ctime() }}
+          {{ solution.submitted_date | ymd }}
         </td>
         <td>
           {{ solution.status }}

@@ -131,7 +131,7 @@ Challenge: {{ challenge.name }}
           <td><pre>{{ tc.input_string }}</pre></td>
           <td>{{ highlight(tc.output_string, console_lexer, console_formatter) | safe if tc.output_string }}</td>
           <td>{{ tc.public }}</td>
-          <td>{{ tc.created_date }}</td>
+          <td>{{ tc.created_date | ymd }}</td>
           <td class="whitespace-nowrap">
             <a href="{{ url_for('administration.challenges.edit_testcase', challenge_id=challenge.id, testcase_id=tc.id) }}" class="btn btn-circle btn-primary"><i class="fa-solid fa-pen-to-square"></i></a>
             <a href="{{ url_for('administration.challenges.delete_testcase', challenge_id=challenge.id, testcase_id=tc.id) }}" class="btn btn-circle btn-primary"><i class="fa-solid fa-trash"></i></a>

@@ -57,8 +57,8 @@
             <p>{{ assignment.description }}</p>
             <p>
               <b>Class:</b> {{ class_.name }}</br/>
-              <b>Start:</b> {{ ass_t.started_date }}<br/>
-              <b>End:</b> {{ ass_t.ended_date }}<br/>
+              <b>Start:</b> {{ ass_t.started_date | ymd }}<br/>
+              <b>End:</b> {{ ass_t.ended_date | ymd }}<br/>
               <b>Score:</b> <b><span class="text-error">{{ '{:.2f}'.format(assignment.get_score(class_, current_user)) }}</span>/<span class="text-info">{{ assignment.score }}</span></b><br/>
             <p>Status:
             {% if all_challenge_submission %}
@@ -97,8 +97,8 @@
               <a class="font-semibold" href="{{ url_for('classes.view', class_id=class_.id) }}">{{ class_.name }}</a>
               <div class="text-sm opacity-70">
                 <p>{{ class_.description }}</p>
-                <p>Start {{ class_.started_date.date() }} <br>
-                   End {{ class_.ended_date.date() }} <br>
+                <p>Start {{ class_.started_date | ymd }} <br>
+                   End {{ class_.ended_date | ymd }} <br>
                    Enroll {{ class_.is_enrolled(current_user.id) }}
                 </p>
               </div>

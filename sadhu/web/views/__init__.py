@@ -11,6 +11,16 @@ def add_date_url(url):
     return f'{url}?date={now.strftime("%Y%m%d")}'
 
 
+def ymd(value):
+    """Render a date/datetime as ``YYYY-MM-DD`` (empty string when missing)."""
+    if value is None:
+        return ""
+    try:
+        return value.strftime("%Y-%m-%d")
+    except AttributeError:
+        return value
+
+
 def get_subblueprints(directory):
     blueprints = []
 
@@ -58,6 +68,7 @@ def get_subblueprints(directory):
 
 def register_blueprint(app):
     app.add_template_filter(add_date_url)
+    app.add_template_filter(ymd)
     parent = pathlib.Path(__file__).parent
     blueprints = get_subblueprints(parent)
 

@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Compile the Tailwind/daisyUI stylesheet (and keep it rebuilding on edits).
+$(pwd)/scripts/run-tailwind
+$(pwd)/scripts/run-tailwind watch &
+
 rm -rf 'sadhu/web/static/brython_modules/*.js'
 poetry run brython-cli install --no-demo --install-dir sadhu/web/static/brython_modules/
 

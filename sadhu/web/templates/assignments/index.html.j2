@@ -14,34 +14,34 @@
   {%- if assignment_schedule %}
   <h2 class="text-2xl font-bold mb-4">Current Assignment</h2>
 	<div class="overflow-x-auto">
-	<table class="table">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Description</th>
-					<th>Due Date</th>
-					<th>Progress</th>
-					<th>Score</th>
-				</tr>
-			</thead>
-			<tbody>
-        {%- for schedule in assignment_schedule %}
-          {%- set assignment = schedule['assignment_schedule'].assignment -%}
-          {%- set assignment_time = schedule['assignment_schedule'] -%}
-          {%- set class_ = schedule['class_'] -%}
-          {%- set ass_score = assignment.get_score(class_, current_user) -%}
-          <tr class="{{ ass_style.get_assignment_class(ass_score, assignment.score) }}">
-					<td data-label="Name">
-						<a href="{{ url_for('assignments.practice', assignment_id=assignment.id, class_id=class_.id) }}">{{ assignment.name }}</a>
-					</td>
-          <td data-label="Description">{{ assignment.description }}</td>
-					<td data-label="Due Date">{{ assignment_time.ended_date.ctime() }}</td>
-          <td data-label="Progress">{{ assignment.count_done_challenges(class_, current_user) }} / {{ assignment.challenges | count }}</td>
-          <td data-label="Score" class="text-right">{{ '{:.2f}'.format(ass_score) }} / {{ assignment.score }}</td>
-				</tr>
-        {% endfor -%}
+		<table class="table">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Description</th>
+						<th>Due Date</th>
+						<th>Progress</th>
+						<th>Score</th>
+					</tr>
+				</thead>
+				<tbody>
+			{%- for schedule in assignment_schedule %}
+			{%- set assignment = schedule['assignment_schedule'].assignment -%}
+			{%- set assignment_time = schedule['assignment_schedule'] -%}
+			{%- set class_ = schedule['class_'] -%}
+			{%- set ass_score = assignment.get_score(class_, current_user) -%}
+			<tr class="{{ ass_style.get_assignment_class(ass_score, assignment.score) }}">
+						<td data-label="Name">
+							<a href="{{ url_for('assignments.practice', assignment_id=assignment.id, class_id=class_.id) }}">{{ assignment.name }}</a>
+						</td>
+			<td data-label="Description">{{ assignment.description }}</td>
+						<td data-label="Due Date">{{ assignment_time.ended_date | ymd }}</td>
+			<td data-label="Progress">{{ assignment.count_done_challenges(class_, current_user) }} / {{ assignment.challenges | count }}</td>
+			<td data-label="Score" class="text-right">{{ '{:.2f}'.format(ass_score) }} / {{ assignment.score }}</td>
+					</tr>
+			{% endfor -%}
 			</tbody>
-  </table>
+		</table>
 	</div>
   {% else %}
     <h4 class="text-lg font-semibold">There are no assignment in this time.</h4>
@@ -74,7 +74,7 @@
 						<a href="{{ url_for('assignments.practice', assignment_id=assignment.id, class_id=class_.id) }}">{{ assignment.name }}</a>
 					</td>
           <td data-label="Description">{{ assignment.description }}</td>
-					<td data-label="Due Date">{{ assignment_time.ended_date.ctime() }}</td>
+					<td data-label="Due Date">{{ assignment_time.ended_date | ymd }}</td>
           <td data-label="Progress">{{ assignment.count_done_challenges(class_, current_user) }} / {{ assignment.challenges | count }}</td>
           <td data-label="Score" class="text-right">{{ '{:.2f}'.format(assignment.get_score(class_, current_user)) }} / {{ assignment.score }}</td>
 				</tr>
