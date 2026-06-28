@@ -1,11 +1,12 @@
 {% import '/base/error-handler.html.j2' as eh %}
 
 {% macro render_field(field, class_='') -%}
-{# Detect textareas by their widget so StringField/TagListField fields that use a
-   TextArea() widget are styled (and sized) as textareas, not single-line inputs. #}
-{%- set is_select = field.type in ['SelectField', 'SelectMultipleField'] -%}
-{%- set is_textarea = not is_select and field.widget.input_type is not defined -%}
-{%- set widget_class = 'select' if is_select else ('textarea' if is_textarea else 'input') -%}
+{# Classify by the widget, not field.type: StringField/TagListField may use a
+   TextArea() widget, and model_form selects are QuerySelectField (not SelectField).
+   Textarea -> sized textarea; any other widget without an input_type is a select. #}
+{%- set is_textarea = field.widget.__class__.__name__ == 'TextArea' -%}
+{%- set is_select = not is_textarea and field.widget.input_type is not defined -%}
+{%- set widget_class = 'textarea' if is_textarea else ('select' if is_select else 'input') -%}
 {%- set style = '%s w-full %s %s' | format(widget_class, class_, eh.get_validate_class(field.errors)) -%}
 <div class="form-control w-full mb-3">
 {{ field.label(class_='label font-medium') }}
