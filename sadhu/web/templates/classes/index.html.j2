@@ -1,22 +1,23 @@
 {% extends '/base/default-dashboard.html.j2' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('classes.index') }}" class="section">Classes</a>
+<li><a href="{{ url_for('classes.index') }}">Classes</a></li>
 {% endblock %}
 
 {% block dashboard_title %}Enrolled Classes{% endblock %}
 
 {% block content %}
-  <div class="ui container">
+  <div class="container mx-auto px-4">
     {% if enrollments %}
-    <table class="ui celled table">
+    <div class="overflow-x-auto">
+    <table class="table">
       <thead>
         <tr>
           <th>Name</th>
           <th>Description</th>
         </tr>
       </thead>
-      <body>
+      <tbody>
   {% for enrollment in enrollments %}
         <tr>
           <td>
@@ -27,8 +28,9 @@
           </td>
         </tr>
   {% endfor %}
-      </body>
+      </tbody>
     </table>
+    </div>
     {% endif %}
 </div>
 

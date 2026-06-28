@@ -35,32 +35,33 @@
 
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
-  <div class="active section">Test Case: {{ challenge.name }}</div>
+  <li>Test Case: {{ challenge.name }}</li>
 {% endblock %}
 
 
 {% block content %}
-  <div class="ui container">
-    <div class="ui segment">
-      <form method="POST" enctype="multipart/form-data" class="ui form">
+  <div class="container mx-auto px-4">
+    <div class="card bg-base-100 shadow">
+      <div class="card-body">
+      <form method="POST" enctype="multipart/form-data">
         {{ form.csrf_token }}
-        <div class="two fields">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {{ renderer.render_fileinput(form.input_file) }}
           {{ renderer.render_fileinput(form.output_file) }}
         </div>
-        <div class="two fields">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {{ renderer.render_checkbox(form.is_inputfile) }}
           {{ renderer.render_checkbox(form.is_outputfile) }}
         </div>
-        <div class="two fields">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {{ renderer.render_field(form.input_string) }}
           {{ renderer.render_field(form.output_string) }}
         </div>
 
-        {{ renderer.render_checkbox(form.public) }} 
-        <button name="create" type="submit" class="ui button primary">Submit</button>
+        {{ renderer.render_checkbox(form.public) }}
+        <button name="create" type="submit" class="btn btn-primary">Submit</button>
       </form>
+      </div>
     </div>
   </div>
 

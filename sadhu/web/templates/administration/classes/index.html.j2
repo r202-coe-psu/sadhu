@@ -1,7 +1,7 @@
 {% extends '/base/default-dashboard.html.j2' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.classes.index') }}" class="section">Classes</a>
+<li><a href="{{ url_for('administration.classes.index') }}">Classes</a></li>
 {% endblock %}
 
 {% block dashboard_title %}
@@ -9,16 +9,17 @@ Classes
 {% endblock %}
 
 {% block content %}
-    <div class="ui labeled icon menu">
-      <a href="{{ url_for('administration.classes.create') }}" class="item"><i class="add icon"></i>Add</a>
-      <a href="{{ url_for('administration.courses.index') }}" class="item"><i class="book icon"></i>Courses</a>
+    <div class="flex flex-wrap gap-2 mb-4">
+      <a href="{{ url_for('administration.classes.create') }}" class="btn"><i class="fa-solid fa-plus"></i>Add</a>
+      <a href="{{ url_for('administration.courses.index') }}" class="btn"><i class="fa-solid fa-book"></i>Courses</a>
     </div>
 
 
     {% if owner_classes %}
-    <div style="margin-top: 1ex;">
-      <h2>Owner</h2>
-      <table class="ui celled table">
+    <div class="mt-2">
+      <h2 class="text-2xl font-bold mb-2">Owner</h2>
+      <div class="overflow-x-auto">
+      <table class="table">
         <thead>
           <tr>
             <th>Name</th>
@@ -35,22 +36,24 @@ Classes
             <td>
               {{ class_.description }}
             </td>
-            <td class="single line">
-              <a class="ui circular button primary icon" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="edit icon"></i></a>
-              <a class="ui circular button primary icon" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="users icon"></i></a>
-              <a class="ui circular button primary icon" href="{{ url_for('administration.classes.delete', class_id=class_.id) }}"><i class="trash icon"></i></a>
+            <td class="whitespace-nowrap">
+              <a class="btn btn-circle btn-primary" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+              <a class="btn btn-circle btn-primary" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="fa-solid fa-users"></i></a>
+              <a class="btn btn-circle btn-primary" href="{{ url_for('administration.classes.delete', class_id=class_.id) }}"><i class="fa-solid fa-trash"></i></a>
             </td>
           </tr>
       {% endfor %}
         </tbody>
       </table>
+      </div>
     </div>
   {% endif %}
 
 {% if classes %}
-  <div style="margin-top: 1ex;">
-    <h2>Other Classes</h2>
-    <table class="ui celled table">
+  <div class="mt-2">
+    <h2 class="text-2xl font-bold mb-2">Other Classes</h2>
+    <div class="overflow-x-auto">
+    <table class="table">
       <thead>
         <tr>
           <th>Name</th>
@@ -67,15 +70,16 @@ Classes
           <td>
             {{ class_.description }}
           </td>
-          <td class="single line">
-            <a class="ui circular button primary icon" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="edit icon"></i></a>
-            <a class="ui circular button primary icon" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="users icon"></i></a>
-            <a class="ui circular button primary icon" href="{{ url_for('administration.classes.delete', class_id=class_.id) }}"><i class="trash icon"></i></a>
+          <td class="whitespace-nowrap">
+            <a class="btn btn-circle btn-primary" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+            <a class="btn btn-circle btn-primary" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="fa-solid fa-users"></i></a>
+            <a class="btn btn-circle btn-primary" href="{{ url_for('administration.classes.delete', class_id=class_.id) }}"><i class="fa-solid fa-trash"></i></a>
           </td>
         </tr>
     {% endfor %}
       </tbody>
     </table>
+    </div>
   </div>
 {% endif %}
 

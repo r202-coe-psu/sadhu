@@ -1,16 +1,15 @@
 {% macro get_validate_class(errors) -%}
-{%- set class_str = 'validate' -%}
+{%- set class_str = '' -%}
 {% if errors | count > 0 -%}
-{% set class_str = class_str + ' ' + 'invalid' %}
+{% set class_str = 'input-error select-error textarea-error' %}
 {%- endif %}
 {{- class_str -}}
 {%- endmacro %}
 
 {% macro get_error_messages(errors) -%}
 	{% if errors %}
-  <div class="red lighten-5 red-text text-darken-4">
+  <div class="text-error text-sm mt-1">
     {{ ', '.join(errors) }}
   </div>
   {% endif %}
 {%- endmacro %}
-

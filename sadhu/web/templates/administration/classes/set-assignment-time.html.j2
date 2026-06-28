@@ -7,18 +7,6 @@
       datetime:"YYYY-MM-DD HH:mm",
       date:"YYYY-MM-DD",
     };
-
-    $('#started_date_calendar').calendar({
-      formatter: datetime_formatter,
-      ampm: false,
-      endCalendar: $('#ended_date_calendar')
-    });
-
-    $('#ended_date_calendar').calendar({
-      formatter: datetime_formatter,
-      ampm: false,
-      startCalendar: $('#started_date_calendar')
-    });
   </script>
 {% endblock %}
 
@@ -28,23 +16,24 @@
 
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
-  <div class="active section">Set Assignment Schedule: {{ assignment.name }}</div>
+  <li>Set Assignment Schedule: {{ assignment.name }}</li>
 {% endblock %}
 
 {% block content %}
-<div class="ui container">
-  <div class="ui segment">
+<div class="container mx-auto px-4">
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
 
-    <form method="POST" class="ui form">
+    <form method="POST">
       {{ form.csrf_token }}
-      <div class="two fields">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         {{ renderer.render_calendar(form.started_date, calendar_id='started_date_calendar') }}
         {{ renderer.render_calendar(form.ended_date, calendar_id='ended_date_calendar') }}
       </div>
-      <button name="create" type="submit" class="ui button primary">Set</button>
+      <button name="create" type="submit" class="btn btn-primary">Set</button>
     </form>
 
+    </div>
   </div>
 </div>
 

@@ -2,193 +2,65 @@
 
 {% block title %}{{ config.get('APP_TITLE') }} Dashboard{% endblock %}
 
-{% block default_head %}
-  <style type="text/css">
-    .ui.main.menu {
-      display: none;
-    }
-
-    .full.height {
-      display: flex;
-      flex-direction: row;
-    }
-
-    .full.height > .toc .ui.menu {
-      border-radius: 0;
-      border-width: 0 1px 0 0;
-      margin: 0;
-      width: inherit;
-      max-height: 100vh;
-      height: 100vh;
-      overflow: auto;
-    }
-
-    .toc {
-      position: fixed;
-      z-index: 1;
-      width: 250px;
-      flex: 0 0 auto;
-      background-color: #1b1c1d;
-    }
-
-    .article {
-      flex: 1 1 auto;
-      min-width: 0px;
-      margin-left: 250px;
-    }
-
-    .footer {
-      border-top: 1px solid #DDDDDD !important;
-      box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.08) inset !important;
-      background-color: #FAFAFA !important;
-      margin-top: 30px !important;
-    }
-
-    .main-content {
-      margin: 20px !important;
-      margin-top: 20px;
-      min-height: 75vh;
-    }
-
-    .introduction {
-      margin-left: 20px !important;
-      border-bottom: 1px solid #DDDDDD;
-      padding-bottom: 10px !important;
-    }
-
-    @media only screen and (max-width: 1180px) {
-      .toc {
-        display: none !important;
-      }
-      
-      .article {
-        margin-left: 0px;
-      }
-
-      .ui.main.menu {
-        display: block !important;
-      }
-      .introduction {
-        display: none !important;
-      }
-      .fixed.menu > .container {
-        width: 100%; !important;
-      }
-    }
-
-  </style>
-
-  <script type="text/javascript">
-  $(document)
-  .ready(function() {
-
-      $('.left.sidebar.menu')
-        .sidebar('attach events', '.launch.icon.item', 'show')
-      ;
-      $('.launch.icon.item')
-        .removeClass('disabled')
-      ;
- 
-      $('.ui.dropdown')
-        .dropdown()
-      ;
-    })
-  ;
-  </script>
-
-{% endblock default_head %}
+{% block default_head %}{% endblock default_head %}
 
 
 {% block body %}
-{# begin slide menu #}
-<div class="ui vertical inverted sidebar large menu left">
-   {% include "/base/toolbar-dashboard.html.j2" with context %}
-</div>
-{# end slide menu #}
+<div class="drawer lg:drawer-open">
+  <input id="dashboard-drawer" type="checkbox" class="drawer-toggle" />
 
-{# begin top bar mobile #}
-<div class="ui fixed inverted main menu">
-  <div class="ui container">
-    <a class="launch icon item">
-      <i class="content icon"></i>
-    </a>
+  <div class="drawer-content flex flex-col min-h-screen">
 
-    <div class="item">
-      {% block dashboard_title %}Dashboard{% endblock %}
-    </div>
-
-    {#
-    <div class="right menu">
-      
-      <div class="vertically fitted borderless item">
-        <iframe class="github" src="./Layouts _ Fomantic UI_files/github-btn.html.j2" allowtransparency="true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
-      </div>
-      
-      <div class="item">
-        <div class="ui hidden right aligned search input" id="search">
-          <div class="ui transparent icon input">
-            <input class="prompt" type="text" placeholder="Search...">
-            <i class="inverted search link icon" data-content="Search UI"></i>
-          </div>
-          <div class="results"></div>
-        </div>
-      </div>
-
-    </div>
-    #}
-  </div>
-</div>
-{# end top bar mobile #}
-
-<div class="pusher">
-  <div class="full height">
-
-    {# begin default left side toc #}
-    <div class="toc">
-      <div class="ui vertical inverted large menu">
-        {% include "/base/toolbar-dashboard.html.j2" with context %}
+    {# begin top bar (mobile only) #}
+    <div class="navbar bg-neutral text-neutral-content lg:hidden sticky top-0 z-30">
+      <label for="dashboard-drawer" class="btn btn-square btn-ghost drawer-button">
+        <i class="fa-solid fa-bars"></i>
+      </label>
+      <div class="px-2 text-lg">
+        {% block dashboard_title %}Dashboard{% endblock %}
       </div>
     </div>
-    {# end default left side toc #}
+    {# end top bar (mobile only) #}
 
     {# begin main article #}
-    <div class="article">
-      <header>
-        <div class="ui vertical dividing segment">
-          <div class="introduction">
-            <h1 class="ui header">
-              {{ self.dashboard_title() }}
-            </h1>
-          </div>
-        </div>
-      </header>
+    <header>
+      <div class="bg-base-100 border-b border-base-300 px-6 py-4 hidden lg:block">
+        <h1 class="text-3xl font-bold">
+          {{ self.dashboard_title() }}
+        </h1>
+      </div>
+    </header>
 
-      <main class="main-content">
-        {%- if self.dashboard_title().lower() != 'dashboard' %}
-        <div class="ui segment">
-          <div class="ui big breadcrumb">
+    <main class="p-5 grow min-h-[75vh]">
+      {%- if self.dashboard_title().lower() != 'dashboard' %}
+      <div class="card bg-base-100 shadow mb-4">
+        <div class="card-body py-3">
+          <div class="breadcrumbs text-lg">
+            <ul>
             {% block breadcrumbs %}{% endblock %}
+            </ul>
           </div>
         </div>
-        {% endif -%}
+      </div>
+      {% endif -%}
 {% block content %}{% endblock %}
-      </main>
+    </main>
 
-      <footer class="ui vertical footer segment">
+    <footer class="bg-base-100 border-t border-base-300 py-8">
 {% include "/base/footer.html.j2" %}
-      </footer>
-      
-    </div>
+    </footer>
     {# end main article #}
 
   </div>
-{#
-<footer class="ui vertical footer segment">
-{% include "/base/footer.html.j2" %}
-</footer>
-#}
+
+  {# begin sidebar #}
+  <div class="drawer-side z-40">
+    <label for="dashboard-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+    <ul class="menu bg-neutral text-neutral-content min-h-full w-64 p-4">
+      {% include "/base/toolbar-dashboard.html.j2" with context %}
+    </ul>
+  </div>
+  {# end sidebar #}
+
 </div>
-
 {% endblock body %}
-
-

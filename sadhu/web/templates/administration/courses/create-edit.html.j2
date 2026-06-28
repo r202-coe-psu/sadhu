@@ -2,14 +2,6 @@
 {% import '/base/error-handler.html.j2' as eh %}
 {% import '/base/html-renderer.html.j2' as renderer %}
 
-{% block additional_js %}
-  <script type="text/javascript">
-      $('.ui.dropdown')
-        .dropdown()
-      ;
-  </script>
-{% endblock %}
-
 {% block dashboard_title %}
   {% if 'edit' in request.path %}
     Edit Course: {{ form.name.data }}
@@ -20,30 +12,31 @@
 
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
   {% if 'edit' in request.path %}
-    <div class="active section">Edit Course: {{ form.name.data }}</div>
+    <li>Edit Course: {{ form.name.data }}</li>
   {% else %}
-    <div class="active section">Create Course</div>
+    <li>Create Course</li>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-<div class="ui container">
-  <div class="ui segment">
-    <form method="POST" class="ui form">
-      {{ form.csrf_token }}
-      {{ renderer.render_field(form.name) }}
-      {{ renderer.render_field(form.description) }}
-      {{ renderer.render_select(form.languages) }}
-      {{ renderer.render_field(form.tags) }}
-      {{ renderer.render_search_multiple_select(form.contributors) }}
-      {% if 'edit' in request.path %}
-        <button name="create" type="submit" class="ui button primary">Edit</button>
-      {% else %}
-        <button name="create" type="submit" class="ui button primary">Create</button>
-      {% endif %}
-    </form>
+<div class="container mx-auto px-4">
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+      <form method="POST">
+        {{ form.csrf_token }}
+        {{ renderer.render_field(form.name) }}
+        {{ renderer.render_field(form.description) }}
+        {{ renderer.render_select(form.languages) }}
+        {{ renderer.render_field(form.tags) }}
+        {{ renderer.render_search_multiple_select(form.contributors) }}
+        {% if 'edit' in request.path %}
+          <button name="create" type="submit" class="btn btn-primary">Edit</button>
+        {% else %}
+          <button name="create" type="submit" class="btn btn-primary">Create</button>
+        {% endif %}
+      </form>
+    </div>
   </div>
 </div>
 

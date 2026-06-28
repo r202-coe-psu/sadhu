@@ -1,10 +1,9 @@
 {%- macro get_solution_class(solution) -%}
 {%- set class_str = '' -%}
 {% if solution.passed -%}
-  {% set class_str = 'positive' %}
+  {% set class_str = 'bg-success/20' %}
 {% elif not solution.passed and solution.status == 'complete' %}
-  {% set class_str = 'negative' %}
+  {% set class_str = 'bg-error/20' %}
 {%- endif %}
 {{- class_str -}}
 {%- endmacro %}
-

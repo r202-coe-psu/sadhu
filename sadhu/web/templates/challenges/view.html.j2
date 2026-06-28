@@ -58,62 +58,63 @@ Challenge: {{ challenge.name }}
 {% endblock %}
 
 {% block breadcrumbs %}
-  {{ super() }}  
-  <i class="right chevron icon divider"></i>
-  <a href="{{ url_for('challenges.view', challenge_id=challenge.id, **request.args.to_dict()) }}" class="active section">{{ challenge.name }}</a>
+  {{ super() }}
+  <li><a href="{{ url_for('challenges.view', challenge_id=challenge.id, **request.args.to_dict()) }}">{{ challenge.name }}</a></li>
 {% endblock %}
 
 {% block content %}
-<div class="ui container">
-  <div class="ui info message">
-    <h2 class="header">
+<div class="container mx-auto px-4">
+  <div class="alert alert-info">
+    <h2 class="text-xl font-bold">
       Assignment: <a href="{{ url_for('assignments.practice', assignment_id=assignment.id,  **request.args.to_dict()) }}">{{ assignment.name }}</a>
     </h2>
   </div>
 </div>
 
-<div class="ui container" style="margin-top: 1em;">
-  <div class="ui segment big" style="line-height: normal;">
-		<h3>{{ challenge.name }}</h3>
+<div class="container mx-auto px-4 mt-4">
+  <div class="card bg-base-100 shadow">
+		<div class="card-body text-lg leading-normal">
+		<h3 class="text-2xl font-bold">{{ challenge.name }}</h3>
 		{#
 		<h4>Description</h4>
 		<div>
 			{{ challenge.description }}
 		</div>
 		#}
-		<h4>Problem Statement</h4>
+		<h4 class="text-lg font-semibold mt-4">Problem Statement</h4>
 		<div>
 			{{ markdown(challenge.problem_statement, extensions=['fenced_code', 'codehilite', 'mdx_math', 'tables']) | safe }}
 		</div>
 
-		<h4>Input Format</h4>
+		<h4 class="text-lg font-semibold mt-4">Input Format</h4>
 		<div>
 			{{ challenge.input_format if challenge.input_format and challenge.input_format | count > 0 else '-' }}
 		</div>
 
-		<h4>Constrains</h4>
+		<h4 class="text-lg font-semibold mt-4">Constrains</h4>
 		<div>
 			{{ challenge.constrains if challenge.constrains and challenge.constrains | count > 0 else '-'}}
 		</div>
 
-		<h4>Output Format</h4>
+		<h4 class="text-lg font-semibold mt-4">Output Format</h4>
 		<div>
 			{{ markdown(challenge.output_format, extensions=['fenced_code', 'codehilite', 'mdx_math', 'tables']) | safe }}
 		</div>
 
-		<h4>Score</h4>
+		<h4 class="text-lg font-semibold mt-4">Score</h4>
 		<div>
-      <span class="ui red text"><b>{{ challenge.score }}</b></span>
+      <span class="text-error"><b>{{ challenge.score }}</b></span>
 		</div>
 
-		<h4>Tags</h4>
+		<h4 class="text-lg font-semibold mt-4">Tags</h4>
 		<div>
       {{ challenge.tags | join(', ') }}
     </div>
 
     {%- if challenge.test_cases | count > 0 %}
-		<h4>Public Test Case</h4>
-    <table class="ui celled blue table">
+		<h4 class="text-lg font-semibold mt-4">Public Test Case</h4>
+    <div class="overflow-x-auto">
+    <table class="table">
       <thead>
         <tr>
             <th>Input</th>
@@ -132,24 +133,28 @@ Challenge: {{ challenge.name }}
         {% endfor -%}
       </tbody>
     </table>
+    </div>
     {% endif -%}
+		</div>
   </div>
 </div>
 
 {% if request.args.get('class_id', None) %}
 {% if show_submission %}
-<div class="ui container" style="margin-top: 1em;">
-	<div class="ui segment">
-		<form class="ui form" action="{{ url_for('challenges.submit_solution', challenge_id=challenge.id, class_id=request.args.get('class_id')) }}" enctype="multipart/form-data" method="POST">
+<div class="container mx-auto px-4 mt-4">
+	<div class="card bg-base-100 shadow">
+		<div class="card-body">
+		<form action="{{ url_for('challenges.submit_solution', challenge_id=challenge.id, class_id=request.args.get('class_id')) }}" enctype="multipart/form-data" method="POST">
 			{{ form.csrf_token }}
 			{{ renderer.render_fileinput(form.code) }}
-			<button name="submit" type="submit" class="ui primary button">Submit</button>
+			<button name="submit" type="submit" class="btn btn-primary">Submit</button>
 		</form>
+		</div>
   </div>
 </div>
 {% endif %}
 
-<div class="ui container" style="margin-top: 1em;">
+<div class="container mx-auto px-4 mt-4">
   {% if solutions %}
 <script type="text/python">
   from browser import document, html, ajax, timer
@@ -177,7 +182,7 @@ Challenge: {{ challenge.name }}
     if old_status == obj['status']:
       set_get_status_timeout()
       return
-  
+
     tr = document['solution-'+obj['id']]
     for td in tr.children:
       if td.headers == 'status':
@@ -189,12 +194,12 @@ Challenge: {{ challenge.name }}
 
     if obj['status'] == 'complete':
       if obj['passed'] == True:
-        tr.className = 'positive'
+        tr.className = 'bg-success/20'
       else:
-        tr.className = 'negative'
+        tr.className = 'bg-error/20'
 
       a = document[f'solution-{obj["id"]}-view']
-      a.className = a.className.replace('disabled', '').strip()
+      a.className = a.className.replace('btn-disabled', '').strip()
 
       sol_status.pop(obj['id'])
     else:
@@ -224,7 +229,8 @@ Challenge: {{ challenge.name }}
     get_status_from_server()
 
 </script>
-		  <table class="ui celled table">
+		  <div class="overflow-x-auto">
+		  <table class="table">
         <thead>
           <tr>
             <th>Filename</th>
@@ -246,15 +252,16 @@ Challenge: {{ challenge.name }}
             <td headers="score">{{ '{:.2f}'.format(solution.score) }}</td>
             <td headers="operation">
               {% if solution.status == 'complete' %}
-                <a id="solution-{{ solution.id }}-view" class="ui circular primary icon button" target="blank" href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="eye icon"></i></a>
+                <a id="solution-{{ solution.id }}-view" class="btn btn-circle btn-primary" target="blank" href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="fa-solid fa-eye"></i></a>
               {% else %}
-                <a id="solution-{{ solution.id }}-view" class="ui circular primary icon button disabled" target="blank" href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="eye icon"></i></a>
+                <a id="solution-{{ solution.id }}-view" class="btn btn-circle btn-primary btn-disabled" target="blank" href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}"><i class="fa-solid fa-eye"></i></a>
               {% endif %}
             </td>
 					</tr>
           {% endfor %}
         </tbody>
 		  </table>
+		  </div>
 	  {% endif %}
 </div>
 {% endif %}

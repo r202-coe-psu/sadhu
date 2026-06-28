@@ -5,80 +5,82 @@
 
 {% block breadcrumbs %}
 {{ super() }}
-<i class="right angle icon divider"></i>
-<div class="active section">{{ class_.name }}</div>
+<li>{{ class_.name }}</li>
 {% endblock %}
 
 
 {% block content %}
 
-<div class="ui container">
-	<div class="ui segment">
-		<div>
-			<b>Description:</b> {{ class_.description }}
-		</div>
-		<div>
-			<b>Code:</b> {{ class_.code }}
-		</div>
-		<div>
-			<b>Course:</b> <a
-				href="{{ url_for('administration.courses.view', course_id=class_.course.id) }}">{{ class_.course.name }}</a>
-		</div>
-		<div>
-			<b>Limited Class:</b> {{ class_.limited }}
-		</div>
-		{% if class_.limited_enrollment %}
-		<div>
-			<b>Limited Method:</b> {{ class_.limited_enrollment.method }}
-		</div>
-		<div>
-			<b>Limited Grantees:</b> {{ class_.limited_enrollment.grantees | join(', ') }}
-		</div>
-		{% endif %}
-		<div>
-			<b>Started Date:</b> {{ class_.started_date }}
-		</div>
-		<div>
-			<b>Ended Date:</b> {{ class_.ended_date }}
-		</div>
+<div class="container mx-auto px-4">
+	<div class="card bg-base-100 shadow">
+		<div class="card-body">
+			<div>
+				<b>Description:</b> {{ class_.description }}
+			</div>
+			<div>
+				<b>Code:</b> {{ class_.code }}
+			</div>
+			<div>
+				<b>Course:</b> <a
+					href="{{ url_for('administration.courses.view', course_id=class_.course.id) }}">{{ class_.course.name }}</a>
+			</div>
+			<div>
+				<b>Limited Class:</b> {{ class_.limited }}
+			</div>
+			{% if class_.limited_enrollment %}
+			<div>
+				<b>Limited Method:</b> {{ class_.limited_enrollment.method }}
+			</div>
+			<div>
+				<b>Limited Grantees:</b> {{ class_.limited_enrollment.grantees | join(', ') }}
+			</div>
+			{% endif %}
+			<div>
+				<b>Started Date:</b> {{ class_.started_date }}
+			</div>
+			<div>
+				<b>Ended Date:</b> {{ class_.ended_date }}
+			</div>
 
-		<div>
-			<b>Tag:</b> {{ class_.tags | join(', ') }}
-		</div>
-		<div>
-			<b>Teaching Assistant</b>
-			{% for ta in class_.teaching_assistants %}
-			{{ ta.user.first_name }} {{ ta.user.last_name }},
-			{% endfor %}
-		</div>
+			<div>
+				<b>Tag:</b> {{ class_.tags | join(', ') }}
+			</div>
+			<div>
+				<b>Teaching Assistant</b>
+				{% for ta in class_.teaching_assistants %}
+				{{ ta.user.first_name }} {{ ta.user.last_name }},
+				{% endfor %}
+			</div>
 
+		</div>
 	</div>
 </div>
 
-<div class="ui container" style="margin-top: 1em;">
-	<div class="ui labeled icon menu">
+<div class="container mx-auto px-4 mt-4">
+	<div class="flex flex-wrap gap-2">
 		{% if class_.owner == current_user %}
-		<a class="item" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i
-				class="edit icon"></i>Edit</a>
-		<a class="item" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i
-				class="student icon"></i>Students</a>
-		<a class="item" href="{{ url_for('administration.classes.add_teaching_assistant', class_id=class_.id) }}"><i
-				class="clipboard check icon"></i>TA</a>
+		<a class="btn" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i
+				class="fa-solid fa-pen-to-square"></i>Edit</a>
+		<a class="btn" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i
+				class="fa-solid fa-graduation-cap"></i>Students</a>
+		<a class="btn" href="{{ url_for('administration.classes.add_teaching_assistant', class_id=class_.id) }}"><i
+				class="fa-solid fa-clipboard-check"></i>TA</a>
 		{% elif class_.is_teaching_assistant(current_user) %}
-		<a class="item" href="{{ url_for('teaching_assistants.classes.list_students', class_id=class_.id) }}"><i
-				class="student icon"></i>Students</a>
+		<a class="btn" href="{{ url_for('teaching_assistants.classes.list_students', class_id=class_.id) }}"><i
+				class="fa-solid fa-graduation-cap"></i>Students</a>
 		{% endif %}
-		<a class="item" href="{{ url_for('administration.classes.list_class_solutions', class_id=class_.id) }}"><i
-				class="code file icon"></i>Solutions</a>
+		<a class="btn" href="{{ url_for('administration.classes.list_class_solutions', class_id=class_.id) }}"><i
+				class="fa-solid fa-file-code"></i>Solutions</a>
 
-		<a class="item" href="{{ url_for('administration.classes.print_challenges', class_id=class_.id) }}"><i
-				class="print icon"></i>Print Challenges</a>
+		<a class="btn" href="{{ url_for('administration.classes.print_challenges', class_id=class_.id) }}"><i
+				class="fa-solid fa-print"></i>Print Challenges</a>
 	</div>
 </div>
 
-<div class="ui container" style="margin-top: 1em;">
-	<h2>Assignments</h2>
-	<table class="ui celled table">
+<div class="container mx-auto px-4 mt-4">
+	<h2 class="text-2xl font-bold mb-2">Assignments</h2>
+	<div class="overflow-x-auto">
+	<table class="table">
 		<thead>
 			<tr>
 				<th>Name</th>
@@ -91,7 +93,7 @@
 		</thead>
 		<tbody>
 			{% for assignment in class_.course.assignments %}
-			<tr class="top aligned">{% set ass_time=class_.get_assignment_schedule(assignment) %}
+			<tr class="align-top">{% set ass_time=class_.get_assignment_schedule(assignment) %}
 				<td>
 					{% if current_user.has_roles(["lecturer"]) %}
 					<a href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}"
@@ -109,23 +111,24 @@
 				<td>{{ assignment.score }}</td>
 				<td>{{ ass_time.started_date if ass_time else '-' }}</td>
 				<td>{{ ass_time.ended_date if ass_time else '-' }}</td>
-				<td class="single line one wide right aligned">
+				<td class="whitespace-nowrap text-right">
 					{% if class_.owner == current_user or current_user in class_.contributors or class_.is_teaching_assistant(current_user) %}
-					<a class="ui icon button circular primary"
+					<a class="btn btn-circle btn-primary"
 						href="{{ url_for('administration.classes.set_assignment_time', class_id=class_.id, assignment_id=assignment.id) }}"><i
-							class="clock icon"></i></a>
-					<a class="ui icon button circular primary"
+							class="fa-solid fa-clock"></i></a>
+					<a class="btn btn-circle btn-primary"
 						href="{{ url_for('scoreboards.show_assignment_scores', class_id=class_.id, assignment_id=assignment.id) }}"><i
-							class="award icon"></i></a>
-					<a class="ui icon button circular primary"
+							class="fa-solid fa-award"></i></a>
+					<a class="btn btn-circle btn-primary"
 						href="{{ url_for('administration.classes.list_assignment_users', class_id=class_.id, assignment_id=assignment.id) }}"><i
-							class="eye icon"></i></a>
+							class="fa-solid fa-eye"></i></a>
 					{% endif %}
 				</td>
 			</tr>
 			{% endfor %}
 		</tbody>
 	</table>
+	</div>
 
 </div>
 {% endblock %}

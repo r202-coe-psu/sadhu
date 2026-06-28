@@ -3,36 +3,34 @@
 {% block dashboard_title %}Courses{% endblock %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.courses.index') }}" class="section">Courses</a>
+<li><a href="{{ url_for('administration.courses.index') }}">Courses</a></li>
 {% endblock %}
 
 {% block content %}
-<div class="row" style="padding-top: 1ex">
-  <div class="column">
-    <div class="ui labeled icon menu">
-      <a class="item" href="{{ url_for('administration.courses.create_or_edit') }}">
-        <i class="add icon"></i> Add
-      </a>
-      <a class="item" href="{{ url_for('administration.assignments.index') }}">
-        <i class="laptop code icon"></i>
-        Assignments
-      </a>
-      <a class="item" href="{{ url_for('administration.challenges.index') }}">
-        <i class="code icon"></i>
-        Challenges
-      </a>
-    </div>
+<div class="pt-2">
+  <div class="flex flex-wrap gap-2">
+    <a class="btn" href="{{ url_for('administration.courses.create_or_edit') }}">
+      <i class="fa-solid fa-plus"></i> Add
+    </a>
+    <a class="btn" href="{{ url_for('administration.assignments.index') }}">
+      <i class="fa-solid fa-laptop-code"></i>
+      Assignments
+    </a>
+    <a class="btn" href="{{ url_for('administration.challenges.index') }}">
+      <i class="fa-solid fa-code"></i>
+      Challenges
+    </a>
   </div>
 </div>
 
-<div class="row" style="padding-top: 1ex">
-  <div class="column">
+<div class="pt-2">
+  <div>
     {% if owner_courses %}
-      <h2>Own Course</h2>
+      <h2 class="text-2xl font-bold my-4">Own Course</h2>
       {{ render_table(owner_courses) }}
 		{% endif %}
     {% if contributed_courses %}
-      <h2>Contributed Course</h2>
+      <h2 class="text-2xl font-bold my-4">Contributed Course</h2>
       {{ render_table(contributed_courses) }}
 		{% endif %}
   </div>
@@ -41,7 +39,8 @@
 {% endblock %}
 
 {% macro render_table(courses) %}
-	<table class="ui celled table">
+  <div class="overflow-x-auto">
+	<table class="table">
     <thead>
       <tr>
         <th>Name</th>
@@ -49,7 +48,7 @@
         <th>Operation</th>
       </tr>
     </thead>
-    <body>
+    <tbody>
 {% for course in courses %}
 				<tr>
           <td data-label="Name">
@@ -59,17 +58,18 @@
             {{ course.description }}
           </td>
           <td data-label="Operation">
-            <a class="ui button circular icon primary"
+            <a class="btn btn-circle btn-primary"
             href="{{ url_for('administration.courses.view', course_id=course.id) }}">
-            <i class="eye icon"></i>
+            <i class="fa-solid fa-eye"></i>
             </a>
-            <a class="ui circular button primary icon"
+            <a class="btn btn-circle btn-primary"
             href="{{ url_for('administration.courses.create_or_edit', course_id=course.id) }}">
-            <i class="edit icon"></i>
+            <i class="fa-solid fa-pen-to-square"></i>
             </a>
           </td>
 				</tr>
 {% endfor %}
-    </body>
+    </tbody>
   </table>
+  </div>
 {% endmacro %}

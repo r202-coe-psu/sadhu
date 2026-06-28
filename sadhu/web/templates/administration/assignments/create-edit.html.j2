@@ -1,14 +1,6 @@
 {% extends '/administration/assignments/index.html.j2' %}
 {% import '/base/html-renderer.html.j2' as renderer %}
 
-{% block additional_js %}
-  <script type="text/javascript">
-    $('.ui.dropdown')
-      .dropdown()
-    ;
-  </script>
-{% endblock %}
-
 {% block dashboard_title %}
   {% if 'edit' in request.path %}
     Edit Assignment: {{ form.name.data }}
@@ -19,18 +11,18 @@
 
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
   {% if 'edit' in request.path %}
-    <div class="active section">Edit Assignment: {{ form.name.data }}</div>
+    <li>Edit Assignment: {{ form.name.data }}</li>
   {% else %}
-    <div class="active section">Create Assignment</div>
+    <li>Create Assignment</li>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-<div class="ui container">
-  <div class="ui segment">
-    <form method="POST" class="ui form">
+<div class="container mx-auto px-4">
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+    <form method="POST">
       {{ form.csrf_token }}
       {{ renderer.render_field(form.name) }}
       {{ renderer.render_field(form.description) }}
@@ -40,8 +32,9 @@
       {{ renderer.render_field(form.level) }}
       {{ renderer.render_field(form.random_or_not) }}
       {{ renderer.render_field(form.random_count) }}
-      <button name="create" type="submit" class="ui button primary">{{ 'Create' if 'edit' not in request.path else 'Create' }}</button>
+      <button name="create" type="submit" class="btn btn-primary">{{ 'Create' if 'edit' not in request.path else 'Create' }}</button>
     </form>
+    </div>
   </div>
 </div>
 

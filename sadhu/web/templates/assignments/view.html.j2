@@ -4,14 +4,14 @@
 
 {% block breadcrumbs %}
 {{ super() }}
-<i class="right angle icon divider"></i>
-<div class="active section">{{ assignment.name }}</div>
+<li>{{ assignment.name }}</li>
 {% endblock %}
 
 
 {% block content %}
-<div class="ui container">
-	<div class="ui segment">
+<div class="container mx-auto px-4">
+	<div class="card bg-base-100 shadow">
+		<div class="card-body">
 		<div>
 			<p>Course <a href="{{ url_for('courses.view', course_id=assignment.course.id) }}">{{ assignment.course.name }}</a></p>
       {#
@@ -27,13 +27,15 @@
 		<div>
 			<p>{{ assignment.tags | join(', ') }}</p>
 		</div>
+		</div>
   </div>
 </div>
 
-<div class="ui container" style="margin-top: 20px">
-	
+<div class="container mx-auto px-4 mt-5">
+
 	{% if assignment.challenges | count > 0 %}
-    <table class="ui celled table">
+		<div class="overflow-x-auto">
+    <table class="table">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -42,7 +44,7 @@
           {# <th>Submitted</th> #}
 				</tr>
 			</thead>
-			<body>
+			<tbody>
 {% for challenge in assignment.challenges %}
 				<tr>
 					<td>
@@ -61,8 +63,9 @@
           #}
 				</tr>
 {% endfor %}
-			</body>
+			</tbody>
 		</table>
+		</div>
 		{% endif %}
 
 </div>

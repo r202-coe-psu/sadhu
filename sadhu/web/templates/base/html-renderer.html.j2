@@ -1,35 +1,38 @@
 {% import '/base/error-handler.html.j2' as eh %}
 
 {% macro render_field(field, class_='') -%}
-{%- set style = '%s' | format(eh.get_validate_class(field.errors)) -%}
-{%- if class_ != '' -%}
-{%- set style = '%s %s' | format(class_, eh.get_validate_class(field.errors)) -%}
+{%- set widget_class = 'input' -%}
+{%- if field.type in ['SelectField', 'SelectMultipleField'] -%}
+{%- set widget_class = 'select' -%}
+{%- elif field.type == 'TextAreaField' -%}
+{%- set widget_class = 'textarea' -%}
 {%- endif -%}
-<div class="field">
-{{ field.label }}
+{%- set style = '%s w-full %s %s' | format(widget_class, class_, eh.get_validate_class(field.errors)) -%}
+<div class="form-control w-full mb-3">
+{{ field.label(class_='label font-medium') }}
 {{ field(class_=style) }}
 </div>
 {{ eh.get_error_messages(field.errors) }}
 {%- endmacro %}
 
 {% macro render_checkbox(field) -%}
-<div class="field">
-  <div class="ui checkbox">
-    {{ field }}
-    {{ field.label }}
-  </div>
+<div class="form-control mb-3">
+  <label class="label cursor-pointer justify-start gap-3">
+    {{ field(class_='checkbox') }}
+    <span class="label-text">{{ field.label.text }}</span>
+  </label>
 </div>
 {%- endmacro %}
 
 
 {% macro render_fileinput(field) -%}
-<div class="field">
-  {{ field.label }}
-  <div class="ui action input">
-    <input type="text" placeholder="{{ field.label.text }}" readonly class="attach-file-{{field.name}}">
+<div class="form-control w-full mb-3">
+  {{ field.label(class_='label font-medium') }}
+  <div class="join w-full">
+    <input type="text" placeholder="{{ field.label.text }}" readonly class="input join-item w-full attach-file-{{field.name}}">
     {{ field(style="display: none;") }}
-    <div class="ui icon button attach-file-{{field.name}}">
-      <i class="attach icon"></i>
+    <div class="btn join-item attach-file-{{field.name}}">
+      <i class="fa-solid fa-paperclip"></i>
     </div>
   </div>
 </div>
@@ -37,26 +40,22 @@
 
 
 {% macro render_select(field) -%}
-{{ render_field(field, class_='ui dropdown') }}
+{{ render_field(field) }}
 {%- endmacro %}
 
 
 {% macro render_multiple_select(field) -%}
-{{ render_field(field, class_='ui fluid dropdown') }}
+{{ render_field(field) }}
 {%- endmacro %}
 
 {% macro render_search_multiple_select(field) -%}
-{{ render_field(field, class_='ui fluid search dropdown') }}
+{{ render_field(field) }}
 {%- endmacro %}
 
-{% macro render_calendar(field, calendar_id='calendar') -%}
-<div class="field">
-  {{ field.label }}
-  <div class="ui calendar" id="{{ calendar_id }}">
-    <div class="ui input left icon">
-      <i class="calendar icon"></i>
-      {{ field(autocomplete='off') }}
-    </div>
-  </div>
+{% macro render_calendar(field, calendar_id='calendar', input_type='date') -%}
+<div class="form-control w-full mb-3" id="{{ calendar_id }}">
+  {{ field.label(class_='label font-medium') }}
+  {{ field(class_='input w-full', type=input_type, autocomplete='off') }}
 </div>
+{{ eh.get_error_messages(field.errors) }}
 {%- endmacro %}

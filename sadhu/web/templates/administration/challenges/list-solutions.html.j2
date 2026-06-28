@@ -3,10 +3,8 @@
 
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
-  <a class="section" href="{{ url_for('administration.challenges.view', challenge_id=challenge.id, **request.args) }}">{{ challenge.name }}</a>
-  <i class="right angle icon divider"></i>
-  <div class="active section">Solutions</div>
+  <li><a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id, **request.args) }}">{{ challenge.name }}</a></li>
+  <li>Solutions</li>
 {% endblock %}
 
 {% block dashboard_title %}
@@ -14,19 +12,22 @@ Solution: {{ challenge.name }}
 {% endblock %}
 
 {% block content %}
-<div class="ui container">
-  <div class="ui segment">
-    <h2 class="ui header">{{ challenge.name }}</h2>
-		<h3>Description</h3>
+<div class="container mx-auto px-4">
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+    <h2 class="card-title text-2xl">{{ challenge.name }}</h2>
+		<h3 class="text-lg font-semibold mt-4">Description</h3>
 		<div>
       {{ challenge.description }}
+    </div>
     </div>
   </div>
 </div>
 
-<div class="ui container" style="margin-top: 20px;">
+<div class="container mx-auto px-4 mt-5">
   {% if solutions | count > 0 %}
-    <table class="ui celled table">
+    <div class="overflow-x-auto">
+    <table class="table">
     <thead>
       <tr>
         <th>Name</th>
@@ -57,24 +58,25 @@ Solution: {{ challenge.name }}
         <td>
           {{ solution.passed }}
         </td>
-        <td class="right aligned">
+        <td class="text-right">
           {{ solution.count_pass_testcases() }} /
           {{ solution.test_results | count }}
         </td>
-        <td class="right aligned">
+        <td class="text-right">
           {{ '{:.2f}'.format(solution.score) }}
         </td>
         <td>
             {% if solution.status == 'complete' %}
-              <a href="{{ url_for('administration.solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="ui circular primary icon button"><i class="eye icon"></i></a>
+              <a href="{{ url_for('administration.solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="btn btn-circle btn-primary"><i class="fa-solid fa-eye"></i></a>
             {% else %}
-              <i class="eye icon"></i>
+              <i class="fa-solid fa-eye"></i>
             {% endif %}
         </td>
       </tr>
 {% endfor %}
     </tbody>
   </table>
+  </div>
   {% endif %}
 </div>
 

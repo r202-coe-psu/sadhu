@@ -6,19 +6,19 @@
 
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
-  <div class="active section">{{ class_.name }}</div>
+  <li>{{ class_.name }}</li>
 {% endblock %}
 
 {% block content %}
-<div class="ui container">
-  <div class="ui segment">
-		<h3>{{ class_.name }}</h3>
+<div class="container mx-auto px-4">
+  <div class="card bg-base-100 shadow">
+		<div class="card-body">
+		<h3 class="text-xl font-bold">{{ class_.name }}</h3>
 		<div>
 			{% if enrollment %}
 				You enroll this class
 			{% else %}
-			<a class="btn-floating btn-small waves-effect waves-light red" href="{{ url_for('classes.enroll', class_id=class_.id) }}"><i class="material-icons">add</i></a>
+			<a class="btn btn-circle btn-sm btn-error" href="{{ url_for('classes.enroll', class_id=class_.id) }}"><i class="fa-solid fa-plus"></i></a>
 
 			{% endif %}
 		</div>
@@ -45,11 +45,13 @@
 		<div>
 			<b>Tag:</b> {{ class_.tags | join(', ') }}
 		</div>
+		</div>
   </div>
 
-  <div style="margin-top: 1em;">
-		<h3>Assignments</h3>
-		<table class="ui celled blue table">
+  <div class="mt-4">
+		<h3 class="text-xl font-bold mb-2">Assignments</h3>
+		<div class="overflow-x-auto">
+		<table class="table">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -73,8 +75,8 @@
 					<td>{{ ass_time.ended_date }}</td>
           <td>
             {% if ass_time.is_pass_started_time() %}
-            <a class="ui circular primary icon button" href="{{ url_for('assignments.practice', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">
-              <i class="eye icon"></i>
+            <a class="btn btn-circle btn-primary" href="{{ url_for('assignments.practice', assignment_id=ass_time.assignment.id, class_id=class_.id) }}">
+              <i class="fa-solid fa-eye"></i>
             </a>
             {% endif %}
           </td>
@@ -82,7 +84,8 @@
 			{% endfor %}
 			</tbody>
 		</table>
-            	
+		</div>
+
   </div>
 </div>
 {% endblock %}

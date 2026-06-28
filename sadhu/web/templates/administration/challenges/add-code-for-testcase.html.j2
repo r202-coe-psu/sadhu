@@ -25,22 +25,23 @@
 
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
-  <div class="active section">Code for Test Case: {{ challenge.name }}</div>
+  <li>Code for Test Case: {{ challenge.name }}</li>
 {% endblock %}
 
 
 {% block content %}
-  <div class="ui container">
-    <div class="ui segment">
-      <form method="POST" enctype="multipart/form-data" class="ui form">
+  <div class="container mx-auto px-4">
+    <div class="card bg-base-100 shadow">
+      <div class="card-body">
+      <form method="POST" enctype="multipart/form-data">
         {{ form.csrf_token }}
-        <div class="two fields">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {{ renderer.render_fileinput(form.code) }}
           {{ renderer.render_select(form.language) }}
         </div>
-        <button name="create" type="submit" class="ui button primary">Submit</button>
+        <button name="create" type="submit" class="btn btn-primary">Submit</button>
       </form>
+      </div>
     </div>
   </div>
 

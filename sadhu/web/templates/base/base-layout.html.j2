@@ -1,23 +1,19 @@
 <!DOCTYPE.html.j2>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta http-equiv="Content-Type" content="text.html.j2; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>{% block title  %}{{ config.get('APP_TITLE') }}{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/fomantic-ui-css/semantic.min.css') | add_date_url}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/daisyui/daisyui.css') | add_date_url}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/@fortawesome/fontawesome-free/css/all.min.css') | add_date_url}}">
+    <script src="{{ url_for('static', filename='node_modules/@tailwindcss/browser/dist/index.global.js') | add_date_url}}"></script>
     <script src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') | add_date_url}}"></script>
-    <script src="{{ url_for('static', filename='node_modules/fomantic-ui-css/semantic.min.js') | add_date_url}}"></script>
-    <style type="text/css">
-      body {
-        background-color: #DADADA;
-      }
-    </style>
-    
+
     {% block default_head %}{% endblock %}
     {% block additional_head %}{% endblock %}
   </head>
 
-  <body>
+  <body class="min-h-screen bg-base-200">
     {% block body %}{% endblock %}
   </body>
 	{% block additional_js %}{% endblock %}

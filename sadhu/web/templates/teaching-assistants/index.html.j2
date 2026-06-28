@@ -1,13 +1,14 @@
 {% extends '/base/default-dashboard.html.j2' %}
 
 {% block content %}
-<div class="ui container">
-    <h4>Teaching Assistant Mode</h4>
+<div class="container mx-auto px-4">
+    <h4 class="text-xl font-bold">Teaching Assistant Mode</h4>
 </div>
 
-<div class="ui container" style="padding-top:20px;">
-  <h5>Class</h5>
-  <table class="ui celled table">
+<div class="container mx-auto px-4 pt-5">
+  <h5 class="text-lg font-semibold mb-2">Class</h5>
+  <div class="overflow-x-auto">
+  <table class="table">
     <thead>
       <tr>
           <th>Name</th>
@@ -22,12 +23,13 @@
           <a href="{{ url_for('teaching_assistants.classes.view', class_id=class_.id) }}">{{ class_.name }}</a>
         </td>
         <td>
-          <a href="{{ url_for('teaching_assistants.classes.view', class_id=class_.id) }}" class="ui button icon primary circular"><i class="ui eye icon"></i></a>
+          <a href="{{ url_for('teaching_assistants.classes.view', class_id=class_.id) }}" class="btn btn-circle btn-primary"><i class="fa-solid fa-eye"></i></a>
         </td>
       </tr>
     {% endfor %}
     </tbody>
   </table>
+  </div>
 
 </div>
 

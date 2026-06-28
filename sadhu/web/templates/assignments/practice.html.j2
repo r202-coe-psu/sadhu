@@ -2,12 +2,12 @@
 {% import '/base/error-handler.html.j2' as eh %}
 
 {%- macro get_challenge_status_style(class_, challenge) %}
-{%- set style = 'warning' -%}
+{%- set style = 'bg-warning/20' -%}
 {%- set user_score = challenge.score - challenge.get_solution_score(class_, current_user) -%}
 {%- if user_score == 0 %}
-  {%- set style = 'positive' -%}
+  {%- set style = 'bg-success/20' -%}
 {% elif user_score > 0 %}
-  {%- set style = 'negative' -%}
+  {%- set style = 'bg-error/20' -%}
 {% endif -%}
 {{ style }}
 {%- endmacro %}
@@ -15,10 +15,11 @@
 {% block dashboard_title %}Assignments{% endblock %}
 
 {% block content %}
-<div class="ui container">
-  <div class="ui segment">
+<div class="container mx-auto px-4">
+  <div class="card bg-base-100 shadow mb-4">
+    <div class="card-body">
 		<div>
-			<h3 class="ui header">Course: <a href="{{ url_for('courses.view', course_id=assignment.course.id) }}">{{ assignment.course.name }}</a></h3>
+			<h3 class="text-xl font-bold">Course: <a href="{{ url_for('courses.view', course_id=assignment.course.id) }}">{{ assignment.course.name }}</a></h3>
       <p>Class <a href="{{ url_for('classes.view', class_id=class_.id) }}">{{ class_.name }}</a></p>
 		</div>
 		<div>
@@ -30,10 +31,12 @@
 		<div>
 			<p>{{ assignment.tags | join(', ') }}</p>
 		</div>
+    </div>
   </div>
-	
+
   {% if assignment.challenges | count > 0 %}
-  <table class="ui celled table">
+  <div class="overflow-x-auto">
+  <table class="table">
     <thead>
       <tr>
         <th>Name</th>
@@ -65,6 +68,7 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
   {% endif %}
 
 </div>

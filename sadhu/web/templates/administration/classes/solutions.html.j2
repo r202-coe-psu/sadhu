@@ -6,16 +6,15 @@
 
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
-  <div class="section">{{ class_.name }}</div>
-  <i class="right angle icon divider"></i>
-  <a href="{{ url_for('administration.solutions.index') }}" class="active section">Solutions</a>
+  <li>{{ class_.name }}</li>
+  <li><a href="{{ url_for('administration.solutions.index') }}">Solutions</a></li>
 {% endblock %}
 
 
 {% block content %}
-<div class="ui container">
-	<div class="ui segment">
+<div class="container mx-auto px-4">
+	<div class="card bg-base-100 shadow">
+		<div class="card-body">
 		<div>
 			<b>Description:</b> {{ class_.description }}
 		</div>
@@ -47,31 +46,33 @@
 			<b>Tag:</b> {{ class_.tags | join(', ') }}
     </div>
     <div>
-      <b>Teaching Assistant</b> 
+      <b>Teaching Assistant</b>
       {% for ta in class_.teaching_assistants %}
-        {{ ta.user.first_name }} {{ ta.user.last_name }}, 
+        {{ ta.user.first_name }} {{ ta.user.last_name }},
       {% endfor %}
     </div>
 
+		</div>
   </div>
 </div>
 
-<div class="ui container" style="margin-top: 1em;">
-    <div class="ui labeled icon menu">
+<div class="container mx-auto px-4 mt-4">
+    <div class="flex flex-wrap gap-2">
       {% if class_.owner == current_user %}
-      <a class="item" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="edit icon"></i>Edit</a>
-      <a class="item" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="student icon"></i>Students</a>
-      <a class="item" href="{{ url_for('administration.classes.add_teaching_assistant', class_id=class_.id) }}"><i class="clipboard check icon"></i>TA</a>
+      <a class="btn" href="{{ url_for('administration.classes.edit', class_id=class_.id) }}"><i class="fa-solid fa-pen-to-square"></i>Edit</a>
+      <a class="btn" href="{{ url_for('administration.classes.list_students', class_id=class_.id) }}"><i class="fa-solid fa-graduation-cap"></i>Students</a>
+      <a class="btn" href="{{ url_for('administration.classes.add_teaching_assistant', class_id=class_.id) }}"><i class="fa-solid fa-clipboard-check"></i>TA</a>
     {% elif class_.is_teaching_assistant(current_user) %}
-      <a class="item" href="{{ url_for('teaching_assistants.classes.list_students', class_id=class_.id) }}"><i class="student icon"></i>Students</a>
+      <a class="btn" href="{{ url_for('teaching_assistants.classes.list_students', class_id=class_.id) }}"><i class="fa-solid fa-graduation-cap"></i>Students</a>
     {% endif %}
-      <a class="item" href="{{ url_for('administration.classes.list_class_solutions', class_id=class_.id) }}"><i class="code file icon"></i>Solutions</a>
+      <a class="btn" href="{{ url_for('administration.classes.list_class_solutions', class_id=class_.id) }}"><i class="fa-solid fa-file-code"></i>Solutions</a>
     </div>
 </div>
 
-<div class="ui container" style="margin-top: 1em;">
-  <h2>Last 50 solutions</h2>
-  <table class="ui celled table">
+<div class="container mx-auto px-4 mt-4">
+  <h2 class="text-2xl font-bold mb-2">Last 50 solutions</h2>
+  <div class="overflow-x-auto">
+  <table class="table">
     <thead>
       <tr>
         <th>Name</th>
@@ -110,15 +111,16 @@
         </td>
         <td>
             {% if solution.status == 'complete' %}
-              <a href="{{ url_for('administration.solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="ui circular primary icon button"><i class="eye icon"></i></a>
+              <a href="{{ url_for('administration.solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="btn btn-circle btn-primary"><i class="fa-solid fa-eye"></i></a>
             {% else %}
-              <i class="eye icon"></i>
+              <i class="fa-solid fa-eye"></i>
             {% endif %}
         </td>
       </tr>
 {% endfor %}
     </tbody>
   </table>
+  </div>
 
 
 

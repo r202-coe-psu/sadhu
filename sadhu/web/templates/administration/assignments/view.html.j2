@@ -1,30 +1,20 @@
 {% extends '/administration/assignments/index.html.j2' %}
 {% import '/base/html-renderer.html.j2' as renderer %}
 
-{% block additional_js %}
-  <script type="text/javascript">
-  $('.ui.fluid.dropdown')
-    .dropdown({
-      allowAdditions: true
-    })
-  ;
-	</script>
-{% endblock %}
-
 {% block dashboard_title %}
   Assignment: {{ assignment.name }}
 {% endblock %}
 
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
-  <div class="active section">{{ assignment.name }}</div>
+  <li>{{ assignment.name }}</li>
 {% endblock %}
 
 {% block content %}
-<div class="ui container">
-  <div class="ui segment">
-		<h2>{{ assignment.name }}</h2>
+<div class="container mx-auto px-4">
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+		<h2 class="card-title text-2xl">{{ assignment.name }}</h2>
 		<div>
 			<p>course <a href="{{ url_for('administration.courses.view', course_id=assignment.course.id) }}">{{ assignment.course.name }}</a></p>
 		</div>
@@ -47,17 +37,19 @@
 			Number of Random: {{assignment.random_count}}
 		</div>
 
-    <form method="POST" class="ui form" action="{{ url_for('administration.assignments.add_challenge', assignment_id=assignment.id) }}">
+    <form method="POST" action="{{ url_for('administration.assignments.add_challenge', assignment_id=assignment.id) }}">
         {{ form.csrf_token }}
         {{ renderer.render_multiple_select(form.challenges) }}
-        <button type="submit" class="ui button primary">add</button>
+        <button type="submit" class="btn btn-primary">add</button>
     </form>
+    </div>
   </div>
 </div>
 
-<div class="ui container" style="margin-top: 1em;">
+<div class="container mx-auto px-4 mt-4">
 	{% if assignment.challenges | count > 0 %}
-	 <table class="ui celled table">
+	 <div class="overflow-x-auto">
+	 <table class="table">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -78,19 +70,20 @@
 					</td>
 					<td>
 						{{ challenge.level}}
-					</td>	
+					</td>
 					<td>
 						{{ challenge.score }}
           </td>
           <td>
-            <a href="{{ url_for('administration.assignments.delete_challenge', assignment_id=assignment.id, challenge_id=challenge.id) }}" class="ui negative icon circular button">
-              <i class="trash icon"></i>
+            <a href="{{ url_for('administration.assignments.delete_challenge', assignment_id=assignment.id, challenge_id=challenge.id) }}" class="btn btn-circle btn-error">
+              <i class="fa-solid fa-trash"></i>
             </a>
           </td>
 				</tr>
 {% endfor %}
 			</tbody>
 		</table>
+		</div>
 		{% endif %}
 </div>
 

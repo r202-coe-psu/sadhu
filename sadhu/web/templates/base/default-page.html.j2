@@ -6,18 +6,18 @@
   {% if request.path == '/' %}
     {% include "/base/banner.html.j2" %}
   {% else %}
-    <div style="padding-top:50px;"></div>
+    <div class="pt-2"></div>
   {% endif %}
 {% endblock %}
 </header>
 
 <main>
-  <div class="container">
+  <div class="container mx-auto px-4">
     {% block content %}{% endblock content %}
   </div>
 </main>
 
-<footer class="ui vertical footer segment" style="padding-top: 2em;">
+<footer class="bg-base-100 border-t border-base-300 mt-8 py-8">
 {% include "/base/footer.html.j2" %}
 </footer>
 {% endblock %}

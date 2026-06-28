@@ -9,7 +9,7 @@
   {{ style }}
 </style>
 
-  
+
 
   <script>
     function printDiv(divId) {
@@ -65,60 +65,61 @@ Class: {{ class_.name }} - Print Challenges
 
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
-  <div class="active section">Print Challenges for Class {{ class_.name }}</div>
+  <li>Print Challenges for Class {{ class_.name }}</li>
 {% endblock %}
 
 {% block content %}
-<button onclick="printDiv('printable-area')" class="ui button primary"><i class="print icon"></i> Print All</button>
+<button onclick="printDiv('printable-area')" class="btn btn-primary"><i class="fa-solid fa-print"></i> Print All</button>
 
-<div id="printable-area" style="margin-top: 1em;">
+<div id="printable-area" class="mt-4">
   {% for assignment in assignments %}
-    <div class="ui info message">
-      <h2 class="header">
+    <div class="alert alert-info mb-4">
+      <h2 class="text-2xl font-bold">
         Assignment: <a
           href="{{ url_for('assignments.practice', assignment_id=assignment.id,  **request.args.to_dict()) }}">{{ assignment.name }}</a>
       </h2>
     </div>
     {% for challenge in assignment.challenges %}
-      <div class="ui segment big" style="line-height: normal; page-break-after: always;">
-        <h3>{{ challenge.name }}</h3>
-      
-        <h4>Problem Statement</h4>
+      <div class="card bg-base-100 shadow mb-4" style="line-height: normal; page-break-after: always;">
+        <div class="card-body text-lg">
+        <h3 class="text-xl font-bold">{{ challenge.name }}</h3>
+
+        <h4 class="text-lg font-semibold mt-2">Problem Statement</h4>
         <div>
 
           {{ markdown(challenge.problem_statement, extensions=['fenced_code','codehilite', 'mdx_math', 'tables']) | safe }}
 
         </div>
 
-        <h4>Input Format</h4>
+        <h4 class="text-lg font-semibold mt-2">Input Format</h4>
         <div>
           {{ challenge.input_format if challenge.input_format and challenge.input_format | count > 0 else '-' }}
         </div>
 
-        <h4>Constrains</h4>
+        <h4 class="text-lg font-semibold mt-2">Constrains</h4>
         <div>
           {{ challenge.constrains if challenge.constrains and challenge.constrains | count > 0 else '-'}}
         </div>
 
-        <h4>Output Format</h4>
+        <h4 class="text-lg font-semibold mt-2">Output Format</h4>
         <div>
           {{ markdown(challenge.output_format, extensions=['fenced_code', 'codehilite', 'mdx_math', 'tables']) | safe }}
         </div>
 
-        <h4>Score</h4>
+        <h4 class="text-lg font-semibold mt-2">Score</h4>
         <div>
-          <span class="ui red text"><b>{{ challenge.score }}</b></span>
+          <span class="text-error"><b>{{ challenge.score }}</b></span>
         </div>
 
-        <h4>Tags</h4>
+        <h4 class="text-lg font-semibold mt-2">Tags</h4>
         <div>
           {{ challenge.tags | join(', ') }}
         </div>
 
         {%- if challenge.test_cases | count > 0 %}
-        <h4>Public Test Case</h4>
-        <table class="ui celled blue table">
+        <h4 class="text-lg font-semibold mt-2">Public Test Case</h4>
+        <div class="overflow-x-auto">
+        <table class="table">
           <thead>
             <tr>
               <th>Input</th>
@@ -139,7 +140,9 @@ Class: {{ class_.name }} - Print Challenges
             {% endfor -%}
           </tbody>
         </table>
+        </div>
         {% endif -%}
+        </div>
       </div>
     {% endfor %}
   {% endfor %}
@@ -147,6 +150,6 @@ Class: {{ class_.name }} - Print Challenges
 
 
 
-<div class="ui container" style="margin-top: 1em;">
+<div class="container mx-auto px-4 mt-4">
 </div>
 {% endblock %}

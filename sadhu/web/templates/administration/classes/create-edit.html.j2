@@ -3,24 +3,10 @@
 
 {% block additional_js %}
   <script type="text/javascript">
-    $('.ui.dropdown')
-      .dropdown()
-;
     datetime_formatter = {
       datetime:"YYYY-M-DD HH:mm",
       date:"YYYY-MM-DD",
     };
-
-    $('#started_date_calendar').calendar({
-      type: 'date',
-      formatter: datetime_formatter,
-      endCalendar: $('#ended_date_calendar')
-    });
-    $('#ended_date_calendar').calendar({
-      type: 'date',
-      formatter: datetime_formatter,
-      startCalendar: $('#started_date_calendar')
-    });
 	</script>
 {% endblock %}
 
@@ -34,19 +20,19 @@
 
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
   {% if 'edit' in request.path %}
-    <div class="active section">Edit Class: {{ form.name.data }}</div>
+    <li>Edit Class: {{ form.name.data }}</li>
   {% else %}
-    <div class="active section">Create Class</div>
+    <li>Create Class</li>
   {% endif %}
 
 {% endblock %}
 
 {% block content %}
-<div class="ui container">
-  <div class="ui segment">
-    <form method="POST" class="ui form">
+<div class="container mx-auto px-4">
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+    <form method="POST">
       {{ form.csrf_token }}
       {{ renderer.render_field(form.name) }}
       {{ renderer.render_field(form.code) }}
@@ -56,16 +42,17 @@
       {{ renderer.render_select(form.limited_enrollment.method) }}
 
       {{ renderer.render_field(form.limited_enrollment.grantees) }}
-      <div class="two fields">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         {{ renderer.render_calendar(form.started_date, calendar_id='started_date_calendar') }}
         {{ renderer.render_calendar(form.ended_date, calendar_id='ended_date_calendar') }}
       </div>
 
-      <div class="field">
+      <div>
       {{ renderer.render_field(form.tags) }}
       </div>
-      <button name="create" type="submit" class="ui button primary">{{ 'Create' if 'create' in request.path else 'Edit' }}</button>
+      <button name="create" type="submit" class="btn btn-primary">{{ 'Create' if 'create' in request.path else 'Edit' }}</button>
     </form>
+    </div>
   </div>
 </div>
 

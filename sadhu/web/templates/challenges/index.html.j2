@@ -3,13 +3,14 @@
 {% block dashboard_title %}Challenges{% endblock %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('challenges.index', **request.args.to_dict()) }}" class="section">Challenges</a>
+<li><a href="{{ url_for('challenges.index', **request.args.to_dict()) }}">Challenges</a></li>
 {% endblock %}
 
 {% block content %}
 
-<div class="ui container">
-      <table class="ui celled table">
+<div class="container mx-auto px-4">
+      <div class="overflow-x-auto">
+      <table class="table">
         <thead>
           <tr>
               <th>Name</th>
@@ -18,7 +19,7 @@
               <th>Your Scores</th>
           </tr>
         </thead>
-        <body>
+        <tbody>
   {% for challenge in challenges %}
           <tr>
             <td>
@@ -30,13 +31,14 @@
             <td>
                 {{ challenge.tags | join(', ') }}
             </td>
-            <td class="right aligned">
+            <td class="text-right">
               {{ '{:.02f}'.format(challenge.get_solution_score(class_, current_user)) }}
             </td>
           </tr>
   {% endfor %}
-        </body>
+        </tbody>
       </table>
+      </div>
 </div>
 
 {% endblock %}

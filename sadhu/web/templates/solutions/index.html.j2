@@ -2,7 +2,7 @@
 {% import '/base/solution-style.html.j2' as solution_style %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('solutions.index') }}" class="section">Solutions</a>
+<li><a href="{{ url_for('solutions.index') }}">Solutions</a></li>
 {% endblock %}
 
 {% block dashboard_title %}
@@ -10,8 +10,9 @@ Submitted Soulutions
 {% endblock %}
 
 {% block content %}
-<div class="ui container">
-  <table class="ui celled table">
+<div class="container mx-auto px-4">
+  <div class="overflow-x-auto">
+  <table class="table">
     <thead>
       <tr>
         <th>Challenge Name</th>
@@ -46,14 +47,15 @@ Submitted Soulutions
         </td>
         <td>
             {% if solution.status == 'complete' %}
-              <a href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="ui circular primary icon button"><i class="eye icon"></i></a>
+              <a href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="btn btn-circle btn-primary"><i class="fa-solid fa-eye"></i></a>
             {% else %}
-              <a href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="ui circular red icon button"><i class="eye icon"></i></a>
+              <a href="{{ url_for('solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="btn btn-circle btn-error"><i class="fa-solid fa-eye"></i></a>
             {% endif %}
         </td>
       </tr>
 {% endfor %}
     </tbody>
   </table>
+  </div>
 </div>
 {% endblock %}

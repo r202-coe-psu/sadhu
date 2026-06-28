@@ -6,20 +6,21 @@ Courses
 {% endblock %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('courses.index') }}" class="section">Courses</a>
+<li><a href="{{ url_for('courses.index') }}">Courses</a></li>
 {% endblock %}
 
 {% block content %}
-<div class="ui container">
+<div class="container mx-auto px-4">
 	{% if courses %}
-	 <table class="ui celled table">
+	 <div class="overflow-x-auto">
+	 <table class="table">
 			<thead>
 				<tr>
 					<th>Name</th>
 					<th>Description</th>
 				</tr>
 			</thead>
-			<body>
+			<tbody>
 {% for course in courses %}
 				<tr>
 					<td>
@@ -30,10 +31,11 @@ Courses
 		</td>
 				</tr>
 {% endfor %}
-			</body>
+			</tbody>
    </table>
+	 </div>
  {% else %}
-   <h3>
+   <h3 class="text-xl font-semibold">
     There are no available course now.
    </h3>
 		{% endif %}

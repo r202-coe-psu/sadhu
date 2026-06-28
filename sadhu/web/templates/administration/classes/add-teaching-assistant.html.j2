@@ -1,20 +1,9 @@
 {% extends '/administration/classes/index.html.j2' %}
 {% import '/base/html-renderer.html.j2' as renderer %}
 
-{% block additional_js %}
-<script type="text/javascript">
-  $('.ui.fluid.dropdown')
-    .dropdown({
-      allowAdditions: true
-    })
-  ;
-</script>
-{% endblock %}
-
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
-  <div class="active section">TA</div>
+  <li>TA</li>
 {% endblock %}
 
 {% block dashboard_title %}
@@ -22,13 +11,15 @@
 {% endblock %}
 
 {% block content %}
-<div class="ui conainer">
-  <div class="ui segment">
-    <form method="POST" class="ui form">
+<div class="container mx-auto px-4">
+  <div class="card bg-base-100 shadow">
+    <div class="card-body">
+    <form method="POST">
       {{ form.csrf_token }}
       {{ renderer.render_search_multiple_select(form.users) }}
-      <button class="ui primary button" type="submit">Add</button>
+      <button class="btn btn-primary" type="submit">Add</button>
     </form>
+    </div>
   </div>
 </div>
 {% endblock %}

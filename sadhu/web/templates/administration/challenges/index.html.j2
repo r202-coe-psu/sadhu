@@ -1,7 +1,7 @@
 {% extends '/base/default-dashboard.html.j2' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.challenges.index') }}" class="section">Challenges</a>
+<li><a href="{{ url_for('administration.challenges.index') }}">Challenges</a></li>
 {% endblock %}
 
 {% block dashboard_title %}
@@ -9,20 +9,18 @@
 {% endblock %}
 
 {% block content %}
-<div class="ui" style="padding-top: 1ex">
-  <div class="ui labeled icon menu">
-      <a href="{{ url_for('administration.challenges.create') }}" class="item"><i class="add icon"></i>Add</a>
-  </div>
+<div class="pt-2">
+  <a href="{{ url_for('administration.challenges.create') }}" class="btn btn-primary"><i class="fa-solid fa-plus"></i>Add</a>
 </div>
 
-<div class="row" style="padding-top: 1ex">
-  <div class="column" style="padding-top: 1ex">
+<div class="pt-2">
+  <div class="pt-2">
     {% if challenges %}
-      <h2>Own Challenges</h2>
+      <h2 class="text-2xl font-bold mt-4 mb-2">Own Challenges</h2>
       {{ render_table(challenges) }}
     {% endif %}
     {% if other_challenges %}
-      <h2>Other Challenges</h2>
+      <h2 class="text-2xl font-bold mt-4 mb-2">Other Challenges</h2>
       {{ render_table(other_challenges) }}
     {% endif %}
   </div>
@@ -30,7 +28,8 @@
 {% endblock %}
 
 {% macro render_table(challenges) %}
-  <table class="ui celled table">
+  <div class="overflow-x-auto">
+  <table class="table">
     <thead>
       <tr>
           <th>Name</th>
@@ -41,7 +40,7 @@
       </tr>
     </thead>
 
-    <body>
+    <tbody>
     {% for challenge in challenges %}
           <tr>
             <td>
@@ -56,12 +55,13 @@
             <td>
                 {{ challenge.tags | join(', ') }}
             </td>
-            <td class="ui single line">
-              <a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}" class="ui button circular icon primary"><i class="eye icon"></i></a>
-              <a href="{{ url_for('administration.challenges.edit', challenge_id=challenge.id) }}" class="ui button circular icon primary"><i class="edit icon"></i></a>
+            <td class="whitespace-nowrap">
+              <a href="{{ url_for('administration.challenges.view', challenge_id=challenge.id) }}" class="btn btn-circle btn-primary"><i class="fa-solid fa-eye"></i></a>
+              <a href="{{ url_for('administration.challenges.edit', challenge_id=challenge.id) }}" class="btn btn-circle btn-primary"><i class="fa-solid fa-pen-to-square"></i></a>
             </td>
           </tr>
     {% endfor %}
-    </body>
+    </tbody>
   </table>
+  </div>
   {% endmacro %}

@@ -1,7 +1,7 @@
 {% extends '/base/default-dashboard.html.j2' %}
 
 {% block breadcrumbs %}
-<a href="{{ url_for('administration.assignments.index') }}" class="section">Assignments</a>
+<li><a href="{{ url_for('administration.assignments.index') }}">Assignments</a></li>
 {% endblock %}
 
 {% block dashboard_title %}
@@ -9,20 +9,18 @@
 {% endblock %}
 
 {% block content %}
-<div class="ui" style="padding-top: 1ex">
-  <div class="ui labeled icon menu">
-      <a href="{{ url_for('administration.assignments.create_or_edit') }}" class="item"><i class="add icon"></i>Add</a>
-  </div>
+<div class="pt-2">
+  <a href="{{ url_for('administration.assignments.create_or_edit') }}" class="btn btn-primary"><i class="fa-solid fa-plus"></i>Add</a>
 </div>
 
-<div class="row" style="padding-top: 1ex">
-  <div class="column" style="padding-top: 1ex">
+<div class="pt-2">
+  <div class="pt-2">
     {% if assignments %}
-      <h2>Own assignments</h2>
+      <h2 class="text-2xl font-bold mt-4 mb-2">Own assignments</h2>
       {{ render_table(assignments) }}
     {% endif %}
     {% if other_assignments %}
-      <h2>Other assignments</h2>
+      <h2 class="text-2xl font-bold mt-4 mb-2">Other assignments</h2>
       {{ render_table(other_assignments) }}
     {% endif %}
   </div>
@@ -30,9 +28,10 @@
 {% endblock %}
 
 {% macro render_table(assignments) %}
-<div style="margin-top: 20px;">
+<div class="mt-5">
 	{% if assignments %}
-	 <table class="ui celled table">
+	 <div class="overflow-x-auto">
+	 <table class="table">
 			<thead>
 				<tr>
 					<th>Name</th>
@@ -43,7 +42,7 @@
 					<th>Operation</th>
 				</tr>
 			</thead>
-			<body>
+			<tbody>
 {% for assignment in assignments %}
 				<tr>
 					<td>
@@ -63,21 +62,22 @@
 					<td>
 						{{ assignment.score }}
           </td>
-          <td class="ui single line">
-            <a class="ui button circular icon primary" href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}">
-              <i class="eye icon"></i>
+          <td class="whitespace-nowrap">
+            <a class="btn btn-circle btn-primary" href="{{ url_for('administration.assignments.view', assignment_id=assignment.id) }}">
+              <i class="fa-solid fa-eye"></i>
             </a>
-            <a class="ui circular button icon primary" href="{{ url_for("administration.assignments.create_or_edit", assignment_id=assignment.id) }}">
-              <i class="ui edit icon"></i>
+            <a class="btn btn-circle btn-primary" href="{{ url_for("administration.assignments.create_or_edit", assignment_id=assignment.id) }}">
+              <i class="fa-solid fa-pen-to-square"></i>
             </a>
-			      <a class="ui circular button primary icon" href="{{ url_for('administration.assignments.delete', assignment_id=assignment.id) }}">
-              <i class="trash icon"></i>
+			      <a class="btn btn-circle btn-primary" href="{{ url_for('administration.assignments.delete', assignment_id=assignment.id) }}">
+              <i class="fa-solid fa-trash"></i>
             </a>
           </td>
 				</tr>
 {% endfor %}
-			</body>
+			</tbody>
 		</table>
+		</div>
 		{% endif %}
 </div>
 {% endmacro %}

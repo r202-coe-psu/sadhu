@@ -5,19 +5,21 @@
 
 {% block breadcrumbs %}
   {{ super() }}
-  <i class="right angle icon divider"></i>
-  <div class="active section">{{ class_.name }}</div>
+  <li>{{ class_.name }}</li>
 {% endblock %}
 
 {% block content %}
-  <div class="ui container">
-    <div class="ui segment">
-      <h2>{{ user.first_name }} {{ user.last_name }} </h2>
+  <div class="container mx-auto px-4">
+    <div class="card bg-base-100 shadow mb-4">
+      <div class="card-body">
+      <h2 class="text-2xl font-bold mb-2">{{ user.first_name }} {{ user.last_name }} </h2>
       <b>Thai Name: </b>{{ user.metadata['thai_first_name'] }} {{ user.metadata['thai_last_name'] }}<br/>
       <b>Student ID: </b> {{ user.metadata.get('user_id',  user.username) }} <b>Organization</b> {{ user.metadata['organization'] }}<br/>
       <b>Email: </b> {{ user.email }}
+      </div>
     </div>
-    <table class="ui celled table">
+    <div class="overflow-x-auto">
+    <table class="table">
       <thead>
         <tr>
           <th>Name</th>
@@ -43,15 +45,16 @@
           </td>
           <td>
             {% if class_.owner == current_user %}
-              <a class="ui icon button circular primary" href="{{ url_for('administration.classes.show_user_assignment', class_id=class_.id, user_id=user.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
+              <a class="btn btn-circle btn-primary" href="{{ url_for('administration.classes.show_user_assignment', class_id=class_.id, user_id=user.id, assignment_id=assignment.id) }}"><i class="fa-solid fa-eye"></i></a>
             {% elif class_.is_teaching_assistant(current_user) %}
-              <a class="ui icon button circular primary" href="{{ url_for('teaching_assistants.classes.show_user_assignment', class_id=class_.id, user_id=user.id, assignment_id=assignment.id) }}"><i class="eye icon"></i></a>
+              <a class="btn btn-circle btn-primary" href="{{ url_for('teaching_assistants.classes.show_user_assignment', class_id=class_.id, user_id=user.id, assignment_id=assignment.id) }}"><i class="fa-solid fa-eye"></i></a>
             {% endif %}
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+    </div>
   </div>
 
 {% endblock %}
