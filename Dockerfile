@@ -5,8 +5,8 @@ RUN apt update --fix-missing && apt dist-upgrade -y
 RUN apt install -y python3.14 python3.14-dev python3.14-venv python3-pip build-essential npm locales golang
 
 RUN sed -i '/th_TH.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
-ENV LANG th_TH.UTF-8
-ENV LANGUAGE th_TH:en
+ENV LANG=th_TH.UTF-8
+ENV LANGUAGE=th_TH:en
 ENV SADHU_SETTINGS=/app/sadhu-production.cfg
 # ENV LC_ALL th_TH.UTF-8
 
@@ -26,6 +26,11 @@ RUN npm install --prefix sadhu/web/static
 
 COPY . /app
 RUN npm run build:css --prefix sadhu/web/static
+# Remove stale brython-managed artifacts so a fresh install does not hit the
+# interactive "Override? (Y/N)" prompt (no stdin during build -> EOFError).
+RUN rm -f sadhu/web/static/brython_modules/brython.js \
+    sadhu/web/static/brython_modules/brython_stdlib.js \
+    sadhu/web/static/brython_modules/unicode.txt
 RUN /venv/bin/brython-cli install --no-demo --install-dir sadhu/web/static/brython_modules
 
 RUN cd sadhu/web/static/brython_modules; for i in $(ls -d */); do /venv/bin/python -m brython make_package ${i%%/}; done
