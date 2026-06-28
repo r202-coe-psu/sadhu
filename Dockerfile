@@ -33,5 +33,5 @@ RUN rm -f sadhu/web/static/brython_modules/brython.js \
     sadhu/web/static/brython_modules/unicode.txt
 RUN /venv/bin/brython-cli install --no-demo --install-dir sadhu/web/static/brython_modules
 
-RUN cd sadhu/web/static/brython_modules; for i in $(ls -d */); do /venv/bin/python -m brython make_package ${i%%/}; done
+RUN /venv/bin/python scripts/auto-build-brython --once
 

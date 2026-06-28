@@ -1,14 +1,36 @@
+import os
 import datetime
 import pathlib
 import importlib
 import logging
 
+from flask import current_app
+
 logger = logging.getLogger(__name__)
 
 
 def add_date_url(url):
-    now = datetime.datetime.now()
-    return f'{url}?date={now.strftime("%Y%m%d")}'
+    """Append a cache-busting query string to a static asset URL.
+
+    Uses the file's modification time so the browser refetches whenever the
+    asset actually changes (e.g. a rebuilt ``css/tailwind.css``). Falls back to
+    the current date for non-static URLs or if the file can't be found.
+    """
+    version = None
+    try:
+        static_url = current_app.static_url_path or ""
+        prefix = static_url + "/"
+        if static_url and url.startswith(prefix):
+            file_path = os.path.join(current_app.static_folder, url[len(prefix):])
+            version = int(os.path.getmtime(file_path))
+    except Exception:
+        version = None
+
+    if version is None:
+        version = datetime.datetime.now().strftime("%Y%m%d")
+
+    separator = "&" if "?" in url else "?"
+    return f"{url}{separator}date={version}"
 
 
 def ymd(value):

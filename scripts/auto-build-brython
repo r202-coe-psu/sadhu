@@ -1,64 +1,118 @@
 #!/usr/bin/env python3
+"""Build the project's Brython packages and rebuild them on source changes.
+
+`brython make_package` bundles everything under the *current working directory*,
+so it must always run with the cwd set to the brython modules root. Run with an
+optional path argument (defaults to ``sadhu/web/static/brython_modules``).
+
+Use ``--once`` for a one-shot build (CI / Docker); the default starts a file
+watcher. Watching needs ``watchdog`` (a dev dependency), imported lazily so the
+one-shot build works in a production image without it."""
 import sys
 import time
 import logging
-from watchdog.observers import Observer
-from watchdog.events import LoggingEventHandler, PatternMatchingEventHandler
-import os
+import argparse
 import pathlib
 import subprocess
 
-BRYTHON_PATH = 'sadhu/web/static/brython_modules'
+BRYTHON_PATH = pathlib.Path("sadhu/web/static/brython_modules")
 
-def cls():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-
-def when_file_changed(filename, path):
-    cls() 
-    print('change:', filename)
-
-    packagename = pathlib.Path(filename[len(path):]).parts[1]
-
-    subprocess.run(['python',
-                    '-m',
-                    'brython',
-                    'make_package',
-                    packagename],
-                   cwd=pathlib.Path(path).resolve())
+logger = logging.getLogger("auto-build-brython")
 
 
-class ModifiedHandler(PatternMatchingEventHandler):
-    patterns = ["*.py"]
-    base_path = ''
-
-    def on_created(self, event):
-        when_file_changed(event.src_path, path)
-
-    def on_any_event(self, event):
-        pass
-
-    def on_modified(self, event):
-        pass
-
-    def set_based_path(self, path):
-        self.based_path = path
+def make_package(package, base_path):
+    """Bundle a single Brython package (cwd must be the modules root)."""
+    logger.info("building brython package: %s", package)
+    # Remove the previous bundle first: make_package bundles everything in the
+    # directory, so leaving the old <package>.brython.js makes each rebuild
+    # re-ingest it and the output grows without bound.
+    (base_path / f"{package}.brython.js").unlink(missing_ok=True)
+    result = subprocess.run(
+        [sys.executable, "-m", "brython", "make_package", package],
+        cwd=str(base_path.resolve()),
+    )
+    if result.returncode != 0:
+        logger.error("failed to build brython package: %s", package)
 
 
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s - %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S')
-    path = sys.argv[1] if len(sys.argv) > 1 else BRYTHON_PATH
-    # event_handler = LoggingEventHandler()
-    event_handler = ModifiedHandler()
-    event_handler.set_based_path(path)
+def package_of(changed, base_path):
+    """Top-level package name for a changed source file, or None."""
+    try:
+        rel = pathlib.Path(changed).resolve().relative_to(base_path.resolve())
+    except ValueError:
+        return None
+    return rel.parts[0] if len(rel.parts) > 1 else None
+
+
+def build_all(base_path):
+    """Build every package (a directory with an __init__.py) under the root."""
+    for entry in sorted(base_path.iterdir()):
+        if entry.is_dir() and (entry / "__init__.py").exists():
+            make_package(entry.name, base_path)
+
+
+def watch(base_path):
+    """Rebuild the affected package whenever a source file changes."""
+    from watchdog.observers import Observer
+    from watchdog.events import PatternMatchingEventHandler
+
+    class SourceChangeHandler(PatternMatchingEventHandler):
+        patterns = ["*.py"]
+
+        def _rebuild(self, path):
+            package = package_of(path, base_path)
+            if package:
+                make_package(package, base_path)
+
+        def on_created(self, event):
+            if not event.is_directory:
+                self._rebuild(event.src_path)
+
+        def on_modified(self, event):
+            if not event.is_directory:
+                self._rebuild(event.src_path)
+
+        def on_moved(self, event):
+            if not event.is_directory:
+                self._rebuild(event.dest_path)
+
     observer = Observer()
-    observer.schedule(event_handler, path, recursive=True)
+    observer.schedule(SourceChangeHandler(), str(base_path), recursive=True)
     observer.start()
+    logger.info("watching %s for brython source changes", base_path)
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
+
+
+def main():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+    parser = argparse.ArgumentParser(description="Build Brython packages.")
+    parser.add_argument(
+        "path", nargs="?", default=str(BRYTHON_PATH),
+        help="brython modules root (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--once", action="store_true",
+        help="build all packages once and exit (no file watching)",
+    )
+    args = parser.parse_args()
+    base_path = pathlib.Path(args.path)
+
+    # Build everything once so a fresh start (or a one-shot/CI build) is current.
+    build_all(base_path)
+    if args.once:
+        return
+
+    watch(base_path)
+
+
+if __name__ == "__main__":
+    main()

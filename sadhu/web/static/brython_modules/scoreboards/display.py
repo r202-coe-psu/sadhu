@@ -6,6 +6,9 @@ import random
 fabric = window.fabric
 
 
+
+
+
 class ScoreBoard:
     def __init__(self, name="scoreboard", width=800, height=600, data_url=""):
         self.name = name
