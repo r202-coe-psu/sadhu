@@ -15,3 +15,57 @@
     background-color: color-mix(in oklch, var(--color-base-content) 12%, transparent);
   }
 }
+
+/* daisyUI's `.select` uses `display: inline-flex`, which lays a multiple-select's
+   <option>s out as flex items in a single row so they overlap. Restore native
+   vertical list layout for multi-selects. Unlayered so it beats daisyUI's @layer.
+   Only matters as the no-JS fallback: multi-selects are enhanced by Tom Select. */
+.select[multiple] {
+  display: block;
+  white-space: normal;
+}
+
+/* Theme Tom Select (searchable multi-selects) to match daisyUI form controls.
+   tom-select's stylesheet is loaded before tailwind.css so these win the cascade. */
+.ts-control {
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+  border: var(--border) solid color-mix(in oklab, var(--color-base-content) 20%, transparent);
+  border-radius: var(--radius-field);
+  min-height: calc(var(--size-field, 0.25rem) * 10);
+  box-shadow: none;
+}
+.ts-wrapper.focus .ts-control {
+  border-color: var(--color-base-content);
+  outline: 2px solid color-mix(in oklab, var(--color-base-content) 20%, transparent);
+  outline-offset: 2px;
+}
+.ts-control input,
+.ts-control input::placeholder {
+  color: var(--color-base-content);
+}
+/* Selected tag chips */
+.ts-control .item {
+  background-color: var(--color-primary);
+  color: var(--color-primary-content);
+  border-radius: var(--radius-field);
+  border: none;
+}
+.ts-control .item .remove {
+  border-inline-start-color: color-mix(in oklab, var(--color-primary-content) 40%, transparent);
+}
+/* Dropdown list */
+.ts-dropdown {
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+  border: var(--border) solid color-mix(in oklab, var(--color-base-content) 20%, transparent);
+  border-radius: var(--radius-field);
+  margin-top: 0.25rem;
+}
+.ts-dropdown .option {
+  color: var(--color-base-content);
+}
+.ts-dropdown .active {
+  background-color: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  color: var(--color-base-content);
+}

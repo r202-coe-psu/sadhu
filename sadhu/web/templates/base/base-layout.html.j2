@@ -4,11 +4,14 @@
     <meta http-equiv="Content-Type" content="text.html.j2; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>{% block title  %}{{ config.get('APP_TITLE') }}{% endblock %}</title>
+    <!-- Third-party stylesheets first, so our tailwind.css overrides win the cascade. -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/tom-select/dist/css/tom-select.default.min.css') | add_date_url}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') | add_date_url}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/@fortawesome/fontawesome-free/css/all.min.css') | add_date_url}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/flatpickr/dist/flatpickr.min.css') | add_date_url}}">
     <script src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') | add_date_url}}"></script>
     <script src="{{ url_for('static', filename='node_modules/flatpickr/dist/flatpickr.min.js') | add_date_url}}"></script>
+    <script src="{{ url_for('static', filename='node_modules/tom-select/dist/js/tom-select.complete.min.js') | add_date_url}}"></script>
     <script>
       // Render date fields as fixed-format pickers (instead of the browser's
       // locale-dependent native <input type="date">).
@@ -19,6 +22,20 @@
           time_24hr: true,
           dateFormat: 'Y-m-d H:i',
           allowInput: true,
+        });
+
+        // Enhance every multi-select into a searchable tag picker. Drop daisyUI's
+        // `.select` class first so its styles don't leak onto Tom Select's wrapper
+        // (Tom Select copies the original element's classes to .ts-wrapper).
+        document.querySelectorAll('select[multiple]').forEach(function (el) {
+          el.classList.remove('select');
+          new TomSelect(el, {
+            plugins: ['remove_button'],
+            // Keep the default rendered-option cap (50). Some fields (e.g. course
+            // contributors) have >1000 options; rendering them all freezes the
+            // dropdown. Typing narrows the list, so the cap is invisible in use.
+            hidePlaceholder: true,
+          });
         });
       });
     </script>
