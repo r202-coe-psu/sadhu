@@ -26,13 +26,18 @@ def list_assignment_scores(class_id, assignment_id):
 
     challenge_count = len(assignment.challenges)
 
+    enrollments = class_.get_enrollments()
+    users = [e.user for e in enrollments]
+    scores = assignment.get_class_scores(class_, users)
+
     data = dict()
-    for e in class_.get_enrollments():
-        data[str(e.user.id)] = dict(
-            name=e.user.first_name,
-            score=assignment.get_score(class_, e.user),
+    for user in users:
+        user_scores = scores[user.id]
+        data[str(user.id)] = dict(
+            name=user.first_name,
+            score=user_scores["score"],
             max_score=assignment.score,
-            complete=assignment.count_done_challenges(class_, e.user),
+            complete=user_scores["complete"],
             challenges=challenge_count,
         )
 

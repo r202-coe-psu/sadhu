@@ -51,7 +51,7 @@
           #}
 					</td>
         <td>
-          {% set score = class_.get_assignment_score(enrollment.user) %}
+          {% set score = scores[enrollment.user.id] %}
           {{ '{:.2f}'.format(score['total_user_score']) }} / {{ score['total_score'] }}
 		      </td>
         <td>
@@ -97,7 +97,7 @@
             #}
 					</td>
           <td>
-            {% set score = class_.get_assignment_score(user) %}
+            {% set score = scores[user.id] %}
             {{ '{:.2f}'.format(score['total_user_score']) }} / {{ score['total_score'] }}
 		      </td>
           <td>

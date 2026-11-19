@@ -172,12 +172,16 @@ def list_students(class_id):
         if not class_.is_enrolled(user=user):
             unenrollments.append(user)
 
+    all_users = [e.user for e in enrollments] + unenrollments
+    scores = class_.get_bulk_assignment_scores(all_users)
+
     return render_template(
         "/administration/classes/list-users.html.j2",
         class_=class_,
         enrollments=enrollments,
         unenrollments=unenrollments,
         never_login=never_login,
+        scores=scores,
     )
 
 
@@ -187,12 +191,14 @@ def show_user_score(class_id, user_id):
     class_ = models.Class.objects.get(id=class_id)
     user = models.User.objects.get(id=user_id)
     assignments = class_.course.assignments
+    scores = {a.id: a.get_class_scores(class_, [user])[user.id] for a in assignments}
 
     return render_template(
         "/administration/classes/show-user-score.html.j2",
         class_=class_,
         user=user,
         assignments=assignments,
+        scores=scores,
     )
 
 
@@ -219,12 +225,14 @@ def list_assignment_users(class_id, assignment_id):
     enrollments = class_.get_enrollments()
     users = [e.user for e in enrollments]
     users.sort(key=lambda u: u.first_name)
+    scores = assignment.get_class_scores(class_, users)
 
     return render_template(
         "/administration/classes/list-assignment-users.html.j2",
         class_=class_,
         users=users,
         assignment=assignment,
+        scores=scores,
     )
 
 
@@ -310,6 +318,12 @@ def export_scores(class_id):
     header.append("total")
     subheader.append(total_score)
 
+    # One bulk query per assignment, shared across every user, instead of
+    # one query per (user, challenge, assignment) triple.
+    assignment_scores = {
+        ass.id: ass.get_class_scores(class_, users) for ass in assignments
+    }
+
     output = io.StringIO()
     writer = csv.writer(output)
 
@@ -336,7 +350,7 @@ def export_scores(class_id):
             data.append(user.last_name)
 
         for ass in assignments:
-            score = ass.get_score(class_, user)
+            score = assignment_scores[ass.id][user.id]["score"]
             data.append(score)
             total_score += score
         data.append(total_score)

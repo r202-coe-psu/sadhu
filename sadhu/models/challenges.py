@@ -46,7 +46,12 @@ class Solution(me.Document):
 
     metadata = me.DictField()
 
-    meta = {"collection": "solutions"}
+    meta = {
+        "collection": "solutions",
+        "indexes": [
+            {"fields": ["enrolled_class", "challenge", "owner", "-score"]},
+        ],
+    }
 
     def count_pass_testcases(self):
         count = 0

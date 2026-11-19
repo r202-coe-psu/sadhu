@@ -44,22 +44,68 @@ class Assignment(me.Document):
 
         return solutions
 
-    def get_score(self, class_, user):
+    def get_class_scores(self, class_, users=None):
+        """Compute score/completion for many users with a single query.
+
+        The naive per-user, per-challenge approach (`get_best_solution`/
+        `is_done` in a loop) issues one unindexed Mongo query per
+        (user, challenge) pair, so a class page costs O(users * challenges)
+        round-trips and times out as either grows. This fetches every
+        relevant Solution once, then reduces to best-per-(user, challenge)
+        in memory.
+        """
         from sadhu import models
 
-        user_score = 0
-        challenge_score = 0
-        for challenge in self.challenges:
-            solution = challenge.get_best_solution(class_, user)
-            challenge_score += challenge.score
-            if solution:
-                user_score += solution.score
+        if users is None:
+            users = [e.user for e in class_.get_enrollments()]
 
-        score = 0
-        if challenge_score != 0:
-            score = user_score / challenge_score * self.score
+        challenge_score_map = {c.id: c.score for c in self.challenges}
+        total_challenge_score = sum(challenge_score_map.values())
 
-        return score
+        best_scores = {}
+        if self.challenges and users:
+            # as_pymongo() avoids dereferencing owner/challenge into full
+            # documents (which would reintroduce one query per row).
+            raw_solutions = (
+                models.Solution.objects(
+                    enrolled_class=class_,
+                    challenge__in=self.challenges,
+                    owner__in=users,
+                )
+                .only("owner", "challenge", "score")
+                .as_pymongo()
+            )
+
+            for sol in raw_solutions:
+                key = (sol["owner"].id, sol["challenge"].id)
+                score = sol.get("score") or 0
+                if key not in best_scores or score > best_scores[key]:
+                    best_scores[key] = score
+
+        results = {}
+        for user in users:
+            user_score = 0
+            complete = 0
+            challenge_scores = {}
+            for challenge_id, c_score in challenge_score_map.items():
+                best = best_scores.get((user.id, challenge_id), 0)
+                challenge_scores[challenge_id] = best
+                user_score += best
+                if c_score != 0 and best == c_score:
+                    complete += 1
+
+            score = 0
+            if total_challenge_score != 0:
+                score = user_score / total_challenge_score * self.score
+
+            results[user.id] = dict(
+                score=score, complete=complete, challenge_scores=challenge_scores
+            )
+
+        return results
+
+    def get_score(self, class_, user):
+        return self.get_class_scores(class_, [user])[user.id]["score"]
 
     def check_user_submission(self, class_, user):
         from sadhu import models
@@ -75,13 +121,7 @@ class Assignment(me.Document):
         return challenge_checker
 
     def count_done_challenges(self, class_, user):
-        # very slow need update
-        count = 0
-        for challenge in self.challenges:
-            if challenge.is_done(class_, user):
-                count += 1
-
-        return count
+        return self.get_class_scores(class_, [user])[user.id]["complete"]
 
 
 def get_assignment_schedule(user):

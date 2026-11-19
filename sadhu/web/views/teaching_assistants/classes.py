@@ -43,11 +43,14 @@ def list_students(class_id):
 
     enrollments = class_.get_enrollments()
     enrollments = sorted(enrollments, key=lambda e: e.user.first_name)
+    users = [e.user for e in enrollments]
+    scores = class_.get_bulk_assignment_scores(users)
 
     return render_template(
         "/administration/classes/list-users.html.j2",
         enrollments=enrollments,
         class_=class_,
+        scores=scores,
     )
 
 
@@ -58,12 +61,14 @@ def show_user_score(class_id, user_id):
     class_ = models.Class.objects.get(id=class_id)
     user = models.User.objects.get(id=user_id)
     assignments = class_.course.assignments
+    scores = {a.id: a.get_class_scores(class_, [user])[user.id] for a in assignments}
 
     return render_template(
         "/administration/classes/show-user-score.html.j2",
         class_=class_,
         user=user,
         assignments=assignments,
+        scores=scores,
     )
 
 

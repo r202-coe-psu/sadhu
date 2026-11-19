@@ -30,14 +30,15 @@
       </thead>
       <tbody>
         {% for assignment in assignments  %}
-          {%- set ass_score = assignment.get_score(class_, user) -%}
+          {%- set ass_user_scores = scores[assignment.id] -%}
+          {%- set ass_score = ass_user_scores.score -%}
         <tr class="{{ ass_style.get_assignment_class(ass_score, assignment.score) }}">
           <td>
             {{ assignment.name }}
           </td>
           <td>
             {% for challenge in assignment.challenges %}
-              {{ '{:.02f}'.format(challenge.get_solution_score(class_, user)) }},
+              {{ '{:.02f}'.format(ass_user_scores.challenge_scores[challenge.id]) }},
             {% endfor %}
           </td>
           <td>

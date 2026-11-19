@@ -87,19 +87,35 @@ class Class(me.Document):
 
         return None
 
+    def get_bulk_assignment_scores(self, users):
+        """Total score across every scheduled assignment, for many users.
+
+        Calling `assignment.get_score(self, user)` per user per assignment
+        (as the old `get_assignment_score` did) costs one query per
+        (user, challenge, assignment) triple. This instead issues one bulk
+        query per assignment, shared across all `users`.
+        """
+        assignments = [ass_t.assignment for ass_t in self.assignment_schedule]
+        total_assignment_score = sum(a.score for a in assignments)
+
+        per_assignment_scores = {
+            a.id: a.get_class_scores(self, users) for a in assignments
+        }
+
+        results = {}
+        for user in users:
+            total_user_score = sum(
+                per_assignment_scores[a.id][user.id]["score"] for a in assignments
+            )
+            results[user.id] = dict(
+                total_score=total_assignment_score,
+                total_user_score=total_user_score,
+            )
+
+        return results
+
     def get_assignment_score(self, user):
-
-        total_assignment_score = 0
-        total_assignment_user_score = 0
-        for ass_t in self.assignment_schedule:
-            assignment = ass_t.assignment
-            total_assignment_score += assignment.score
-            total_assignment_user_score += assignment.get_score(self, user)
-
-        return dict(
-            total_score=total_assignment_score,
-            total_user_score=total_assignment_user_score,
-        )
+        return self.get_bulk_assignment_scores([user])[user.id]
 
     def get_assignment_schedule(self, assignment):
         ass_time = None
