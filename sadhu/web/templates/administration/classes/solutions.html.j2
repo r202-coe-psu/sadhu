@@ -12,6 +12,8 @@
 
 
 {% block content %}
+{#- TA view: viewer assists this class but does not own it. -#}
+{%- set is_ta = class_.owner != current_user and class_.is_teaching_assistant(current_user) -%}
 <div class="container mx-auto px-4">
 	<div class="card bg-base-100 shadow">
 		<div class="card-body">
@@ -65,7 +67,7 @@
     {% elif class_.is_teaching_assistant(current_user) %}
       <a class="btn" href="{{ url_for('teaching_assistants.classes.list_students', class_id=class_.id) }}"><i class="fa-solid fa-graduation-cap"></i>Students</a>
     {% endif %}
-      <a class="btn" href="{{ url_for('administration.classes.list_class_solutions', class_id=class_.id) }}"><i class="fa-solid fa-file-code"></i>Solutions</a>
+      <a class="btn" href="{{ url_for('teaching_assistants.classes.list_class_solutions' if is_ta else 'administration.classes.list_class_solutions', class_id=class_.id) }}"><i class="fa-solid fa-file-code"></i>Solutions</a>
     </div>
 </div>
 
@@ -89,13 +91,17 @@
 {% for solution in solutions %}
   <tr class="{{ solution_style.get_solution_class(solution) }}">
     <td>
-      <a href="{{ url_for('administration.classes.show_user_score', class_id=solution.enrolled_class.id, user_id=solution.owner.id) }}">{{ solution.owner.first_name }}</a>
+      <a href="{{ url_for('teaching_assistants.classes.show_user_score' if is_ta else 'administration.classes.show_user_score', class_id=solution.enrolled_class.id, user_id=solution.owner.id) }}">{{ solution.owner.first_name }}</a>
       </td>
         <td>
+          {% if is_ta %}
+          {{ solution.challenge.name }}
+          {% else %}
           <a href="{{ url_for('administration.challenges.list_solutions', challenge_id=solution.challenge.id, class_id=solution.enrolled_class.id) }}">{{ solution.challenge.name }}</a>
+          {% endif %}
         </td>
         <td>
-          <a href="{{ url_for('administration.classes.view', class_id=solution.enrolled_class.id) }}">{{ solution.enrolled_class.name }}</a>
+          <a href="{{ url_for('teaching_assistants.classes.view' if is_ta else 'administration.classes.view', class_id=solution.enrolled_class.id) }}">{{ solution.enrolled_class.name }}</a>
         </td>
         <td>
           {{ solution.submitted_date | ymd }}
@@ -111,7 +117,11 @@
         </td>
         <td>
             {% if solution.status == 'complete' %}
+              {% if is_ta %}
+              <a href="{{ url_for('teaching_assistants.solutions.view', solution_id=solution.id) }}" class="btn btn-circle btn-primary"><i class="fa-solid fa-eye"></i></a>
+              {% else %}
               <a href="{{ url_for('administration.solutions.view', solution_id=solution.id, class_id=request.args.get('class_id')) }}" class="btn btn-circle btn-primary"><i class="fa-solid fa-eye"></i></a>
+              {% endif %}
             {% else %}
               <i class="fa-solid fa-eye"></i>
             {% endif %}
