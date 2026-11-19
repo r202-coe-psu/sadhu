@@ -14,7 +14,7 @@ module = Blueprint(
 
 
 @module.route("/")
-@acl.roles_required("teaching_assistant")
+@acl.teaching_assistant_required
 def index():
     classes = models.Class.objects(
         teaching_assistants__user=current_user._get_current_object()

@@ -33,6 +33,29 @@ def roles_required(*roles):
     return wrapper
 
 
+def teaching_assistant_required(func):
+    """Allow users holding the `teaching_assistant` role, or listed as a TA
+    on any class. Class membership alone is enough, so TAs added before the
+    role was granted automatically are not locked out."""
+
+    @wraps(func)
+    def wrapped(*args, **kwargs):
+        if not current_user.is_authenticated:
+            raise Forbidden()
+
+        if "teaching_assistant" in current_user.roles:
+            return func(*args, **kwargs)
+
+        if models.Class.objects(
+            teaching_assistants__user=current_user._get_current_object()
+        ).first():
+            return func(*args, **kwargs)
+
+        raise Forbidden()
+
+    return wrapped
+
+
 @login_manager.user_loader
 def load_user(user_id):
     user = models.User.objects.with_id(user_id)

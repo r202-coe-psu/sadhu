@@ -410,6 +410,11 @@ def add_teaching_assistant(class_id):
         if not found_user:
             ta = models.TeachingAssistant(user=user, ended_date=class_.ended_date)
             class_.teaching_assistants.append(ta)
+
+        # TA pages are gated on this role; grant it so the new TA can open them.
+        if "teaching_assistant" not in user.roles:
+            user.roles.append("teaching_assistant")
+            user.save()
     class_.save()
 
     return redirect(url_for("administration.classes.view", class_id=class_id))
